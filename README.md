@@ -4,15 +4,6 @@
 * Version: 4.20
 * Posted: December 3, 2020
 
-VERSION
-------------------------------------------------------------------
-4.00 - Adds Note Crawlers, Sounds, and image overlays for advanced
-       streaming options.
-       
-4.10 - Sound volume and stop button. Manual Stat page sizing. 
-       Bug fixes.   
-       
-4.20 - Added Load/Save setup buttons.
        
 SUMMARY
 ------------------------------------------------------------------
@@ -129,3 +120,9 @@ v4.10
 v4.20
 * Added setup Load/Save buttons for access to multiple setups.
 * Changed ABOUT dialog to RTF for ease of use.
+
+v5.0 Alpha
+* Code Migration to c#
+
+v5.1 Alpha
+* Added In-Game overlay that shows players ranks during match loading screen (Requires Toggle Overlay checked and turned on Auto Scan Log)
