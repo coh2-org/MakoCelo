@@ -153,10 +153,10 @@
     <Compile Include="frmMaxPlayerSearch.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmNotes.Designer.cs">
-      <DependentUpon>frmNotes.cs</DependentUpon>
+    <Compile Include="FrmNotes.Designer.cs">
+      <DependentUpon>FrmNotes.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmNotes.cs">
+    <Compile Include="FrmNotes.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="frmAbout.Designer.cs">
@@ -202,8 +202,8 @@
     <EmbeddedResource Include="frmMaxPlayerSearch.resx">
       <DependentUpon>frmMaxPlayerSearch.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmNotes.resx">
-      <DependentUpon>frmNotes.cs</DependentUpon>
+    <EmbeddedResource Include="FrmNotes.resx">
+      <DependentUpon>FrmNotes.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

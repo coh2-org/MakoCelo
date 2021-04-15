@@ -7,28 +7,24 @@ namespace MakoCelo
     {
         public static string PATH_StripFilename(string tPath)
         {
-            string PATH_StripFilenameRet = default;
             // R2.00 Strip the filename off for init dir on dialog.  
-            int N;
-            string S;
-            N = Conversions.ToInteger(STRING_FindLastSlash(tPath));
-            if (3 < N)
+            string s;
+            var n = Conversions.ToInteger(STRING_FindLastSlash(tPath));
+            if (3 < n)
             {
-                S = Strings.Mid(tPath, 1, N);
+                s = Strings.Mid(tPath, 1, n);
             }
             else
             {
-                S = "";
+                s = "";
             }
-
-            PATH_StripFilenameRet = S;
-            return PATH_StripFilenameRet;
+            
+            return s;
         }
 
         public static string PATH_GetAnyPath()
         {
-            string PATH_GetAnyPathRet = default;
-            string tPath = "";
+            var tPath = "";
 
             // R4.00 Get a texture path from defined textures.
             if (!string.IsNullOrEmpty(frmMain.PATH_BackgroundImage))
@@ -57,29 +53,24 @@ namespace MakoCelo
                     tPath = PATH_StripFilename(frmMain.PATH_Note04_Bmp);
                 }
             }
-
-            PATH_GetAnyPathRet = tPath;
-            return PATH_GetAnyPathRet;
+            
+            return tPath;
         }
 
 
-        public static object STRING_FindLastSlash(string A)
+        public static object STRING_FindLastSlash(string a)
         {
-            object STRING_FindLastSlashRet = default;
             int i;
-            int Hit;
-            Hit = 0;
-            for (i = Strings.Len(A); i >= 1; i -= 1)
+            var hit = 0;
+            for (i = Strings.Len(a); i >= 1; i -= 1)
             {
-                if (Strings.Mid(A, i, 1) == @"\")
+                if (Strings.Mid(a, i, 1) == @"\")
                 {
-                    Hit = i;
+                    hit = i;
                     break;
                 }
             }
-
-            STRING_FindLastSlashRet = Hit;
-            return STRING_FindLastSlashRet;
+            return hit;
         }
     }
 }

@@ -8,7 +8,7 @@ using Microsoft.VisualBasic.CompilerServices;
 namespace MakoCelo
 {
     [DesignerGenerated()]
-    public partial class frmNotes : Form
+    public partial class FrmNotes : Form
     {
 
         // Form overrides dispose to clean up the component list.
@@ -38,7 +38,7 @@ namespace MakoCelo
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            var resources = new System.ComponentModel.ComponentResourceManager(typeof(frmNotes));
+            var resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmNotes));
             tbN04 = new TextBox();
             tbN03 = new TextBox();
             tbN02 = new TextBox();
@@ -538,7 +538,7 @@ namespace MakoCelo
             Controls.Add(tbN01);
             FormBorderStyle = FormBorderStyle.Fixed3D;
             Icon = (Icon)resources.GetObject("$this.Icon");
-            Name = "frmNotes";
+            Name = "FrmNotes";
             StartPosition = FormStartPosition.CenterParent;
             Text = "MakoCELO - Note Definition";
             Load += new EventHandler(frmNotes_Load);

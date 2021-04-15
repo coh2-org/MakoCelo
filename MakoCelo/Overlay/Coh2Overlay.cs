@@ -135,9 +135,9 @@ namespace MakoCelo.Overlay
 
                 _window.Unpause();
                 _window.Show();
-            };
+            }
 
-            Task.Delay(30000).ContinueWith(x =>
+            Task.Delay(30000).ContinueWith(_ =>
             {
                 _window.Pause();
                 _window.Hide();
@@ -150,18 +150,18 @@ namespace MakoCelo.Overlay
         }
 
         #region IDisposable Support
-        private bool disposedValue;
+        private bool _disposedValue;
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposedValue)
+            if (!_disposedValue)
             {
                 if (_window != null)
                 {
                     _window.Dispose();
                 }
 
-                disposedValue = true;
+                _disposedValue = true;
             }
         }
 

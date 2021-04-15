@@ -3,9 +3,9 @@ using System;
 
 namespace MakoCelo
 {
-    public partial class frmNotes
+    public partial class FrmNotes
     {
-        public frmNotes(bool displayTooltips)
+        public FrmNotes(bool displayTooltips)
         {
             InitializeComponent();
             _Button1.Name = "Button1";
