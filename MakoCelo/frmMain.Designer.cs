@@ -123,7 +123,6 @@ namespace MakoCelo
             this._cboFXVar2 = new System.Windows.Forms.ComboBox();
             this.lbFXVar2 = new System.Windows.Forms.Label();
             this.lbFXVar4 = new System.Windows.Forms.Label();
-            this._chkMismatch = new System.Windows.Forms.CheckBox();
             this.lbError1 = new System.Windows.Forms.Label();
             this.lbError2 = new System.Windows.Forms.Label();
             this.SaveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
@@ -198,6 +197,7 @@ namespace MakoCelo
             this.SS1_Sep3 = new System.Windows.Forms.ToolStripStatusLabel();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this._chkToggleOverlay = new System.Windows.Forms.CheckBox();
+            this._chkMismatch = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.pbFact01)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbFact02)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbFact03)).BeginInit();
@@ -1240,20 +1240,6 @@ namespace MakoCelo
             this.lbFXVar4.TabIndex = 70;
             this.lbFXVar4.Text = "--";
             // 
-            // _chkMismatch
-            // 
-            this._chkMismatch.AutoSize = true;
-            this._chkMismatch.Checked = true;
-            this._chkMismatch.CheckState = System.Windows.Forms.CheckState.Checked;
-            this._chkMismatch.Location = new System.Drawing.Point(9, 143);
-            this._chkMismatch.Name = "_chkMismatch";
-            this._chkMismatch.Size = new System.Drawing.Size(102, 17);
-            this._chkMismatch.TabIndex = 11;
-            this._chkMismatch.Text = "Show Bad Stats";
-            this._chkMismatch.UseVisualStyleBackColor = true;
-            this._chkMismatch.Visible = false;
-            this._chkMismatch.CheckedChanged += new System.EventHandler(this.chkMismatch_CheckedChanged);
-            // 
             // lbError1
             // 
             this.lbError1.BackColor = System.Drawing.Color.Silver;
@@ -2048,6 +2034,20 @@ namespace MakoCelo
             this._chkToggleOverlay.UseVisualStyleBackColor = true;
             this._chkToggleOverlay.CheckedChanged += new System.EventHandler(this._chkToggleOverlay_CheckedChanged);
             // 
+            // _chkMismatch
+            // 
+            this._chkMismatch.AutoSize = true;
+            this._chkMismatch.Checked = true;
+            this._chkMismatch.CheckState = System.Windows.Forms.CheckState.Checked;
+            this._chkMismatch.Location = new System.Drawing.Point(9, 143);
+            this._chkMismatch.Name = "_chkMismatch";
+            this._chkMismatch.Size = new System.Drawing.Size(102, 17);
+            this._chkMismatch.TabIndex = 11;
+            this._chkMismatch.Text = "Show Bad Stats";
+            this._chkMismatch.UseVisualStyleBackColor = true;
+            this._chkMismatch.Visible = false;
+            this._chkMismatch.CheckedChanged += new System.EventHandler(this.chkMismatch_CheckedChanged);
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2701,7 +2701,6 @@ namespace MakoCelo
         }
 
         internal SaveFileDialog SaveFileDialog1;
-        private CheckBox _chkMismatch;
 
         internal CheckBox chkMismatch
         {
@@ -4755,5 +4754,6 @@ namespace MakoCelo
         internal ToolStripStatusLabel SS1_Sep3;
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
         private CheckBox _chkToggleOverlay;
+        private CheckBox _chkMismatch;
     }
 }

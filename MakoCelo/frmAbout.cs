@@ -35,13 +35,17 @@ namespace MakoCelo
 
             // R4.10 KEY PREVIEW is on, check for ESCAPE or RETURN to exit.
             if ((int)e.KeyCode == 27 | (int)e.KeyCode == 13)
+            {
                 Close();
+            }
         }
 
         private void Button1_Click(object sender, EventArgs e)
         {
-            var Recipients = new List<string>();
-            Recipients.Add("Receiver@hotmail.com");
+            var Recipients = new List<string>
+            {
+                "Receiver@hotmail.com"
+            };
             string FromEmailAddress = "Sender@hotmail.com";
             string Subject = "This email came from MakoCELO.";
             string Body = "This code is not implemented but here for future possible use.";
@@ -60,10 +64,16 @@ namespace MakoCelo
             {
                 var SMTPServer = new SmtpClient();
                 foreach (string Attachment in Attachments)
+                {
                     Email.Attachments.Add(new Attachment(Attachment));
+                }
+
                 Email.From = new MailAddress(FromAddress);
                 foreach (string Recipient in Recipients)
+                {
                     Email.To.Add(Recipient);
+                }
+
                 Email.Subject = Subject;
                 Email.Body = Body;
                 SMTPServer.Host = Server;
@@ -81,12 +91,12 @@ namespace MakoCelo
             }
             // Return "Sending Email Failed. Smtp Error."
 
-            catch (ArgumentOutOfRangeException ex)
+            catch (ArgumentOutOfRangeException)
             {
                 Email.Dispose();
                 return "Sending Email Failed. Check Port Number.";
             }
-            catch (InvalidOperationException Ex)
+            catch (InvalidOperationException)
             {
                 Email.Dispose();
                 return "Sending Email Failed. Check Port Number.";

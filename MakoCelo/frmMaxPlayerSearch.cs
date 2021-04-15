@@ -26,38 +26,15 @@ namespace MakoCelo
         }
 
         // R4.00 Create some PROPERTIES that hide/show dialog controls.
-        // Dim _LVLs As clsGlobal.t_LabelSetup = New clsGlobal.t_LabelSetup
-        private string[,] _LVLs = new string[8, 5];
-        private bool _Cancel = true;
+        public string[,] LVLs { get; set; } = new string[8, 5];
         private bool SearchFound;
         private bool SearchStop;
         private long SearchPage;
         private bool SearchActual;
-        private string[,] SearchURL = new string[8, 5];
-        private string[,] RelDataLeaderID = new string[8, 5];
+        private readonly string[,] SearchURL = new string[8, 5];
+        private readonly string[,] RelDataLeaderID = new string[8, 5];
 
-        public bool Cancel
-        {
-            get
-            {
-                return _Cancel;
-            }
-
-            set
-            {
-                _Cancel = value;
-            }
-        }
-
-        public string get_LVLs(int I1, int I2)
-        {
-            return _LVLs[I1, I2];
-        }
-
-        public void set_LVLs(int I1, int I2, string value)
-        {
-            _LVLs[I1, I2] = value;
-        }
+        public bool Cancel { get; set; } = true;
 
         private void frmMaxPlayerSearch_Load(object sender, EventArgs e)
         {
@@ -128,32 +105,32 @@ namespace MakoCelo
 
         private void DATA_Show()
         {
-            tb1v1Ost.Text = _LVLs[1, 1];
-            tb1v1Sov.Text = _LVLs[2, 1];
-            tb1v1Okw.Text = _LVLs[3, 1];
-            tb1v1Usf.Text = _LVLs[4, 1];
-            tb1v1Brit.Text = _LVLs[5, 1];
-            tb2v2Ost.Text = _LVLs[1, 2];
-            tb2v2Sov.Text = _LVLs[2, 2];
-            tb2v2Okw.Text = _LVLs[3, 2];
-            tb2v2Usf.Text = _LVLs[4, 2];
-            tb2v2Brit.Text = _LVLs[5, 2];
-            tb2ATAllies.Text = _LVLs[6, 2];
-            tb2ATAxis.Text = _LVLs[7, 2];
-            tb3v3Ost.Text = _LVLs[1, 3];
-            tb3v3Sov.Text = _LVLs[2, 3];
-            tb3v3Okw.Text = _LVLs[3, 3];
-            tb3v3Usf.Text = _LVLs[4, 3];
-            tb3v3Brit.Text = _LVLs[5, 3];
-            tb3ATAllies.Text = _LVLs[6, 3];
-            tb3ATAxis.Text = _LVLs[7, 3];
-            tb4v4Ost.Text = _LVLs[1, 4];
-            tb4v4Sov.Text = _LVLs[2, 4];
-            tb4v4Okw.Text = _LVLs[3, 4];
-            tb4v4Usf.Text = _LVLs[4, 4];
-            tb4v4Brit.Text = _LVLs[5, 4];
-            tb4ATAllies.Text = _LVLs[6, 4];
-            tb4ATAxis.Text = _LVLs[7, 4];
+            tb1v1Ost.Text = LVLs[1, 1];
+            tb1v1Sov.Text = LVLs[2, 1];
+            tb1v1Okw.Text = LVLs[3, 1];
+            tb1v1Usf.Text = LVLs[4, 1];
+            tb1v1Brit.Text = LVLs[5, 1];
+            tb2v2Ost.Text = LVLs[1, 2];
+            tb2v2Sov.Text = LVLs[2, 2];
+            tb2v2Okw.Text = LVLs[3, 2];
+            tb2v2Usf.Text = LVLs[4, 2];
+            tb2v2Brit.Text = LVLs[5, 2];
+            tb2ATAllies.Text = LVLs[6, 2];
+            tb2ATAxis.Text = LVLs[7, 2];
+            tb3v3Ost.Text = LVLs[1, 3];
+            tb3v3Sov.Text = LVLs[2, 3];
+            tb3v3Okw.Text = LVLs[3, 3];
+            tb3v3Usf.Text = LVLs[4, 3];
+            tb3v3Brit.Text = LVLs[5, 3];
+            tb3ATAllies.Text = LVLs[6, 3];
+            tb3ATAxis.Text = LVLs[7, 3];
+            tb4v4Ost.Text = LVLs[1, 4];
+            tb4v4Sov.Text = LVLs[2, 4];
+            tb4v4Okw.Text = LVLs[3, 4];
+            tb4v4Usf.Text = LVLs[4, 4];
+            tb4v4Brit.Text = LVLs[5, 4];
+            tb4ATAllies.Text = LVLs[6, 4];
+            tb4ATAxis.Text = LVLs[7, 4];
         }
 
         private void Web1_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
@@ -161,7 +138,9 @@ namespace MakoCelo
             int N;
             string A;
             if (SearchActual)
+            {
                 return;
+            }
 
             // R4.30 None of this works.
             // If Web1.ReadyState <> WebBrowserReadyState.Complete Then Exit Sub
@@ -194,13 +173,24 @@ namespace MakoCelo
             lbStatus.Text = "";
             Application.DoEvents();
             if (rb1v1.Checked)
+            {
                 Web1.Navigate("http://www.companyofheroes.com/leaderboards#global/1v1/soviet/by-rank?page=10000");
+            }
+
             if (rb2v2.Checked)
+            {
                 Web1.Navigate("http://www.companyofheroes.com/leaderboards#global/2v2/soviet/by-rank?page=10000");
+            }
+
             if (rb3v3.Checked)
+            {
                 Web1.Navigate("http://www.companyofheroes.com/leaderboards#global/3v3/soviet/by-rank?page=10000");
+            }
+
             if (rb4v4.Checked)
+            {
                 Web1.Navigate("http://www.companyofheroes.com/leaderboards#global/4v4/soviet/by-rank?page=10000");
+            }
         }
 
         private void cm1v1Usf_Click(object sender, EventArgs e)
@@ -208,13 +198,24 @@ namespace MakoCelo
             lbStatus.Text = "";
             Application.DoEvents();
             if (rb1v1.Checked)
+            {
                 Web1.Navigate("http://www.companyofheroes.com/leaderboards#global/1v1/aef/by-rank?page=10000");
+            }
+
             if (rb2v2.Checked)
+            {
                 Web1.Navigate("http://www.companyofheroes.com/leaderboards#global/2v2/aef/by-rank?page=10000");
+            }
+
             if (rb3v3.Checked)
+            {
                 Web1.Navigate("http://www.companyofheroes.com/leaderboards#global/3v3/aef/by-rank?page=10000");
+            }
+
             if (rb4v4.Checked)
+            {
                 Web1.Navigate("http://www.companyofheroes.com/leaderboards#global/4v4/aef/by-rank?page=10000");
+            }
         }
 
         private void cm1v1Brit_Click(object sender, EventArgs e)
@@ -222,13 +223,24 @@ namespace MakoCelo
             lbStatus.Text = "";
             Application.DoEvents();
             if (rb1v1.Checked)
+            {
                 Web1.Navigate("http://www.companyofheroes.com/leaderboards#global/1v1/british/by-rank?page=10000");
+            }
+
             if (rb2v2.Checked)
+            {
                 Web1.Navigate("http://www.companyofheroes.com/leaderboards#global/2v2/british/by-rank?page=10000");
+            }
+
             if (rb3v3.Checked)
+            {
                 Web1.Navigate("http://www.companyofheroes.com/leaderboards#global/3v3/british/by-rank?page=10000");
+            }
+
             if (rb4v4.Checked)
+            {
                 Web1.Navigate("http://www.companyofheroes.com/leaderboards#global/4v4/british/by-rank?page=10000");
+            }
         }
 
         private void cm1v1Ost_Click(object sender, EventArgs e)
@@ -236,13 +248,24 @@ namespace MakoCelo
             lbStatus.Text = "";
             Application.DoEvents();
             if (rb1v1.Checked)
+            {
                 Web1.Navigate("http://www.companyofheroes.com/leaderboards#global/1v1/german/by-rank?page=10000");
+            }
+
             if (rb2v2.Checked)
+            {
                 Web1.Navigate("http://www.companyofheroes.com/leaderboards#global/2v2/german/by-rank?page=10000");
+            }
+
             if (rb3v3.Checked)
+            {
                 Web1.Navigate("http://www.companyofheroes.com/leaderboards#global/3v3/german/by-rank?page=10000");
+            }
+
             if (rb4v4.Checked)
+            {
                 Web1.Navigate("http://www.companyofheroes.com/leaderboards#global/4v4/german/by-rank?page=10000");
+            }
         }
 
         private void cm1v1Okw_Click(object sender, EventArgs e)
@@ -250,13 +273,24 @@ namespace MakoCelo
             lbStatus.Text = "";
             Application.DoEvents();
             if (rb1v1.Checked)
+            {
                 Web1.Navigate("http://www.companyofheroes.com/leaderboards#global/1v1/wgerman/by-rank?page=10000");
+            }
+
             if (rb2v2.Checked)
+            {
                 Web1.Navigate("http://www.companyofheroes.com/leaderboards#global/2v2/wgerman/by-rank?page=10000");
+            }
+
             if (rb3v3.Checked)
+            {
                 Web1.Navigate("http://www.companyofheroes.com/leaderboards#global/3v3/wgerman/by-rank?page=10000");
+            }
+
             if (rb4v4.Checked)
+            {
                 Web1.Navigate("http://www.companyofheroes.com/leaderboards#global/4v4/wgerman/by-rank?page=10000");
+            }
         }
 
         private void cmATallies_Click(object sender, EventArgs e)
@@ -264,11 +298,19 @@ namespace MakoCelo
             lbStatus.Text = "";
             Application.DoEvents();
             if (rb2v2.Checked)
+            {
                 Web1.Navigate("http://www.companyofheroes.com/leaderboards#global/team-of-2/allies/by-rank?page=10000");
+            }
+
             if (rb3v3.Checked)
+            {
                 Web1.Navigate("http://www.companyofheroes.com/leaderboards#global/team-of-3/allies/by-rank?page=10000");
+            }
+
             if (rb4v4.Checked)
+            {
                 Web1.Navigate("http://www.companyofheroes.com/leaderboards#global/team-of-4/allies/by-rank?page=10000");
+            }
         }
 
         private void cmATAxis_Click(object sender, EventArgs e)
@@ -276,41 +318,49 @@ namespace MakoCelo
             lbStatus.Text = "";
             Application.DoEvents();
             if (rb2v2.Checked)
+            {
                 Web1.Navigate("http://www.companyofheroes.com/leaderboards#global/team-of-2/axis/by-rank?page=10000");
+            }
+
             if (rb3v3.Checked)
+            {
                 Web1.Navigate("http://www.companyofheroes.com/leaderboards#global/team-of-3/axis/by-rank?page=10000");
+            }
+
             if (rb4v4.Checked)
+            {
                 Web1.Navigate("http://www.companyofheroes.com/leaderboards#global/team-of-4/axis/by-rank?page=10000");
+            }
         }
 
         private void cmOK_Click(object sender, EventArgs e)
         {
-            _LVLs[1, 1] = tb1v1Ost.Text;
-            _LVLs[2, 1] = tb1v1Sov.Text;
-            _LVLs[3, 1] = tb1v1Okw.Text;
-            _LVLs[4, 1] = tb1v1Usf.Text;
-            _LVLs[5, 1] = tb1v1Brit.Text;
-            _LVLs[1, 2] = tb2v2Ost.Text;
-            _LVLs[2, 2] = tb2v2Sov.Text;
-            _LVLs[3, 2] = tb2v2Okw.Text;
-            _LVLs[4, 2] = tb2v2Usf.Text;
-            _LVLs[5, 2] = tb2v2Brit.Text;
-            _LVLs[6, 2] = tb2ATAllies.Text;
-            _LVLs[7, 2] = tb2ATAxis.Text;
-            _LVLs[1, 3] = tb3v3Ost.Text;
-            _LVLs[2, 3] = tb3v3Sov.Text;
-            _LVLs[3, 3] = tb3v3Okw.Text;
-            _LVLs[4, 3] = tb3v3Usf.Text;
-            _LVLs[5, 3] = tb3v3Brit.Text;
-            _LVLs[6, 3] = tb3ATAllies.Text;
-            _LVLs[7, 3] = tb3ATAxis.Text;
-            _LVLs[1, 4] = tb4v4Ost.Text;
-            _LVLs[2, 4] = tb4v4Sov.Text;
-            _LVLs[3, 4] = tb4v4Okw.Text;
-            _LVLs[4, 4] = tb4v4Usf.Text;
-            _LVLs[5, 4] = tb4v4Brit.Text;
-            _LVLs[6, 4] = tb4ATAllies.Text;
-            _LVLs[7, 4] = tb4ATAxis.Text;
+            LVLs[1, 1] = tb1v1Ost.Text;
+            LVLs[2, 1] = tb1v1Sov.Text;
+            LVLs[3, 1] = tb1v1Okw.Text;
+            LVLs[4, 1] = tb1v1Usf.Text;
+            LVLs[5, 1] = tb1v1Brit.Text;
+            LVLs[1, 2] = tb2v2Ost.Text;
+            LVLs[2, 2] = tb2v2Sov.Text;
+            LVLs[3, 2] = tb2v2Okw.Text;
+            LVLs[4, 2] = tb2v2Usf.Text;
+            LVLs[5, 2] = tb2v2Brit.Text;
+            LVLs[6, 2] = tb2ATAllies.Text;
+            LVLs[7, 2] = tb2ATAxis.Text;
+            LVLs[1, 3] = tb3v3Ost.Text;
+            LVLs[2, 3] = tb3v3Sov.Text;
+            LVLs[3, 3] = tb3v3Okw.Text;
+            LVLs[4, 3] = tb3v3Usf.Text;
+            LVLs[5, 3] = tb3v3Brit.Text;
+            LVLs[6, 3] = tb3ATAllies.Text;
+            LVLs[7, 3] = tb3ATAxis.Text;
+            LVLs[1, 4] = tb4v4Ost.Text;
+            LVLs[2, 4] = tb4v4Sov.Text;
+            LVLs[3, 4] = tb4v4Okw.Text;
+            LVLs[4, 4] = tb4v4Usf.Text;
+            LVLs[5, 4] = tb4v4Brit.Text;
+            LVLs[6, 4] = tb4ATAllies.Text;
+            LVLs[7, 4] = tb4ATAxis.Text;
             Cancel = false;
             Close();
         }
@@ -335,10 +385,12 @@ namespace MakoCelo
 
                         // R4.30 Loop here while DOC COMPLETED task checks status of search. 
                         while (SearchFound == false & SearchStop == false)
+                        {
                             Application.DoEvents();
+                        }
 
                         // R4.30 Calc APPROX # of players assuming 40 players per page.
-                        _LVLs[t, tt] = (SearchPage * 40L).ToString();
+                        LVLs[t, tt] = (SearchPage * 40L).ToString();
 
                         // R4.30 Reset our search flags.
                         SearchFound = false;
@@ -371,7 +423,9 @@ namespace MakoCelo
 
             // R4.30 Do not read something that does not exist yet.
             if (Web1.ReadyState != WebBrowserReadyState.Complete)
+            {
                 return;
+            }
 
             // R4.30 Get the HTML text to search for rank.
             A = Web1.Document.Body.InnerHtml;
@@ -385,7 +439,9 @@ namespace MakoCelo
             }
 
             if (0L < N)
+            {
                 SearchPage = N;
+            }
         }
 
         private void cmStopAll_Click(object sender, EventArgs e)
@@ -410,7 +466,9 @@ namespace MakoCelo
             {
                 tTim = DateTime.Now.ToString();
                 while ((tTim ?? "") == (DateTime.Now.ToString() ?? "") & SearchStop == false)
+                {
                     Application.DoEvents();
+                }
             }
         }
 
@@ -421,13 +479,14 @@ namespace MakoCelo
             // R4.30 Wait a little bit to let the page begin updating before moving on.
             tTim = Environment.TickCount;
             while (Environment.TickCount < tTim + WaitMS & tTim <= Environment.TickCount & SearchStop == false)
+            {
                 Application.DoEvents();
+            }
         }
 
         private void cmGetAllActual_Click(object sender, EventArgs e)
         {
             long TLast = 0L;
-            int SameCnt = 0;
             int tCnt = 0;
             lbStatus.BackColor = Color.FromArgb(255, 128, 255, 128);
             OBJ_Enable(false);
@@ -456,12 +515,11 @@ namespace MakoCelo
                             if (TLast == SearchPage & 1000L < SearchPage)
                             {
                                 SearchFound = true;
-                                SameCnt = 0;
                             }
                         }
 
                         // R4.30 # of players.
-                        _LVLs[t, tt] = SearchPage.ToString();
+                        LVLs[t, tt] = SearchPage.ToString();
 
                         // R4.30 Reset our search flags.
                         SearchFound = false;

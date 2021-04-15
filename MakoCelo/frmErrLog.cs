@@ -24,7 +24,9 @@ namespace MakoCelo
 
             // R4.41 Get the data from the main form listbox.
             for (int t = 0, loopTo = _logItems.Count - 1; t <= loopTo; t++)
+            {
                 A = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(A, _logItems[t]), Constants.vbCrLf));
+            }
 
             // R4.41 Place the log data into the text box and unselect the text.
             tbErrLog.Text = A;

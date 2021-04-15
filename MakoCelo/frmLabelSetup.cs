@@ -64,121 +64,55 @@ namespace MakoCelo
 
         // R4.00 Create some PROPERTIES that hide/show dialog controls.
         private clsGlobal.t_LabelSetup _LSetup = new clsGlobal.t_LabelSetup();
-        private bool _HideSizeOptions = false;
-        private bool _HideImageOptions = false;
-        private bool _HideScalingOptions = false;
-        private bool _HideSizeAll = false;
-        private bool _HideFormColor = false;
-        private bool _Cancel = true;
         private readonly bool _displayTooltips;
 
-        public clsGlobal.t_LabelSetup LSetup
+        public clsGlobal.t_LabelSetup LSetup 
         {
-            get
-            {
-                return _LSetup;
-            }
+            get => _LSetup;
 
-            set
-            {
-                _LSetup = value;
-            }
+            set => _LSetup = value;
         }
 
-        public bool HideSizeOptions
-        {
-            get
-            {
-                return _HideSizeOptions;
-            }
+        public bool HideSizeOptions { get; set; } = false;
 
-            set
-            {
-                _HideSizeOptions = value;
-            }
-        }
+        public bool HideImageOptions { get; set; } = false;
 
-        public bool HideImageOptions
-        {
-            get
-            {
-                return _HideImageOptions;
-            }
+        public bool HideScalingOptions { get; set; } = false;
 
-            set
-            {
-                _HideImageOptions = value;
-            }
-        }
+        public bool HideSizeAll { get; set; } = false;
 
-        public bool HideScalingOptions
-        {
-            get
-            {
-                return _HideScalingOptions;
-            }
+        public bool HideFormColor { get; set; } = false;
 
-            set
-            {
-                _HideScalingOptions = value;
-            }
-        }
-
-        public bool HideSizeAll
-        {
-            get
-            {
-                return _HideSizeAll;
-            }
-
-            set
-            {
-                _HideSizeAll = value;
-            }
-        }
-
-        public bool HideFormColor
-        {
-            get
-            {
-                return _HideFormColor;
-            }
-
-            set
-            {
-                _HideFormColor = value;
-            }
-        }
-
-        public bool Cancel
-        {
-            get
-            {
-                return _Cancel;
-            }
-
-            set
-            {
-                _Cancel = value;
-            }
-        }
+        public bool Cancel { get; set; } = true;
 
         private void cmOK_Click(object sender, EventArgs e)
         {
             long N;
             N = (long)Math.Round(Conversion.Val(tbWidth.Text));
             if (N < 1L)
+            {
                 N = 1L;
+            }
+
             if (32000L < N)
+            {
                 N = 32000L;
+            }
+
             _LSetup.Width = (int)N;
             N = (long)Math.Round(Conversion.Val(tbHeight.Text));
             if (N < 1L)
+            {
                 N = 1L;
+            }
+
             if (32000L < N)
+            {
                 N = 32000L;
+            }
+
             _LSetup.Height = (int)N;
-            _Cancel = false;
+            Cancel = false;
             Close();
         }
 
@@ -448,10 +382,12 @@ namespace MakoCelo
 
         private void cmRankFont_Click(object sender, EventArgs e)
         {
-            var fontDialog1 = new FontDialog();
+            var fontDialog1 = new FontDialog
+            {
 
-            // R1.00 Get current font.
-            fontDialog1.Font = frmMain.FONT_Setup;    // R3.00 lbRank01.Font    
+                // R1.00 Get current font.
+                Font = frmMain.FONT_Setup    // R3.00 lbRank01.Font    
+            };
 
             // R1.00 Get user selected font, store it, and redraw controls.
             if (fontDialog1.ShowDialog() != DialogResult.Cancel)
@@ -572,8 +508,10 @@ namespace MakoCelo
 
         private void cmFormImage_Click(object sender, EventArgs e)
         {
-            var fd = new OpenFileDialog();
-            fd.Title = "Background Image Dialog";
+            var fd = new OpenFileDialog
+            {
+                Title = "Background Image Dialog"
+            };
             if (!string.IsNullOrEmpty(frmMain.PATH_DlgBmp))
             {
                 fd.InitialDirectory = Utilities.PATH_StripFilename(frmMain.PATH_DlgBmp);
@@ -641,7 +579,9 @@ namespace MakoCelo
                             {
                                 var loopTo1 = BM.Width;
                                 for (tX = 0; frmMain.Note_BackBmp.Width >= 0 ? tX <= loopTo1 : tX >= loopTo1; tX += frmMain.Note_BackBmp.Width)
+                                {
                                     Gfx.DrawImage(frmMain.Note_BackBmp, tX, tY, frmMain.Note_BackBmp.Width, frmMain.Note_BackBmp.Height);
+                                }
                             }
 
                             break;
@@ -690,8 +630,10 @@ namespace MakoCelo
                 case 5:
                 case 6: // R4.40 Normal.
                     {
-                        tPen = new Pen(new SolidBrush(_LSetup.BorderColor));
-                        tPen.Width = _LSetup.BorderWidth;
+                        tPen = new Pen(new SolidBrush(_LSetup.BorderColor))
+                        {
+                            Width = _LSetup.BorderWidth
+                        };
                         Gfx.DrawRectangle(tPen, 2, 2, pbNote.Width - 3, pbNote.Height - 3);
                         break;
                     }
@@ -706,12 +648,16 @@ namespace MakoCelo
 
                 case 3: // R4.40 3D
                     {
-                        tPen = new Pen(new SolidBrush(_LSetup.BorderColor));
-                        tPen.Width = _LSetup.BorderWidth;
+                        tPen = new Pen(new SolidBrush(_LSetup.BorderColor))
+                        {
+                            Width = _LSetup.BorderWidth
+                        };
                         Gfx.DrawLine(tPen, 2, 2, pbNote.Width - 1, 2);
                         Gfx.DrawLine(tPen, 2, 2, 2, pbNote.Height - 1);
-                        tPen = new Pen(new SolidBrush(Color.FromArgb(255, 0, 0, 0)));
-                        tPen.Width = _LSetup.BorderWidth;
+                        tPen = new Pen(new SolidBrush(Color.FromArgb(255, 0, 0, 0)))
+                        {
+                            Width = _LSetup.BorderWidth
+                        };
                         Gfx.DrawLine(tPen, pbNote.Width - 1, 1, pbNote.Width - 1, pbNote.Height - 1);
                         Gfx.DrawLine(tPen, 1, pbNote.Height - 1, pbNote.Width - 1, pbNote.Height - 1);
                         break;
@@ -796,7 +742,9 @@ namespace MakoCelo
             }
 
             if (Cx2 != 0 | Cy2 != 0)
+            {
                 Gfx.DrawString("Test Sample Text", frmMain.FONT_Setup, tBrushShadow, (float)(Cx + Cx2 * Conversion.Val(_LSetup.ShadowDepth)), (float)(Cy + Cy2 * Conversion.Val(_LSetup.ShadowDepth)));
+            }
 
             // R3.50 Draw the gradient Text.
             // R3.50 Setup LINEAR gradient brushed for TEXT.
@@ -835,7 +783,9 @@ namespace MakoCelo
                                 {
                                     var loopTo3 = BM.Width;
                                     for (tX = 0; frmMain.Note_OVLBmp.Width >= 0 ? tX <= loopTo3 : tX >= loopTo3; tX += frmMain.Note_OVLBmp.Width)
+                                    {
                                         Gfx.DrawImage(frmMain.Note_OVLBmp, tX, tY, frmMain.Note_OVLBmp.Width, frmMain.Note_OVLBmp.Height);
+                                    }
                                 }
 
                                 break;
@@ -1012,10 +962,16 @@ namespace MakoCelo
             // R3.50 Copy current setup to NOTE01. Dont change NOTE size.
             tWid = (int)Math.Round(Conversion.Val(tbWidth.Text));
             if (32000 < tWid)
+            {
                 tWid = 32000;
+            }
+
             tHgt = (int)Math.Round(Conversion.Val(tbHeight.Text));
             if (32000 < tHgt)
+            {
                 tHgt = 32000;
+            }
+
             frmMain.LSNote01.Width = tWid;
             frmMain.LSNote01.Height = tHgt;
             frmMain.LSNote02.Width = tWid;
@@ -1034,8 +990,10 @@ namespace MakoCelo
 
         private void cmOverlay_Click(object sender, EventArgs e)
         {
-            var fd = new OpenFileDialog();
-            fd.Title = "Overlay Image Dialog";
+            var fd = new OpenFileDialog
+            {
+                Title = "Overlay Image Dialog"
+            };
             if (!string.IsNullOrEmpty(frmMain.PATH_DlgOVLBmp))
             {
                 fd.InitialDirectory = Utilities.PATH_StripFilename(frmMain.PATH_DlgOVLBmp);
@@ -1156,10 +1114,16 @@ namespace MakoCelo
             int y1, y2;
             y1 = r.Top + d;
             if (Mid < y1)
+            {
                 y1 = Mid;
+            }
+
             y2 = r.Bottom - d;
             if (y2 < Mid)
+            {
                 y2 = Mid;
+            }
+
             path.AddLine(r.Left + d, r.Top, r.Right - d, r.Top);
             path.AddArc(Rectangle.FromLTRB(r.Right - d, r.Top, r.Right, r.Top + d), -90, 90f);
             path.AddLine(r.Right, y1, r.Right, y2);

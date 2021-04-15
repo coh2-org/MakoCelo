@@ -119,9 +119,9 @@ namespace MakoCelo
 
 
 
-        private SpeechSynthesizer SpeechSynth = new SpeechSynthesizer();      // R4.34 Added for TEXT-TO-SPEECH option.
-        private SoundPlayer _soundPlayer = new SoundPlayer();
-        private Overlay.Coh2Overlay _overlay = new Overlay.Coh2Overlay();
+        private readonly SpeechSynthesizer SpeechSynth = new SpeechSynthesizer();      // R4.34 Added for TEXT-TO-SPEECH option.
+        private readonly SoundPlayer _soundPlayer = new SoundPlayer();
+        private readonly Overlay.Coh2Overlay _overlay = new Overlay.Coh2Overlay();
         // R4.41 Made these PUBLIC.
         private HttpWebRequest WBrequest = null;
         private HttpWebResponse WBresponse = null;
@@ -134,7 +134,6 @@ namespace MakoCelo
         private long Celo_Left;
         private long Celo_Width;
         private long Celo_Height;
-        private bool Celo_Popup;                   // R4.00 Toggle POPUP menu on/off.  
         private int Celo_PopupHit;                // R4.00 Toggle POPUP menu on/off.  
         private object CELO_PopUpObject;
         private int STATS_SizeX = 900;
@@ -163,7 +162,6 @@ namespace MakoCelo
         private Bitmap NAME_OVLBmp;
         private bool FLAG_Loading;                 // R2.00 Flag that we are loading, so do not update.
         private bool FLAG_Drawing;                 // R3.40 Dont let combo boxes call when we are drawing.
-        private bool FLAG_ShowMismatch;            // R3.40 
         private bool FLAG_CheckingLog = false;
         private bool FLAG_InitialScanning;         // R4.30 Added a flag to clear player data. 
         private bool FLAG_HideMissing;             // R4.30 Added to hide blanks on Overlays/Green Screens.
@@ -249,82 +247,81 @@ namespace MakoCelo
         private int COLOR_Back_Dir;           // R3.00 Future gradient on background. 
         private int GUI_ColorMode;            // R2.01 Color scheme number. 0-Lite,1-Dark
         private float LAB_Height;                // R2.00 Height of labels.
-        private clsGlobal.t_Box[] LAB_Rank = new clsGlobal.t_Box[9];           // R2.00 Defs for current label layout. 
-        private clsGlobal.t_Box[] LAB_Name = new clsGlobal.t_Box[9];
-        private clsGlobal.t_Box[] LAB_Fact = new clsGlobal.t_Box[9];
-        private StringFormat[] LAB_Name_Align = new StringFormat[9];
-        private int GUI_Mouse_PlrIndex;  // R3.00 Which player we are moused over in the stats page.
+        private readonly clsGlobal.t_Box[] LAB_Rank = new clsGlobal.t_Box[9];           // R2.00 Defs for current label layout. 
+        private readonly clsGlobal.t_Box[] LAB_Name = new clsGlobal.t_Box[9];
+        private readonly clsGlobal.t_Box[] LAB_Fact = new clsGlobal.t_Box[9];
+        private readonly StringFormat[] LAB_Name_Align = new StringFormat[9];
         private bool GUI_Active;          // R3.10 If TRUE, gui will redraw when mouse over events happen. May be too slow.
-        private string[] PlrName = new string[9];
-        private string[] PlrRank = new string[9];
-        private int[] PlrWin = new int[9];
-        private int[] PlrLoss = new int[9];
-        private int[,,] PlrRankALL = new int[9, 8, 5];  // R4.30 Rank from RID for all game modes.
-        private int[,,] PlrRankWin = new int[9, 8, 5];  // R4.30 Rank from RID for all game modes.
-        private int[,,] PlrRankLoss = new int[9, 8, 5]; // R4.30 Rank from RID for all game modes.
-        private string[,,] PlrRankPerc = new string[9, 8, 5];  // R4.30 Rank from RID for all game modes.
-        private string[] PlrCountry = new string[9];                   // R4.45 Added contry.
-        private string[] PlrCountryName = new string[9];               // R4.46 Added contry.
-        private string[] PlrFact = new string[9];
-        private string[] PlrSteam = new string[9];
-        private int[] PlrRID = new int[9];
-        private string[] PlrELO = new string[9];
-        private int[] PlrTeam = new int[9];
-        private int[] PlrTWin = new int[9];
-        private int[] PlrTLoss = new int[9];
-        private string[] PlrLVL = new string[9];
-        private int[] PlrGLVL = new int[9];
-        private clsGlobal.t_TeamList[,] TeamList = new clsGlobal.t_TeamList[10, 1001];  // R4.34 Added for JSON team parsing.
-        private int[] TeamListCnt = new int[10];
-        private string[] PlrName_Last = new string[9];
-        private string[] PlrRank_Last = new string[9];
-        private string[] PlrFact_Last = new string[9];
-        private int[] PlrTeam_Last = new int[9];
-        private int[] PlrTWin_Last = new int[9];
-        private int[] PlrTLoss_Last = new int[9];
-        private string[] PlrSteam_Last = new string[9];
-        private int[,,] PlrRankALL_Last = new int[9, 8, 5];  // R4.30 Rank from RID for all game modes.
-        private int[,,] PlrRankWin_Last = new int[9, 8, 5];  // R4.30 Rank from RID for all game modes.
-        private int[,,] PlrRankLoss_Last = new int[9, 8, 5];  // R4.30 Rank from RID for all game modes.
-        private string[,,] PlrRankPerc_Last = new string[9, 8, 5];  // R4.30 Rank from RID for all game modes.
-        private string[] PlrCountry_Last = new string[9];
-        private string[] PlrCountryName_Last = new string[9];                   // R4.46 Added contry.
-        private int[] PlrRID_Last = new int[9];
-        private string[] PlrELO_Last = new string[9];
-        private string[] PlrLVL_Last = new string[9];
-        private int[] PlrGLVL_Last = new int[9];
-        private clsGlobal.t_TeamList[,] TeamList_Last = new clsGlobal.t_TeamList[10, 1001];  // R4.34 Added for JSON team parsing.
-        private int[] TeamListCnt_Last = new int[10];
-        private string[] PlrName_Buffer = new string[9];
-        private string[] PlrRank_Buffer = new string[9];
-        private string[] PlrFact_Buffer = new string[9];
-        private int[] PlrTeam_Buffer = new int[9];
-        private int[] PlrTWin_Buffer = new int[9];
-        private int[] PlrTLoss_Buffer = new int[9];
-        private string[] PlrSteam_Buffer = new string[9];
-        private int[] PlrRID_Buffer = new int[9];
-        private int[,,] PlrRankALL_Buffer = new int[9, 8, 5];  // R4.30 Rank from RID for all game modes.
-        private int[,,] PlrRankWin_Buffer = new int[9, 8, 5];  // R4.30 Rank from RID for all game modes.
-        private int[,,] PlrRankLoss_Buffer = new int[9, 8, 5];  // R4.30 Rank from RID for all game modes.
-        private string[,,] PlrRankPerc_Buffer = new string[9, 8, 5];  // R4.30 Rank from RID for all game modes.
-        private string[] PlrCountry_Buffer = new string[9];
-        private string[] PlrCountryName_Buffer = new string[9];                   // R4.46 Added contry.
-        private string[] PlrELO_Buffer = new string[9];
-        private string[] PlrLVL_Buffer = new string[9];
-        private int[] PlrGLVL_Buffer = new int[9];
-        private clsGlobal.t_TeamList[,] TeamList_Buffer = new clsGlobal.t_TeamList[10, 1001];  // R4.34 Added for JSON team parsing.
-        private int[] TeamListCnt_Buffer = new int[10];
-        private string[,] LVLS = new string[8, 5];
-        private int[,,] LVLSteps = new int[8, 5, 21];
-        private float[] LVLpercs = new float[21];
+        private readonly string[] PlrName = new string[9];
+        private readonly string[] PlrRank = new string[9];
+        private readonly int[] PlrWin = new int[9];
+        private readonly int[] PlrLoss = new int[9];
+        private readonly int[,,] PlrRankALL = new int[9, 8, 5];  // R4.30 Rank from RID for all game modes.
+        private readonly int[,,] PlrRankWin = new int[9, 8, 5];  // R4.30 Rank from RID for all game modes.
+        private readonly int[,,] PlrRankLoss = new int[9, 8, 5]; // R4.30 Rank from RID for all game modes.
+        private readonly string[,,] PlrRankPerc = new string[9, 8, 5];  // R4.30 Rank from RID for all game modes.
+        private readonly string[] PlrCountry = new string[9];                   // R4.45 Added contry.
+        private readonly string[] PlrCountryName = new string[9];               // R4.46 Added contry.
+        private readonly string[] PlrFact = new string[9];
+        private readonly string[] PlrSteam = new string[9];
+        private readonly int[] PlrRID = new int[9];
+        private readonly string[] PlrELO = new string[9];
+        private readonly int[] PlrTeam = new int[9];
+        private readonly int[] PlrTWin = new int[9];
+        private readonly int[] PlrTLoss = new int[9];
+        private readonly string[] PlrLVL = new string[9];
+        private readonly int[] PlrGLVL = new int[9];
+        private readonly clsGlobal.t_TeamList[,] TeamList = new clsGlobal.t_TeamList[10, 1001];  // R4.34 Added for JSON team parsing.
+        private readonly int[] TeamListCnt = new int[10];
+        private readonly string[] PlrName_Last = new string[9];
+        private readonly string[] PlrRank_Last = new string[9];
+        private readonly string[] PlrFact_Last = new string[9];
+        private readonly int[] PlrTeam_Last = new int[9];
+        private readonly int[] PlrTWin_Last = new int[9];
+        private readonly int[] PlrTLoss_Last = new int[9];
+        private readonly string[] PlrSteam_Last = new string[9];
+        private readonly int[,,] PlrRankALL_Last = new int[9, 8, 5];  // R4.30 Rank from RID for all game modes.
+        private readonly int[,,] PlrRankWin_Last = new int[9, 8, 5];  // R4.30 Rank from RID for all game modes.
+        private readonly int[,,] PlrRankLoss_Last = new int[9, 8, 5];  // R4.30 Rank from RID for all game modes.
+        private readonly string[,,] PlrRankPerc_Last = new string[9, 8, 5];  // R4.30 Rank from RID for all game modes.
+        private readonly string[] PlrCountry_Last = new string[9];
+        private readonly string[] PlrCountryName_Last = new string[9];                   // R4.46 Added contry.
+        private readonly int[] PlrRID_Last = new int[9];
+        private readonly string[] PlrELO_Last = new string[9];
+        private readonly string[] PlrLVL_Last = new string[9];
+        private readonly int[] PlrGLVL_Last = new int[9];
+        private readonly clsGlobal.t_TeamList[,] TeamList_Last = new clsGlobal.t_TeamList[10, 1001];  // R4.34 Added for JSON team parsing.
+        private readonly int[] TeamListCnt_Last = new int[10];
+        private readonly string[] PlrName_Buffer = new string[9];
+        private readonly string[] PlrRank_Buffer = new string[9];
+        private readonly string[] PlrFact_Buffer = new string[9];
+        private readonly int[] PlrTeam_Buffer = new int[9];
+        private readonly int[] PlrTWin_Buffer = new int[9];
+        private readonly int[] PlrTLoss_Buffer = new int[9];
+        private readonly string[] PlrSteam_Buffer = new string[9];
+        private readonly int[] PlrRID_Buffer = new int[9];
+        private readonly int[,,] PlrRankALL_Buffer = new int[9, 8, 5];  // R4.30 Rank from RID for all game modes.
+        private readonly int[,,] PlrRankWin_Buffer = new int[9, 8, 5];  // R4.30 Rank from RID for all game modes.
+        private readonly int[,,] PlrRankLoss_Buffer = new int[9, 8, 5];  // R4.30 Rank from RID for all game modes.
+        private readonly string[,,] PlrRankPerc_Buffer = new string[9, 8, 5];  // R4.30 Rank from RID for all game modes.
+        private readonly string[] PlrCountry_Buffer = new string[9];
+        private readonly string[] PlrCountryName_Buffer = new string[9];                   // R4.46 Added contry.
+        private readonly string[] PlrELO_Buffer = new string[9];
+        private readonly string[] PlrLVL_Buffer = new string[9];
+        private readonly int[] PlrGLVL_Buffer = new int[9];
+        private readonly clsGlobal.t_TeamList[,] TeamList_Buffer = new clsGlobal.t_TeamList[10, 1001];  // R4.34 Added for JSON team parsing.
+        private readonly int[] TeamListCnt_Buffer = new int[10];
+        private readonly string[,] LVLS = new string[8, 5];
+        private readonly int[,,] LVLSteps = new int[8, 5, 21];
+        private readonly float[] LVLpercs = new float[21];
 
         // R4.30 Get player info from RELICID
         // R4.30 ID for each game mode.
-        private string[,] RelDataLeaderID = new string[8, 5];
+        private readonly string[,] RelDataLeaderID = new string[8, 5];
 
         // R4.46 Added Country Strings.
-        private string[] Country_Name = new string[301];
-        private string[] Country_Abbr = new string[301];
+        private readonly string[] Country_Name = new string[301];
+        private readonly string[] Country_Abbr = new string[301];
         private int CountryCount;
 
         // R4.00 Need these global so we can set them in frmLabelSetup objects. Could be properties.
@@ -335,20 +332,19 @@ namespace MakoCelo
         public static clsGlobal.t_LabelSetup LSNote03;
         public static clsGlobal.t_LabelSetup LSNote04;
         private int NOTE_Spacing;
-        private bool[] CFX3DActive = new bool[11];
-        private string[,] CFX3DVar = new string[11, 11];     // R3.10 1=Mode
-        private Color[] CFX3DC = new Color[11];
+        private readonly bool[] CFX3DActive = new bool[11];
+        private readonly string[,] CFX3DVar = new string[11, 11];     // R3.10 1=Mode
+        private readonly Color[] CFX3DC = new Color[11];
 
         // Public NoteAnim01 As t_NoteAnimation            'R4.00 Added.
         private string[] Note01_Text = new string[21];           // R4.00 These are used during the animation and are modified in code.
         private string[] Note02_Text = new string[21];           // R4.00 These are used during the animation and are modified in code.
         private string[] Note03_Text = new string[21];           // R4.00 These are used during the animation and are modified in code.
         private string[] Note04_Text = new string[21];           // R4.00 These are used during the animation and are modified in code.
-        private clsGlobal.t_NoteAnimation NoteAnim_Setup;
-        private clsGlobal.t_NoteAnimation NoteAnim01;
-        private clsGlobal.t_NoteAnimation NoteAnim02;
-        private clsGlobal.t_NoteAnimation NoteAnim03;
-        private clsGlobal.t_NoteAnimation NoteAnim04;
+        private clsGlobal.t_NoteAnimation NoteAnim01 = new clsGlobal.t_NoteAnimation();
+        private clsGlobal.t_NoteAnimation NoteAnim02 = new clsGlobal.t_NoteAnimation();
+        private clsGlobal.t_NoteAnimation NoteAnim03 = new clsGlobal.t_NoteAnimation();
+        private clsGlobal.t_NoteAnimation NoteAnim04 = new clsGlobal.t_NoteAnimation();
         private string[] NoteAnim01_Text = new string[11];      // R4.00 Added.
         private string[] NoteAnim02_Text = new string[11];      // R4.00 Added.
         private string[] NoteAnim03_Text = new string[11];      // R4.00 Added.
@@ -374,20 +370,10 @@ namespace MakoCelo
         public static Bitmap Note03_OVLBmp;
         public static Bitmap Note04_OVLBmp;
         public static string Note_BackScale;
-        private string Note01_BackScale;
-        private string Note02_BackScale;
-        private string Note03_BackScale;
-        private string Note04_BackScale;
         public string Note_OVLScale;
-        private string Note01_OVLScale;
-        private string Note02_OVLScale;
-        private string Note03_OVLScale;
-        private string Note04_OVLScale;
-        private string[] SOUND_File = new string[31];           // R4.00 Added.
-        private string[] SOUND_Vol = new string[31];            // R4.10 Added.
+        private readonly string[] SOUND_File = new string[31];           // R4.00 Added.
+        private readonly string[] SOUND_Vol = new string[31];            // R4.10 Added.
         private bool ANIMATION_Smooth;
-        private long CLOCK_TicksPerMS;
-        private float CLOCK_Frames;
 
         private void cmCheckLog_Click(object sender, EventArgs e)
         {
@@ -445,7 +431,9 @@ namespace MakoCelo
                     // R4.30 calc levels 1 to 15 generically.
                     Max = (int)Math.Round(Conversion.Val(LVLS[t1, t2]));
                     for (int t3 = 1; t3 <= 15; t3++)
+                    {
                         LVLSteps[t1, t2, t3] = (int)Math.Round(Max * LVLpercs[t2]);
+                    }
 
                     // R4.30 Top 200 levels are always the same.
                     LVLSteps[t1, t2, 20] = 1;
@@ -500,7 +488,10 @@ namespace MakoCelo
 
                     TeamListCnt_Last[t] = TeamListCnt_Buffer[t];
                     for (int T2 = 1, loopTo = TeamList_Last.GetUpperBound(1); T2 <= loopTo; T2++)
+                    {
                         TeamList_Last[t, T2] = TeamList_Buffer[t, T2];
+                    }
+
                     PlrELO_Last[t] = PlrELO_Buffer[t];
                     PlrLVL_Last[t] = PlrLVL_Buffer[t];
                     PlrGLVL_Last[t] = PlrGLVL_Buffer[t];
@@ -517,11 +508,9 @@ namespace MakoCelo
             string A, B;
             bool FindMatch;
             bool FindPlayers;
-            bool MatchFound;
             int PlrCnt;
             var MatchMode = default(int);  // R4.30 1-1v1.2-2v2,etc
             int tLen;
-            long LCnt;
             long test1;
             long test2;
             long tRank;
@@ -598,7 +587,10 @@ namespace MakoCelo
 
                     TeamListCnt[t] = 0;
                     for (int T2 = 1, loopTo = TeamList.GetUpperBound(1); T2 <= loopTo; T2++)
+                    {
                         TeamList[t, T2] = tempTL;
+                    }
+
                     PlrELO[t] = "";
                     PlrLVL[t] = "";
                     PlrGLVL[t] = 0;
@@ -685,7 +677,10 @@ namespace MakoCelo
 
                 TeamListCnt_Buffer[t] = tTeamListCnt[t];
                 for (int T2 = 1, loopTo2 = TeamList_Buffer.GetUpperBound(1); T2 <= loopTo2; T2++)
+                {
                     TeamList_Buffer[t, T2] = tTeamList[t, T2];
+                }
+
                 PlrELO_Buffer[t] = tPlrELO[t];
                 PlrLVL_Buffer[t] = tPlrLVL[t];
                 PlrGLVL_Buffer[t] = tPlrGLVL[t];
@@ -701,8 +696,6 @@ namespace MakoCelo
             using (sr)
             {
                 PlrCnt = 0;
-                LCnt = 0L;
-                MatchFound = false;
                 FindMatch = false;
 
                 // R2.01 Loop thru the file looking for the match stats.
@@ -753,13 +746,17 @@ namespace MakoCelo
                             {
                                 MatchRID[PlrCnt] = LOG_HexToLong(Strings.Mid(A, 41, 8));       // R3.20 <-- Convert.ToInt64(Mid(A, 41, 8), 16)
                                 if (MatchRID[PlrCnt] == -1)
+                                {
                                     MatchRID[PlrCnt] = 0L;
+                                }
                             }
 
                             // R3.20 Read the next line of the file and exit if all of the match lines have been found.
                             A = sr.ReadLine();
                             if (Strings.InStr(A, "Match Started") == 0)
+                            {
                                 FindMatch = false;
+                            }
                         }
                     }
 
@@ -797,7 +794,10 @@ namespace MakoCelo
 
                                 TeamListCnt[t] = 0;
                                 for (int T2 = 1, loopTo3 = TeamList.GetUpperBound(1); T2 <= loopTo3; T2++)
+                                {
                                     TeamList[t, T2] = tempTL;
+                                }
+
                                 GameRID[t] = 0L;
                             }
 
@@ -827,15 +827,29 @@ namespace MakoCelo
                                 if (20 < tLen)    // R3.40 This should never happen, but just in case.
                                 {
                                     if (Strings.Mid(A, tLen - 5, 6) == "german")
+                                    {
                                         PlrFact[PlrCnt] = "01";
+                                    }
+
                                     if (Strings.Mid(A, tLen - 5, 6) == "soviet")
+                                    {
                                         PlrFact[PlrCnt] = "02";
+                                    }
+
                                     if (Strings.Mid(A, tLen - 10, 11) == "west_german")
+                                    {
                                         PlrFact[PlrCnt] = "03";
+                                    }
+
                                     if (Strings.Mid(A, tLen - 2, 3) == "aef")
+                                    {
                                         PlrFact[PlrCnt] = "04";
+                                    }
+
                                     if (Strings.Mid(A, tLen - 6, 7) == "british")
+                                    {
                                         PlrFact[PlrCnt] = "05";
+                                    }
                                 }
 
                                 // R3.20 Read the next line of the file.
@@ -843,7 +857,9 @@ namespace MakoCelo
                                 test1 = Strings.InStr(A, "Human Player");
                                 test2 = Strings.InStr(A, "AI Player");
                                 if (test1 == 0L & test2 == 0L)
+                                {
                                     FindPlayers = false;
+                                }
                             }
                         }
                     }
@@ -857,53 +873,6 @@ namespace MakoCelo
             fs.Close();
             fs.Dispose();
 
-
-            // R3.20 Verify all of our data matches. Test against RelicID. Relic broke the STEAM_ID with 64-bit patch.
-            // If FLAG_ShowMismatch = False Then
-            // Dim ValidData As Boolean = True
-            // For t = 1 To 8
-            // If (MatchRID(t) <> GameRID(t)) Then ValidData = False : Exit For
-            // Next
-
-            // 'R3.20 The data is not valid, clear all data.
-            // If ValidData = False Then
-            // lbError1.Text = "Mismatched"
-            // lbError1.BackColor = Color.FromArgb(255, 255, 0, 0)
-            // lbError2.Text = "Bad Stats"
-            // lbError2.BackColor = Color.FromArgb(255, 255, 0, 0)
-            // For t = 1 To 8
-            // PlrName(t) = ""
-            // PlrRank(t) = "---"
-            // PlrSteam(t) = ""
-            // PlrRID(t) = 0
-            // PlrFact(t) = ""
-            // PlrELO(t) = ""
-            // PlrLVL(t) = ""
-            // For T2 = 1 To 5
-            // For T3 = 1 To 4
-            // PlrRankALL(t, T2, T3) = 0
-            // PlrRankWin(t, T2, T3) = 0
-            // PlrRankLoss(t, T2, T3) = 0
-            // PlrRankPerc(t, T2, T3) = ""
-            // Next T3
-            // Next T2
-            // tPlrName(t) = ""
-            // tPlrRank(t) = ""
-            // tPlrSteam(t) = ""
-            // tPlrFact(t) = ""
-            // tPlrELO(t) = ""
-            // tPlrLVL(t) = ""
-            // For T2 = 1 To 5
-            // For T3 = 1 To 4
-            // tPlrRankALL(t, T2, T3) = 0
-            // tPlrRankWin(t, T2, T3) = 0
-            // tPlrRankLoss(t, T2, T3) = 0
-            // tPlrRankPerc(t, T2, T3) = ""
-            // Next T3
-            // Next T2
-            // Next
-            // End If
-            // End If
 
 
             // R4.30 Play the MATCH FOUND ALERT if this a NEW match and are we in AUTO mode.
@@ -976,7 +945,10 @@ namespace MakoCelo
 
                     TeamListCnt[t] = tTeamListCnt[t];
                     for (int T2 = 1, loopTo4 = TeamList.GetUpperBound(1); T2 <= loopTo4; T2++)
+                    {
                         TeamList[t, T2] = tTeamList[t, T2];
+                    }
+
                     PlrELO[t] = tPlrELO[t];
                     PlrLVL[t] = tPlrLVL[t];
                 }
@@ -985,13 +957,24 @@ namespace MakoCelo
             lbStatus.Text = "Render...";
             Application.DoEvents();
             if (0 < PlrCnt)
+            {
                 MatchMode = 1;
+            }
+
             if (2 < PlrCnt)
+            {
                 MatchMode = 2;
+            }
+
             if (4 < PlrCnt)
+            {
                 MatchMode = 3;
+            }
+
             if (6 < PlrCnt)
+            {
                 MatchMode = 4;
+            }
 
             // R4.30 Adjust NAME and RANKS before drawing.
             if (0 < PlrCnt & (F_NewData | !SCAN_Enabled))
@@ -1010,7 +993,10 @@ namespace MakoCelo
                         Application.DoEvents();
                         PlrRank[t] = PlrRankALL[t, Conversions.ToInteger(PlrFact[t]), MatchMode].ToString();
                         if (PlrRank[t] == "0")
+                        {
                             PlrRank[t] = "---";
+                        }
+
                         PlrWin[t] = PlrRankWin[t, Conversions.ToInteger(PlrFact[t]), MatchMode];
                         PlrLoss[t] = PlrRankLoss[t, Conversions.ToInteger(PlrFact[t]), MatchMode];
                     }
@@ -1026,7 +1012,9 @@ namespace MakoCelo
                         for (int t2 = 1; t2 <= 7; t2 += 2)
                         {
                             if ((PlrRank[t] ?? "") == (PlrRank[t2] ?? ""))
+                            {
                                 tCnt += 1;
+                            }
                         }
                     }
                     else
@@ -1034,7 +1022,9 @@ namespace MakoCelo
                         for (int t2 = 2; t2 <= 8; t2 += 2)
                         {
                             if ((PlrRank[t] ?? "") == (PlrRank[t2] ?? ""))
+                            {
                                 tCnt += 1;
+                            }
                         }
                     }
 
@@ -1078,7 +1068,10 @@ namespace MakoCelo
 
                     // R4.30 Calc ELO % and LEVEL values.
                     if (string.IsNullOrEmpty(PlrRank[t]))
+                    {
                         PlrRank[t] = "---";
+                    }
+
                     if (string.IsNullOrEmpty(PlrName[t]))
                     {
                         PlrRank[t] = "";
@@ -1121,7 +1114,9 @@ namespace MakoCelo
 
                 // R4.34 Text-to-Speech the ranks.
                 if (chkSpeech.Checked)
+                {
                     STATS_ReadAloud();
+                }
 
                 // R4.50 Force the STATS image redraw.
                 MainBuffer_Valid = false;
@@ -1147,7 +1142,6 @@ namespace MakoCelo
             long TempWin;
             long TempLoss;
             var TempMax = default(long);
-            string A = "";
             int Cnt;
             var MCnt = new int[10];
             var MTeam = new int[10];
@@ -1168,49 +1162,93 @@ namespace MakoCelo
                         if (0 < TeamList[t, t2].RID1)
                         {
                             if (PlrRID[1] == TeamList[t, t2].RID1)
+                            {
                                 Cnt += 1;
+                            }
+
                             if (PlrRID[3] == TeamList[t, t2].RID1)
+                            {
                                 Cnt += 1;
+                            }
+
                             if (PlrRID[5] == TeamList[t, t2].RID1)
+                            {
                                 Cnt += 1;
+                            }
+
                             if (PlrRID[7] == TeamList[t, t2].RID1)
+                            {
                                 Cnt += 1;
+                            }
                         }
 
                         if (0 < TeamList[t, t2].RID2)
                         {
                             if (PlrRID[1] == TeamList[t, t2].RID2)
+                            {
                                 Cnt += 1;
+                            }
+
                             if (PlrRID[3] == TeamList[t, t2].RID2)
+                            {
                                 Cnt += 1;
+                            }
+
                             if (PlrRID[5] == TeamList[t, t2].RID2)
+                            {
                                 Cnt += 1;
+                            }
+
                             if (PlrRID[7] == TeamList[t, t2].RID2)
+                            {
                                 Cnt += 1;
+                            }
                         }
 
                         if (0 < TeamList[t, t2].RID3)
                         {
                             if (PlrRID[1] == TeamList[t, t2].RID3)
+                            {
                                 Cnt += 1;
+                            }
+
                             if (PlrRID[3] == TeamList[t, t2].RID3)
+                            {
                                 Cnt += 1;
+                            }
+
                             if (PlrRID[5] == TeamList[t, t2].RID3)
+                            {
                                 Cnt += 1;
+                            }
+
                             if (PlrRID[7] == TeamList[t, t2].RID3)
+                            {
                                 Cnt += 1;
+                            }
                         }
 
                         if (0 < TeamList[t, t2].RID4)
                         {
                             if (PlrRID[1] == TeamList[t, t2].RID4)
+                            {
                                 Cnt += 1;
+                            }
+
                             if (PlrRID[3] == TeamList[t, t2].RID4)
+                            {
                                 Cnt += 1;
+                            }
+
                             if (PlrRID[5] == TeamList[t, t2].RID4)
+                            {
                                 Cnt += 1;
+                            }
+
                             if (PlrRID[7] == TeamList[t, t2].RID4)
+                            {
                                 Cnt += 1;
+                            }
                         }
 
                         if (1 < Cnt)
@@ -1319,49 +1357,93 @@ namespace MakoCelo
                         if (0 < TeamList[t, t2].RID1)
                         {
                             if (PlrRID[2] == TeamList[t, t2].RID1)
+                            {
                                 Cnt += 1;
+                            }
+
                             if (PlrRID[4] == TeamList[t, t2].RID1)
+                            {
                                 Cnt += 1;
+                            }
+
                             if (PlrRID[6] == TeamList[t, t2].RID1)
+                            {
                                 Cnt += 1;
+                            }
+
                             if (PlrRID[8] == TeamList[t, t2].RID1)
+                            {
                                 Cnt += 1;
+                            }
                         }
 
                         if (0 < TeamList[t, t2].RID2)
                         {
                             if (PlrRID[2] == TeamList[t, t2].RID2)
+                            {
                                 Cnt += 1;
+                            }
+
                             if (PlrRID[4] == TeamList[t, t2].RID2)
+                            {
                                 Cnt += 1;
+                            }
+
                             if (PlrRID[6] == TeamList[t, t2].RID2)
+                            {
                                 Cnt += 1;
+                            }
+
                             if (PlrRID[8] == TeamList[t, t2].RID2)
+                            {
                                 Cnt += 1;
+                            }
                         }
 
                         if (0 < TeamList[t, t2].RID3)
                         {
                             if (PlrRID[2] == TeamList[t, t2].RID3)
+                            {
                                 Cnt += 1;
+                            }
+
                             if (PlrRID[4] == TeamList[t, t2].RID3)
+                            {
                                 Cnt += 1;
+                            }
+
                             if (PlrRID[6] == TeamList[t, t2].RID3)
+                            {
                                 Cnt += 1;
+                            }
+
                             if (PlrRID[8] == TeamList[t, t2].RID3)
+                            {
                                 Cnt += 1;
+                            }
                         }
 
                         if (0 < TeamList[t, t2].RID4)
                         {
                             if (PlrRID[2] == TeamList[t, t2].RID4)
+                            {
                                 Cnt += 1;
+                            }
+
                             if (PlrRID[4] == TeamList[t, t2].RID4)
+                            {
                                 Cnt += 1;
+                            }
+
                             if (PlrRID[6] == TeamList[t, t2].RID4)
+                            {
                                 Cnt += 1;
+                            }
+
                             if (PlrRID[8] == TeamList[t, t2].RID4)
+                            {
                                 Cnt += 1;
+                            }
                         }
 
                         if (1 < Cnt)
@@ -1458,7 +1540,7 @@ namespace MakoCelo
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 lbError2.Text = "Team Check Err";
                 lbError2.BackColor = Color.FromArgb(255, 255, 0, 0);
@@ -1638,7 +1720,9 @@ namespace MakoCelo
             }
 
             if (!string.IsNullOrEmpty(A))
+            {
                 SpeechSynth.SpeakAsync(A);
+            }
         }
 
         private long LOG_HexToLong(string A)
@@ -1651,7 +1735,7 @@ namespace MakoCelo
             {
                 L = Convert.ToInt64(A, 16);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 L = 0L;
             }
@@ -1670,22 +1754,42 @@ namespace MakoCelo
             for (int t = 1; t <= 15; t++)
             {
                 if (LVLpercs[t] * tMax > PlrRank)
+                {
                     TL = t + 1;
+                }
             }
 
             // R4.30 Levels above rank 200 are always the same.
             if (200 > PlrRank)
+            {
                 TL = 16;
+            }
+
             if (81 > PlrRank)
+            {
                 TL = 17;
+            }
+
             if (37 > PlrRank)
+            {
                 TL = 18;
+            }
+
             if (14 > PlrRank)
+            {
                 TL = 19;
+            }
+
             if (3 > PlrRank)
+            {
                 TL = 20;
+            }
+
             if (PlrRank == 0)
+            {
                 TL = 0;
+            }
+
             LOG_CalcLevelRet = TL;
             return LOG_CalcLevelRet;
         }
@@ -1708,7 +1812,10 @@ namespace MakoCelo
                 {
                     Cnt += 1;
                     if (Cnt == 2)
+                    {
                         CharEnd = T;
+                    }
+
                     if (Cnt == 3)
                     {
                         CharStart = T;
@@ -1718,7 +1825,10 @@ namespace MakoCelo
             }
 
             if (Conversions.ToBoolean(CharEnd))
+            {
                 RID = (long)Math.Round(Conversion.Val(Strings.Mid(A, CharStart, CharEnd - CharStart)));
+            }
+
             LOG_Find_RelicIDRet = RID;
             return LOG_Find_RelicIDRet;
         }
@@ -1734,7 +1844,10 @@ namespace MakoCelo
             {
                 C = Strings.Mid(A, T, 1);
                 if (C == " ")
+                {
                     Cnt += 1;
+                }
+
                 if (Cnt == 3)
                 {
                     CharEnd = T;
@@ -1744,7 +1857,10 @@ namespace MakoCelo
 
             C = "None";
             if (Conversions.ToBoolean(CharEnd))
+            {
                 C = Strings.Mid(A, CharStart, CharEnd - CharStart);
+            }
+
             LOG_FindPlayerRet = C;
             return LOG_FindPlayerRet;
         }
@@ -1865,7 +1981,6 @@ namespace MakoCelo
             string tPath;
             string A = "";
             int Ca, Cr, Cg, Cb;
-            int tFont_Type;
             int Frev = 0;
 
             // R4.20 Added Load/Save setups options.
@@ -1879,7 +1994,9 @@ namespace MakoCelo
             }
 
             if (!File.Exists(tPath))
+            {
                 return;
+            }
 
 
             // R2.01 OPEN log file and start parsing.
@@ -1987,16 +2104,24 @@ namespace MakoCelo
                 FONT_Rank_Bold = Strings.Trim(A);
                 A = sr.ReadLine();
                 FONT_Rank_Italic = Strings.Trim(A);
-                tFont_Type = 0;
                 if (FONT_Rank_Bold == "True")
-                    tFont_Type = 1;
+                {
+                }
+
                 if (FONT_Rank_Italic == "True")
-                    tFont_Type = 2;
+                {
+                }
+
                 FONT_Rank = new Font(FONT_Rank_Name, Conversions.ToSingle(FONT_Rank_Size), FontStyle.Regular);
                 if (FONT_Rank_Bold == "True")
+                {
                     FONT_Rank = new Font(FONT_Rank_Name, Conversions.ToSingle(FONT_Rank_Size), FontStyle.Bold);
+                }
+
                 if (FONT_Rank_Italic == "True")
+                {
                     FONT_Rank = new Font(FONT_Rank_Name, Conversions.ToSingle(FONT_Rank_Size), FontStyle.Italic);
+                }
 
                 // R3.10 Version 2.0 and above.
                 if (0 < Frev)
@@ -2028,16 +2153,25 @@ namespace MakoCelo
                     FONT_Name_Bold = Strings.Trim(A);
                     A = sr.ReadLine();
                     FONT_Name_Italic = Strings.Trim(A);
-                    tFont_Type = 0;
                     if (FONT_Name_Bold == "True")
-                        tFont_Type = 1;
+                    {
+                    }
+
                     if (FONT_Name_Italic == "True")
-                        tFont_Type = 2;
+                    {
+                    }
+
                     FONT_Name = new Font(FONT_Name_Name, Conversions.ToSingle(FONT_Name_Size), FontStyle.Regular);
                     if (FONT_Name_Bold == "True")
+                    {
                         FONT_Name = new Font(FONT_Name_Name, Conversions.ToSingle(FONT_Name_Size), FontStyle.Bold);
+                    }
+
                     if (FONT_Name_Italic == "True")
+                    {
                         FONT_Name = new Font(FONT_Name_Name, Conversions.ToSingle(FONT_Name_Size), FontStyle.Italic);
+                    }
+
                     A = sr.ReadLine();  // R2.00 SCREEN SIZE
                     A = sr.ReadLine();  // cboPageSize.Text = Trim(A)
                     SETTINGS_GetStatSize(A);
@@ -2067,7 +2201,9 @@ namespace MakoCelo
                         A = sr.ReadLine();
                         GUI_ColorMode = (int)Math.Round(Conversion.Val(Strings.Trim(A)));
                         if (GUI_ColorMode != 0)
+                        {
                             chkGUIMode.Checked = true;    // R4.30 Added.
+                        }
                     }
                     else
                     {
@@ -2735,7 +2871,9 @@ namespace MakoCelo
                                     A = sr.ReadLine();
                                     SOUND_Vol[t] = Conversion.Val(A).ToString();     // R4.10 Added.
                                     if (Conversions.ToDouble(SOUND_Vol[t]) < 10d)
+                                    {
                                         SOUND_Vol[t] = 100.ToString();  // R4.10 Old version 5 has no volume so it will be ZERO.  
+                                    }
                                 }
 
                                 A = sr.ReadLine();
@@ -2753,12 +2891,15 @@ namespace MakoCelo
                                 Celo_Height = (long)Math.Round(Conversion.Val(A));
                                 A = sr.ReadLine();
                                 if (A == "1")
+                                {
                                     chkPosition.Checked = true;
+                                }
+
                                 A = sr.ReadLine();
                                 if (A == "1")
                                 {
                                     chkPopUp.Checked = true;
-                                    Celo_Popup = true;
+                                    //Celo_Popup = true; not used anymore
                                 }
 
                                 A = sr.ReadLine(); // R4.10 XY OFFSET
@@ -2801,9 +2942,15 @@ namespace MakoCelo
                                         A = sr.ReadLine();
                                         Vlong = (long)Math.Round(Conversion.Val(A));
                                         if (Vlong < 5L)
+                                        {
                                             A = "5";
+                                        }
+
                                         if (60L < Vlong)
+                                        {
                                             A = "60";
+                                        }
+
                                         switch (A ?? "")
                                         {
                                             case "5":
@@ -3291,7 +3438,6 @@ namespace MakoCelo
             string tPath;
             string A = "";
             int Ca, Cr, Cg, Cb;
-            int tFont_Type;
             int Frev = 0;
 
             // R4.20 Added Load/Save setups options.
@@ -3305,7 +3451,9 @@ namespace MakoCelo
             }
 
             if (!File.Exists(tPath))
+            {
                 return;
+            }
 
             // R4.00 Open the SETTINGS file.
             FileSystem.FileOpen(1, tPath, OpenMode.Input);
@@ -3379,7 +3527,10 @@ namespace MakoCelo
                 }
                 // R3.30 Added notice if image is missing.
                 else if (!string.IsNullOrEmpty(A))
+                {
                     Interaction.MsgBox("ERROR: The User Settings background image no longer exists." + Constants.vbCr + Constants.vbCr + "File:" + A);
+                }
+
                 FileSystem.Input(1, ref A);      // R1.00 GAME PATH
                 FileSystem.Input(1, ref A);
                 PATH_Game = Strings.Trim(A);
@@ -3392,16 +3543,24 @@ namespace MakoCelo
                 FONT_Rank_Bold = Strings.Trim(A);
                 FileSystem.Input(1, ref A);
                 FONT_Rank_Italic = Strings.Trim(A);
-                tFont_Type = 0;
                 if (FONT_Rank_Bold == "True")
-                    tFont_Type = 1;
+                {
+                }
+
                 if (FONT_Rank_Italic == "True")
-                    tFont_Type = 2;
+                {
+                }
+
                 FONT_Rank = new Font(FONT_Rank_Name, Conversions.ToSingle(FONT_Rank_Size), FontStyle.Regular);
                 if (FONT_Rank_Bold == "True")
+                {
                     FONT_Rank = new Font(FONT_Rank_Name, Conversions.ToSingle(FONT_Rank_Size), FontStyle.Bold);
+                }
+
                 if (FONT_Rank_Italic == "True")
+                {
                     FONT_Rank = new Font(FONT_Rank_Name, Conversions.ToSingle(FONT_Rank_Size), FontStyle.Italic);
+                }
 
                 // R3.10 Version 2.0 and above.
                 if (0 < Frev)
@@ -3427,16 +3586,25 @@ namespace MakoCelo
                     FONT_Name_Bold = Strings.Trim(A);
                     FileSystem.Input(1, ref A);
                     FONT_Name_Italic = Strings.Trim(A);
-                    tFont_Type = 0;
                     if (FONT_Name_Bold == "True")
-                        tFont_Type = 1;
+                    {
+                    }
+
                     if (FONT_Name_Italic == "True")
-                        tFont_Type = 2;
+                    {
+                    }
+
                     FONT_Name = new Font(FONT_Name_Name, Conversions.ToSingle(FONT_Name_Size), FontStyle.Regular);
                     if (FONT_Name_Bold == "True")
+                    {
                         FONT_Name = new Font(FONT_Name_Name, Conversions.ToSingle(FONT_Name_Size), FontStyle.Bold);
+                    }
+
                     if (FONT_Name_Italic == "True")
+                    {
                         FONT_Name = new Font(FONT_Name_Name, Conversions.ToSingle(FONT_Name_Size), FontStyle.Italic);
+                    }
+
                     FileSystem.Input(1, ref A);  // R2.00 SCREEN SIZE
                     FileSystem.Input(1, ref A);  // cboPageSize.Text = Trim(A)
                     SETTINGS_GetStatSize(A);                // R4.10 Changed size.
@@ -4154,7 +4322,9 @@ namespace MakoCelo
                                 Celo_Height = (long)Math.Round(Conversion.Val(A));
                                 FileSystem.Input(1, ref A);
                                 if (A == "1")
+                                {
                                     chkPosition.Checked = true;
+                                }
                             }  // <-- REV 5 END
                         }   // <-- REV 4 END
                     }   // <-- REV 3 END
@@ -4177,24 +4347,47 @@ namespace MakoCelo
             // R4.40 Setup the NOTE FONTS. This was BUGGED badly. Fixed.
             FONT_Note01 = new Font(FONT_Note01_Name, Conversions.ToSingle(FONT_Note01_Size), FontStyle.Regular);
             if (FONT_Note01_Bold == "True")
+            {
                 FONT_Note01 = new Font(FONT_Note01_Name, Conversions.ToSingle(FONT_Name_Size), FontStyle.Bold);
+            }
+
             if (FONT_Note01_Italic == "True")
+            {
                 FONT_Note01 = new Font(FONT_Note01_Name, Conversions.ToSingle(FONT_Name_Size), FontStyle.Italic);
+            }
+
             FONT_Note02 = new Font(FONT_Note02_Name, Conversions.ToSingle(FONT_Note02_Size), FontStyle.Regular);
             if (FONT_Note02_Bold == "True")
+            {
                 FONT_Note02 = new Font(FONT_Note02_Name, Conversions.ToSingle(FONT_Name_Size), FontStyle.Bold);
+            }
+
             if (FONT_Note02_Italic == "True")
+            {
                 FONT_Note02 = new Font(FONT_Note02_Name, Conversions.ToSingle(FONT_Name_Size), FontStyle.Italic);
+            }
+
             FONT_Note03 = new Font(FONT_Note03_Name, Conversions.ToSingle(FONT_Note03_Size), FontStyle.Regular);
             if (FONT_Note03_Bold == "True")
+            {
                 FONT_Note03 = new Font(FONT_Note03_Name, Conversions.ToSingle(FONT_Name_Size), FontStyle.Bold);
+            }
+
             if (FONT_Note03_Italic == "True")
+            {
                 FONT_Note03 = new Font(FONT_Note03_Name, Conversions.ToSingle(FONT_Name_Size), FontStyle.Italic);
+            }
+
             FONT_Note04 = new Font(FONT_Note04_Name, Conversions.ToSingle(FONT_Note04_Size), FontStyle.Regular);
             if (FONT_Note04_Bold == "True")
+            {
                 FONT_Note04 = new Font(FONT_Note04_Name, Conversions.ToSingle(FONT_Name_Size), FontStyle.Bold);
+            }
+
             if (FONT_Note04_Italic == "True")
+            {
                 FONT_Note04 = new Font(FONT_Note04_Name, Conversions.ToSingle(FONT_Name_Size), FontStyle.Italic);
+            }
             // *****************************************************
 
             // *****************************************************
@@ -4204,71 +4397,121 @@ namespace MakoCelo
                 NAME_OVLBmp = new Bitmap(PATH_Name_OVLBmp);
             }
             else if (!string.IsNullOrEmpty(PATH_Name_OVLBmp))
+            {
                 Interaction.MsgBox("ERROR: The User Settings NAME OVERLAY image no longer exists." + Constants.vbCr + Constants.vbCr + "File:" + PATH_Name_OVLBmp);
+            }
+
             if (0 < LSNote01.Width)
+            {
                 pbNote1.Width = LSNote01.Width;
+            }
+
             if (0 < LSNote01.Height)
+            {
                 pbNote1.Height = LSNote01.Height;
+            }
+
             if (File.Exists(PATH_Note01_Bmp))
             {
                 Note01_BackBmp = new Bitmap(PATH_Note01_Bmp);
             }
             else if (!string.IsNullOrEmpty(PATH_Note01_Bmp))
+            {
                 Interaction.MsgBox("ERROR: The User Settings NOTE 1 OVERLAY image no longer exists." + Constants.vbCr + Constants.vbCr + "File:" + PATH_Note01_Bmp);
+            }
+
             if (File.Exists(PATH_Note01_OVLBmp))
             {
                 Note01_OVLBmp = new Bitmap(PATH_Note01_OVLBmp);
             }
             else if (!string.IsNullOrEmpty(PATH_Note01_OVLBmp))
+            {
                 Interaction.MsgBox("ERROR: The User Settings NOTE 1 OVERLAY image no longer exists." + Constants.vbCr + Constants.vbCr + "File:" + PATH_Note01_OVLBmp);
+            }
+
             if (0 < LSNote02.Width)
+            {
                 pbNote2.Width = LSNote02.Width;
+            }
+
             if (0 < LSNote02.Height)
+            {
                 pbNote2.Height = LSNote02.Height;
+            }
+
             if (File.Exists(PATH_Note02_Bmp))
             {
                 Note02_BackBmp = new Bitmap(PATH_Note02_Bmp);
             }
             else if (!string.IsNullOrEmpty(PATH_Note01_Bmp))
+            {
                 Interaction.MsgBox("ERROR: The User Settings NOTE 2 background image no longer exists." + Constants.vbCr + Constants.vbCr + "File:" + PATH_Note02_Bmp);
+            }
+
             if (File.Exists(PATH_Note02_OVLBmp))
             {
                 Note02_OVLBmp = new Bitmap(PATH_Note02_OVLBmp);
             }
             else if (!string.IsNullOrEmpty(PATH_Note01_OVLBmp))
+            {
                 Interaction.MsgBox("ERROR: The User Settings NOTE 2 OVERLAY image no longer exists." + Constants.vbCr + Constants.vbCr + "File:" + PATH_Note02_OVLBmp);
+            }
+
             if (0 < LSNote03.Width)
+            {
                 pbNote3.Width = LSNote03.Width;
+            }
+
             if (0 < LSNote03.Height)
+            {
                 pbNote3.Height = LSNote03.Height;
+            }
+
             if (File.Exists(PATH_Note03_Bmp))
             {
                 Note03_BackBmp = new Bitmap(PATH_Note03_Bmp);
             }
             else if (!string.IsNullOrEmpty(PATH_Note03_Bmp))
+            {
                 Interaction.MsgBox("ERROR: The User Settings NOTE 3 background image no longer exists." + Constants.vbCr + Constants.vbCr + "File:" + PATH_Note03_Bmp);
+            }
+
             if (File.Exists(PATH_Note03_OVLBmp))
             {
                 Note03_OVLBmp = new Bitmap(PATH_Note03_OVLBmp);
             }
             else if (!string.IsNullOrEmpty(PATH_Note03_OVLBmp))
+            {
                 Interaction.MsgBox("ERROR: The User Settings NOTE 3 OVERLAY image no longer exists." + Constants.vbCr + Constants.vbCr + "File:" + PATH_Note03_OVLBmp);
+            }
+
             if (0 < LSNote04.Width)
+            {
                 pbNote4.Width = LSNote04.Width;
+            }
+
             if (0 < LSNote04.Height)
+            {
                 pbNote4.Height = LSNote04.Height;
+            }
+
             if (File.Exists(PATH_Note04_Bmp))
             {
                 Note04_BackBmp = new Bitmap(PATH_Note04_Bmp);
             }
             else if (!string.IsNullOrEmpty(PATH_Note04_Bmp))
+            {
                 Interaction.MsgBox("ERROR: The User Settings NOTE 4 background image no longer exists." + Constants.vbCr + Constants.vbCr + "File:" + PATH_Note04_Bmp);
+            }
+
             if (File.Exists(PATH_Note04_OVLBmp))
             {
                 Note04_OVLBmp = new Bitmap(PATH_Note04_OVLBmp);
             }
             else if (!string.IsNullOrEmpty(PATH_Note04_OVLBmp))
+            {
                 Interaction.MsgBox("ERROR: The User Settings NOTE 4 OVERLAY image no longer exists." + Constants.vbCr + Constants.vbCr + "File:" + PATH_Note04_OVLBmp);
+            }
             // *****************************************************
 
             // *****************************************************
@@ -4280,13 +4523,24 @@ namespace MakoCelo
             else
             {
                 if (!string.IsNullOrEmpty(PATH_Note01_Bmp))
+                {
                     PATH_DlgBmp = Utilities.PATH_StripFilename(PATH_Note01_Bmp);
+                }
+
                 if (!string.IsNullOrEmpty(PATH_Note02_Bmp))
+                {
                     PATH_DlgBmp = Utilities.PATH_StripFilename(PATH_Note02_Bmp);
+                }
+
                 if (!string.IsNullOrEmpty(PATH_Note03_Bmp))
+                {
                     PATH_DlgBmp = Utilities.PATH_StripFilename(PATH_Note03_Bmp);
+                }
+
                 if (!string.IsNullOrEmpty(PATH_Note04_Bmp))
+                {
                     PATH_DlgBmp = Utilities.PATH_StripFilename(PATH_Note04_Bmp);
+                }
             }
             // *****************************************************
 
@@ -4297,7 +4551,9 @@ namespace MakoCelo
                 for (int t = 1; t <= 15; t++)
                 {
                     if (!string.IsNullOrEmpty(SOUND_File[t]))
+                    {
                         PATH_SoundFiles = Utilities.PATH_StripFilename(SOUND_File[t]);
+                    }
                 }
             }
             // *****************************************************
@@ -4393,7 +4649,9 @@ namespace MakoCelo
             Color C;
             string tPath;
             if (FLAG_Loading)
+            {
                 return;
+            }
 
             // R4.00 OPEN log file and start parsing.
             var fs = default(FileStream);
@@ -4536,7 +4794,10 @@ namespace MakoCelo
                 sw.WriteLine(LSRank.ShadowDir);
                 sw.WriteLine("RANK SHADOW DEPTH");
                 if (string.IsNullOrEmpty(LSRank.ShadowDepth))
+                {
                     LSRank.ShadowDepth = "";
+                }
+
                 sw.WriteLine(LSRank.ShadowDepth);
                 C = LSName.ShadowColor;
                 sw.WriteLine("NAME SHADOW COLOR");
@@ -4578,7 +4839,10 @@ namespace MakoCelo
                     for (int t = 1; t <= 10; t++)
                     {
                         if (string.IsNullOrEmpty(CFX3DVar[N, t]))
+                        {
                             CFX3DVar[N, t] = "";
+                        }
+
                         sw.WriteLine(CFX3DVar[N, t]);
                     }
                 }
@@ -4646,7 +4910,10 @@ namespace MakoCelo
                 sw.WriteLine(FONT_Note01_Italic);
                 sw.WriteLine(FONT_Note01_Size);
                 for (int t = 1; t <= 10; t++)
+                {
                     sw.WriteLine(NoteAnim01_Text[t]);
+                }
+
                 sw.WriteLine(NoteAnim01.Mode);
                 sw.WriteLine(NoteAnim01.Speed);
                 sw.WriteLine(NoteAnim01.TimeHold);
@@ -4698,7 +4965,10 @@ namespace MakoCelo
                 sw.WriteLine(FONT_Note02_Italic);
                 sw.WriteLine(FONT_Note02_Size);
                 for (int t = 1; t <= 10; t++)
+                {
                     sw.WriteLine(NoteAnim02_Text[t]);
+                }
+
                 sw.WriteLine(NoteAnim02.Mode);
                 sw.WriteLine(NoteAnim02.Speed);
                 sw.WriteLine(NoteAnim02.TimeHold);
@@ -4750,7 +5020,10 @@ namespace MakoCelo
                 sw.WriteLine(FONT_Note03_Italic);
                 sw.WriteLine(FONT_Note03_Size);
                 for (int t = 1; t <= 10; t++)
+                {
                     sw.WriteLine(NoteAnim03_Text[t]);
+                }
+
                 sw.WriteLine(NoteAnim03.Mode);
                 sw.WriteLine(NoteAnim03.Speed);
                 sw.WriteLine(NoteAnim03.TimeHold);
@@ -4802,7 +5075,10 @@ namespace MakoCelo
                 sw.WriteLine(FONT_Note04_Italic);
                 sw.WriteLine(FONT_Note04_Size);
                 for (int t = 1; t <= 10; t++)
+                {
                     sw.WriteLine(NoteAnim04_Text[t]);
+                }
+
                 sw.WriteLine(NoteAnim04.Mode);
                 sw.WriteLine(NoteAnim04.Speed);
                 sw.WriteLine(NoteAnim04.TimeHold);
@@ -4824,9 +5100,15 @@ namespace MakoCelo
                 sw.WriteLine("WINDOW STATE");
                 A = "Normal";
                 if ((int)WindowState == 1)
+                {
                     A = "Minimized";
+                }
+
                 if ((int)WindowState == 2)
+                {
                     A = "Maximized";
+                }
+
                 sw.WriteLine(A);
                 sw.WriteLine(Location.X);
                 sw.WriteLine(Location.Y);
@@ -4887,7 +5169,9 @@ namespace MakoCelo
                 for (int t = 1; t <= 7; t++)
                 {
                     for (int tt = 1; tt <= 4; tt++)
+                    {
                         sw.WriteLine(LVLS[t, tt]);
+                    }
                 }
 
                 // R4.30 Added.
@@ -5004,7 +5288,9 @@ namespace MakoCelo
 
                 // R3.10 Write some extra lines to stop file open fails on future revs.
                 for (int t = 1; t <= 100; t++)
+                {
                     sw.WriteLine(" ");
+                }
             }
             catch (Exception ex)
             {
@@ -5281,24 +5567,44 @@ namespace MakoCelo
             LSName.O1 = (int)Math.Round(LSName.B1.A / 2.55d);
             LSName.O2 = (int)Math.Round(LSName.B2.A / 2.55d);
             if (string.IsNullOrEmpty(cboLayoutY.Text))
+            {
                 cboLayoutY.Text = "3 - 90% tight";
+            }
+
             if (string.IsNullOrEmpty(cboLayoutX.Text))
+            {
                 cboLayoutX.Text = "3 - 90% tight";
+            }
+
             if (string.IsNullOrEmpty(LSName.Scaling))
+            {
                 LSName.Scaling = "2 - Fit";
+            }
+
             if (string.IsNullOrEmpty(LSRank.ShadowDir))
+            {
                 LSRank.ShadowDir = "270°";
+            }
+
             if (string.IsNullOrEmpty(cboFXVar2.Text))
             {
                 cboFXVar2.Text = "270°";
             }
 
             if (string.IsNullOrEmpty(cboFxVar3.Text))
+            {
                 cboFxVar3.Text = "80%";
+            }
+
             if (string.IsNullOrEmpty(cboFxVar4.Text))
+            {
                 cboFxVar4.Text = "2.0%";
+            }
+
             if (string.IsNullOrEmpty(cboFXVar1.Text))
+            {
                 cboFXVar1.Text = "None";
+            }
 
             // R2.00 Strip the filename off for init dir on dialog.  
             int N = Strings.InStr(PATH_Game, "warnings");
@@ -5555,7 +5861,10 @@ namespace MakoCelo
 
             // R4.10 MSGBOX in LOG_Scan holds code there, but animation timer keeps going which triggers this timer and you get a loop.
             if (FLAG_CheckingLog)
+            {
                 return;
+            }
+
             SCAN_SecCnt += 1L;
             if (SCAN_Time < SCAN_SecCnt)
             {
@@ -6057,14 +6366,26 @@ namespace MakoCelo
             // R4.10 Verify and store valid sizes for STATS image.
 
             if (tX < 10f)
+            {
                 tX = 980f;         // R4.30 Changed.
+            }
+
             if (10000f < tX)
+            {
                 tX = 10000f;
+            }
+
             STATS_SizeX = (int)Math.Round(tX);
             if (tY < 10f)
+            {
                 tY = 180f;         // R4.30 Changed.
+            }
+
             if (10000f < tY)
+            {
                 tY = 10000f;
+            }
+
             STATS_SizeY = (int)Math.Round(tY);
         }
 
@@ -6073,20 +6394,34 @@ namespace MakoCelo
 
             // R4.50 Setup STATS page size. Added IF checks.
             if (pbStats.Width != STATS_SizeX)
+            {
                 pbStats.Width = STATS_SizeX;
+            }
+
             if (pbStats.Height != STATS_SizeY)
+            {
                 pbStats.Height = STATS_SizeY;
+            }
+
             if (scrStats.Left != pbStats.Left + pbStats.Width)
+            {
                 scrStats.Left = pbStats.Left + pbStats.Width;
+            }
+
             if (scrStats.Height != pbStats.Height)
+            {
                 scrStats.Height = pbStats.Height;
+            }
         }
 
         private void cboPageSize_SelectedIndexChanged(object sender, EventArgs e)
         {
             // R3.40 Added drawing flag.
             if (FLAG_Loading | FLAG_Drawing)
+            {
                 return;
+            }
+
             FLAG_Drawing = true;
             STATS_AdjustSize();
             STATS_DefineY();
@@ -6101,7 +6436,10 @@ namespace MakoCelo
         {
             // R3.40 Added drawing flag.
             if (FLAG_Loading | FLAG_Drawing)
+            {
                 return;
+            }
+
             FLAG_Drawing = true;
             STATS_DefineY();
             STATS_DefineX();                   // R2.00 X gets adjusted to Y size for faction images.
@@ -6117,7 +6455,10 @@ namespace MakoCelo
         {
             // R3.40 Added drawing flag.
             if (FLAG_Loading | FLAG_Drawing)
+            {
                 return;
+            }
+
             FLAG_Drawing = true;
             STATS_DefineY();
             STATS_DefineX();                  // R2.00 X gets adjusted to Y size for faction images.
@@ -6137,7 +6478,9 @@ namespace MakoCelo
             // *****************************************************************
             FLAG_EloMode += 1;
             if (2 < FLAG_EloMode)
+            {
                 FLAG_EloMode = 0;
+            }
 
             // R4.20 Moved sub for outside calls.
             STATS_Refresh();
@@ -6158,10 +6501,12 @@ namespace MakoCelo
 
         private void cmNameFont_Click(object sender, EventArgs e)
         {
-            var fontDialog1 = new FontDialog();
+            var fontDialog1 = new FontDialog
+            {
 
-            // R1.00 Get current font.
-            fontDialog1.Font = FONT_Name;
+                // R1.00 Get current font.
+                Font = FONT_Name
+            };
 
             // R1.00 Get user selected font, store it, and redraw controls.
             if (fontDialog1.ShowDialog() != DialogResult.Cancel)
@@ -6209,7 +6554,10 @@ namespace MakoCelo
         {
             // R3.40 Added drawing flag.
             if (FLAG_Loading | FLAG_Drawing)
+            {
                 return;
+            }
+
             FLAG_Drawing = true;
             SETTINGS_Save("");
             GFX_DrawStats();
@@ -6375,15 +6723,27 @@ namespace MakoCelo
             float TX, TY;
             TX = (float)Conversion.Val(tbXoff.Text);
             if (TX < -10000)
+            {
                 TX = -10000;
+            }
+
             if (10000f < TX)
+            {
                 TX = 10000f;
+            }
+
             Xoff = (int)Math.Round(TX);
             TY = (float)Conversion.Val(tbYoff.Text);
             if (TY < -10000)
+            {
                 TY = -10000;
+            }
+
             if (10000f < TY)
+            {
                 TY = 10000f;
+            }
+
             Yoff = (int)Math.Round(TY);
         }
 
@@ -6401,7 +6761,6 @@ namespace MakoCelo
             var tFont = FONT_Rank;
             var POP = new int[9];
             int Xoff = default, Yoff = default;
-            string tString = "";
             var YSec = new int[6];
             var YFact = new int[6];
             var YStart = new int[6];
@@ -6481,7 +6840,9 @@ namespace MakoCelo
                             {
                                 var loopTo1 = Main_BM.Width;
                                 for (tX = 0; NAME_bmp.Width >= 0 ? tX <= loopTo1 : tX >= loopTo1; tX += NAME_bmp.Width)
+                                {
                                     Main_Gfx.DrawImage(NAME_bmp, tX, tY, NAME_bmp.Width, NAME_bmp.Height);
+                                }
                             }
 
                             break;
@@ -6517,25 +6878,37 @@ namespace MakoCelo
 
                 Main_Gfx.DrawString("1v1", fonRank, BruRank2, XSec[1], YStart[t] + YSec[2]);
                 if (PlrRankALL[N, t, 1] != 0)
+                {
                     Main_Gfx.DrawString(PlrRankALL[N, t, 1].ToString(), fonRank, BruName, XSec[2], YStart[t] + YSec[2]);
+                }
+
                 Main_Gfx.DrawString(PlrRankWin[N, t, 1].ToString(), fonRank, BruName, XSec[3], YStart[t] + YSec[2]);
                 Main_Gfx.DrawString(PlrRankLoss[N, t, 1].ToString(), fonRank, BruName, XSec[4], YStart[t] + YSec[2]);
                 Main_Gfx.DrawString(PlrRankPerc[N, t, 1], fonRank, BruName, XSec[5], YStart[t] + YSec[2]);
                 Main_Gfx.DrawString("2v2", fonRank, BruRank2, XSec[1], YStart[t] + YSec[3]);
                 if (PlrRankALL[N, t, 2] != 0)
+                {
                     Main_Gfx.DrawString(PlrRankALL[N, t, 2].ToString(), fonRank, BruName, XSec[2], YStart[t] + YSec[3]);
+                }
+
                 Main_Gfx.DrawString(PlrRankWin[N, t, 2].ToString(), fonRank, BruName, XSec[3], YStart[t] + YSec[3]);
                 Main_Gfx.DrawString(PlrRankLoss[N, t, 2].ToString(), fonRank, BruName, XSec[4], YStart[t] + YSec[3]);
                 Main_Gfx.DrawString(PlrRankPerc[N, t, 2], fonRank, BruName, XSec[5], YStart[t] + YSec[3]);
                 Main_Gfx.DrawString("3v3", fonRank, BruRank2, XSec[1], YStart[t] + YSec[4]);
                 if (PlrRankALL[N, t, 3] != 0)
+                {
                     Main_Gfx.DrawString(PlrRankALL[N, t, 3].ToString(), fonRank, BruName, XSec[2], YStart[t] + YSec[4]);
+                }
+
                 Main_Gfx.DrawString(PlrRankWin[N, t, 3].ToString(), fonRank, BruName, XSec[3], YStart[t] + YSec[4]);
                 Main_Gfx.DrawString(PlrRankLoss[N, t, 3].ToString(), fonRank, BruName, XSec[4], YStart[t] + YSec[4]);
                 Main_Gfx.DrawString(PlrRankPerc[N, t, 3], fonRank, BruName, XSec[5], YStart[t] + YSec[4]);
                 Main_Gfx.DrawString("4v4", fonRank, BruRank2, XSec[1], YStart[t] + YSec[5]);
                 if (PlrRankALL[N, t, 4] != 0)
+                {
                     Main_Gfx.DrawString(PlrRankALL[N, t, 4].ToString(), fonRank, BruName, XSec[2], YStart[t] + YSec[5]);
+                }
+
                 Main_Gfx.DrawString(PlrRankWin[N, t, 4].ToString(), fonRank, BruName, XSec[3], YStart[t] + YSec[5]);
                 Main_Gfx.DrawString(PlrRankLoss[N, t, 4].ToString(), fonRank, BruName, XSec[4], YStart[t] + YSec[5]);
                 Main_Gfx.DrawString(PlrRankPerc[N, t, 4], fonRank, BruName, XSec[5], YStart[t] + YSec[5]);
@@ -6556,25 +6929,37 @@ namespace MakoCelo
 
                 Main_Gfx.DrawString("1v1", fonRank, BruRank2, XSec[6], YStart[t] + YSec[2]);
                 if (PlrRankALL[N, t, 1] != 0)
+                {
                     Main_Gfx.DrawString(PlrRankALL[N, t, 1].ToString(), fonRank, BruName, XSec[7], YStart[t] + YSec[2]);
+                }
+
                 Main_Gfx.DrawString(PlrRankWin[N, t, 1].ToString(), fonRank, BruName, XSec[8], YStart[t] + YSec[2]);
                 Main_Gfx.DrawString(PlrRankLoss[N, t, 1].ToString(), fonRank, BruName, XSec[9], YStart[t] + YSec[2]);
                 Main_Gfx.DrawString(PlrRankPerc[N, t, 1], fonRank, BruName, XSec[10], YStart[t] + YSec[2]);
                 Main_Gfx.DrawString("2v2", fonRank, BruRank2, XSec[6], YStart[t] + YSec[3]);
                 if (PlrRankALL[N, t, 2] != 0)
+                {
                     Main_Gfx.DrawString(PlrRankALL[N, t, 2].ToString(), fonRank, BruName, XSec[7], YStart[t] + YSec[3]);
+                }
+
                 Main_Gfx.DrawString(PlrRankWin[N, t, 2].ToString(), fonRank, BruName, XSec[8], YStart[t] + YSec[3]);
                 Main_Gfx.DrawString(PlrRankLoss[N, t, 2].ToString(), fonRank, BruName, XSec[9], YStart[t] + YSec[3]);
                 Main_Gfx.DrawString(PlrRankPerc[N, t, 2], fonRank, BruName, XSec[10], YStart[t] + YSec[3]);
                 Main_Gfx.DrawString("3v3", fonRank, BruRank2, XSec[6], YStart[t] + YSec[4]);
                 if (PlrRankALL[N, t, 3] != 0)
+                {
                     Main_Gfx.DrawString(PlrRankALL[N, t, 3].ToString(), fonRank, BruName, XSec[7], YStart[t] + YSec[4]);
+                }
+
                 Main_Gfx.DrawString(PlrRankWin[N, t, 3].ToString(), fonRank, BruName, XSec[8], YStart[t] + YSec[4]);
                 Main_Gfx.DrawString(PlrRankLoss[N, t, 3].ToString(), fonRank, BruName, XSec[9], YStart[t] + YSec[4]);
                 Main_Gfx.DrawString(PlrRankPerc[N, t, 3], fonRank, BruName, XSec[10], YStart[t] + YSec[4]);
                 Main_Gfx.DrawString("4v4", fonRank, BruRank2, XSec[6], YStart[t] + YSec[5]);
                 if (PlrRankALL[N, t, 4] != 0)
+                {
                     Main_Gfx.DrawString(PlrRankALL[N, t, 4].ToString(), fonRank, BruName, XSec[7], YStart[t] + YSec[5]);
+                }
+
                 Main_Gfx.DrawString(PlrRankWin[N, t, 4].ToString(), fonRank, BruName, XSec[8], YStart[t] + YSec[5]);
                 Main_Gfx.DrawString(PlrRankLoss[N, t, 4].ToString(), fonRank, BruName, XSec[9], YStart[t] + YSec[5]);
                 Main_Gfx.DrawString(PlrRankPerc[N, t, 4], fonRank, BruName, XSec[10], YStart[t] + YSec[5]);
@@ -6592,7 +6977,10 @@ namespace MakoCelo
             {
                 var BM_Country = My.Resources.Resources.ResourceManager.GetObject("flag_" + PlrCountry[N]) as Bitmap;
                 if (!Information.IsNothing(BM_Country))
+                {
                     Main_Gfx.DrawImage(BM_Country, new Point(XSec[6] - 20, YStart[3] + YSec[2]));
+                }
+
                 Main_Gfx.DrawString(PlrCountry[N], fonRank, BruRank, XSec[6] - 20, YStart[3] + YSec[3]);
                 Main_Gfx.DrawString("Country: " + PlrCountryName[N], fonRank, BruRank, XSec[6], YStart[3] + YSec[3]);   // R4.46 Added.
             }
@@ -6613,10 +7001,8 @@ namespace MakoCelo
             int tX, tY;
             var tFont = FONT_Rank;
             var POP = new int[9];
-            int Xoff = 0;
             int Yoff = 0;
             int YAct;
-            string tString = "";
             int Xmid = (int)Math.Round(pbStats.Width * 0.5d);
 
             // R3.00 Precalc some vars for readability in code.
@@ -6660,7 +7046,9 @@ namespace MakoCelo
                             {
                                 var loopTo1 = Main_BM.Width;
                                 for (tX = 0; NAME_bmp.Width >= 0 ? tX <= loopTo1 : tX >= loopTo1; tX += NAME_bmp.Width)
+                                {
                                     Main_Gfx.DrawImage(NAME_bmp, tX, tY, NAME_bmp.Width, NAME_bmp.Height);
+                                }
                             }
 
                             break;
@@ -6687,7 +7075,10 @@ namespace MakoCelo
             {
                 YAct = Yoff + (t - 1) * 90;
                 if (pbStats.Height < YAct)
+                {
                     break;
+                }
+
                 if (-91 < YAct)
                 {
                     Main_Gfx.DrawString(t.ToString(), fonRank, BruName, 10f, YAct);
@@ -6766,7 +7157,6 @@ namespace MakoCelo
             var tFont = FONT_Rank;
             var POP = new int[9];
             int Xoff = default, Yoff = default;
-            string tString = "";
             Pen tPen;
 
             // R3.00 Precalc some vars for readability in code.
@@ -6801,7 +7191,9 @@ namespace MakoCelo
                             {
                                 var loopTo1 = Main_BM.Width;
                                 for (tX = 0; NAME_bmp.Width >= 0 ? tX <= loopTo1 : tX >= loopTo1; tX += NAME_bmp.Width)
+                                {
                                     Main_Gfx.DrawImage(NAME_bmp, tX, tY, NAME_bmp.Width, NAME_bmp.Height);
+                                }
                             }
 
                             break;
@@ -6825,8 +7217,10 @@ namespace MakoCelo
                 case 1: // R4.40 Normal.
                     {
                         // Main_Gfx.draw
-                        tPen = new Pen(new SolidBrush(LSRank.BorderPanelColor));
-                        tPen.Width = LSRank.BorderPanelWidth;
+                        tPen = new Pen(new SolidBrush(LSRank.BorderPanelColor))
+                        {
+                            Width = LSRank.BorderPanelWidth
+                        };
                         Main_Gfx.DrawRectangle(tPen, 2, 2, Main_BM.Width - 5, Main_BM.Height - 5);
                         break;
                     }
@@ -6852,24 +7246,30 @@ namespace MakoCelo
 
                 case 4: // R4.40 Rounded Corners 4 pixels.
                     {
-                        tPen = new Pen(new SolidBrush(LSRank.BorderPanelColor));
-                        tPen.Width = LSRank.BorderPanelWidth;
+                        tPen = new Pen(new SolidBrush(LSRank.BorderPanelColor))
+                        {
+                            Width = LSRank.BorderPanelWidth
+                        };
                         DrawRoundedRectangle(Main_Gfx, new Rectangle(2, 2, Main_BM.Width - 5, Main_BM.Height - 5), tPen, 4);
                         break;
                     }
 
                 case 5: // R4.40 Rounded Corners 8 pixels.
                     {
-                        tPen = new Pen(new SolidBrush(LSRank.BorderPanelColor));
-                        tPen.Width = LSRank.BorderPanelWidth;
+                        tPen = new Pen(new SolidBrush(LSRank.BorderPanelColor))
+                        {
+                            Width = LSRank.BorderPanelWidth
+                        };
                         DrawRoundedRectangle(Main_Gfx, new Rectangle(2, 2, Main_BM.Width - 5, Main_BM.Height - 5), tPen, 8);
                         break;
                     }
 
                 case 6: // R4.40 Rounded Corners LARGE.
                     {
-                        tPen = new Pen(new SolidBrush(LSRank.BorderPanelColor));
-                        tPen.Width = LSRank.BorderPanelWidth;
+                        tPen = new Pen(new SolidBrush(LSRank.BorderPanelColor))
+                        {
+                            Width = LSRank.BorderPanelWidth
+                        };
                         DrawRoundedRectangle_Max(Main_Gfx, new Rectangle(2, 2, Main_BM.Width - 5, Main_BM.Height - 5), tPen);
                         break;
                     }
@@ -6879,7 +7279,9 @@ namespace MakoCelo
             // R3.10 Call any background based FX MODE options like SHADOW, etc
             // *****************************************************************
             if (CFX3DActive[(int)clsGlobal.FXMode.LabelBlur])
+            {
                 GFX_FX_LabBlur(Main_Gfx, Main_BM, Xoff, Yoff);
+            }
 
             // *****************************************************************
             // R3.10 Draw the Rank background rectangles
@@ -6912,8 +7314,10 @@ namespace MakoCelo
                         case 1: // R4.40 Normal.
                             {
                                 Main_Gfx.FillRectangle(linGrBrush, Xoff + LAB_Rank[T].X, Yoff + LAB_Rank[T].Y, LAB_Rank[T].Width, LAB_Rank[T].Height);
-                                tPen = new Pen(new SolidBrush(LSRank.BorderColor));
-                                tPen.Width = LSRank.BorderWidth;
+                                tPen = new Pen(new SolidBrush(LSRank.BorderColor))
+                                {
+                                    Width = LSRank.BorderWidth
+                                };
                                 Main_Gfx.DrawRectangle(tPen, Xoff + LAB_Rank[T].X, Yoff + LAB_Rank[T].Y, LAB_Rank[T].Width, LAB_Rank[T].Height);
                                 break;
                             }
@@ -6930,12 +7334,16 @@ namespace MakoCelo
                         case 3: // R4.40 3D
                             {
                                 Main_Gfx.FillRectangle(linGrBrush, Xoff + LAB_Rank[T].X, Yoff + LAB_Rank[T].Y, LAB_Rank[T].Width, LAB_Rank[T].Height);
-                                tPen = new Pen(new SolidBrush(LSRank.BorderColor));
-                                tPen.Width = LSRank.BorderWidth;
+                                tPen = new Pen(new SolidBrush(LSRank.BorderColor))
+                                {
+                                    Width = LSRank.BorderWidth
+                                };
                                 Main_Gfx.DrawLine(tPen, Xoff + LAB_Rank[T].X, Yoff + LAB_Rank[T].Y, Xoff + LAB_Rank[T].X + LAB_Rank[T].Width - 1f, Yoff + LAB_Rank[T].Y);
                                 Main_Gfx.DrawLine(tPen, Xoff + LAB_Rank[T].X, Yoff + LAB_Rank[T].Y, Xoff + LAB_Rank[T].X, Yoff + LAB_Rank[T].Y + LAB_Rank[T].Height - 1f);
-                                tPen = new Pen(new SolidBrush(Color.FromArgb(255, 0, 0, 0)));
-                                tPen.Width = LSRank.BorderWidth;
+                                tPen = new Pen(new SolidBrush(Color.FromArgb(255, 0, 0, 0)))
+                                {
+                                    Width = LSRank.BorderWidth
+                                };
                                 Main_Gfx.DrawLine(tPen, Xoff + LAB_Rank[T].X, Yoff + LAB_Rank[T].Y + LAB_Rank[T].Height, Xoff + LAB_Rank[T].X + LAB_Rank[T].Width, Yoff + LAB_Rank[T].Y + LAB_Rank[T].Height);
                                 Main_Gfx.DrawLine(tPen, Xoff + LAB_Rank[T].X + LAB_Rank[T].Width, Yoff + LAB_Rank[T].Y, Xoff + LAB_Rank[T].X + LAB_Rank[T].Width, Yoff + LAB_Rank[T].Y + LAB_Rank[T].Height);
                                 break;
@@ -6944,8 +7352,10 @@ namespace MakoCelo
                         case 4: // R4.40 Rounded Corners 4 pixels.
                             {
                                 FillRoundedRectangle(Main_Gfx, new Rectangle((int)Math.Round(Xoff + LAB_Rank[T].X), (int)Math.Round(Yoff + LAB_Rank[T].Y), (int)Math.Round(LAB_Rank[T].Width), (int)Math.Round(LAB_Rank[T].Height)), linGrBrush, 4);
-                                tPen = new Pen(new SolidBrush(LSRank.BorderColor));
-                                tPen.Width = LSRank.BorderWidth;
+                                tPen = new Pen(new SolidBrush(LSRank.BorderColor))
+                                {
+                                    Width = LSRank.BorderWidth
+                                };
                                 DrawRoundedRectangle(Main_Gfx, new Rectangle((int)Math.Round(Xoff + LAB_Rank[T].X), (int)Math.Round(Yoff + LAB_Rank[T].Y), (int)Math.Round(LAB_Rank[T].Width), (int)Math.Round(LAB_Rank[T].Height)), tPen, 4);
                                 break;
                             }
@@ -6953,8 +7363,10 @@ namespace MakoCelo
                         case 5: // R4.40 Rounded Corners 8 pixels.
                             {
                                 FillRoundedRectangle(Main_Gfx, new Rectangle((int)Math.Round(Xoff + LAB_Rank[T].X), (int)Math.Round(Yoff + LAB_Rank[T].Y), (int)Math.Round(LAB_Rank[T].Width), (int)Math.Round(LAB_Rank[T].Height)), linGrBrush, 8);
-                                tPen = new Pen(new SolidBrush(LSRank.BorderColor));
-                                tPen.Width = LSRank.BorderWidth;
+                                tPen = new Pen(new SolidBrush(LSRank.BorderColor))
+                                {
+                                    Width = LSRank.BorderWidth
+                                };
                                 DrawRoundedRectangle(Main_Gfx, new Rectangle((int)Math.Round(Xoff + LAB_Rank[T].X), (int)Math.Round(Yoff + LAB_Rank[T].Y), (int)Math.Round(LAB_Rank[T].Width), (int)Math.Round(LAB_Rank[T].Height)), tPen, 8);
                                 break;
                             }
@@ -6962,8 +7374,10 @@ namespace MakoCelo
                         case 6: // R4.40 Rounded Corners LARGE.
                             {
                                 FillRoundedRectangle_Max(Main_Gfx, new Rectangle((int)Math.Round(Xoff + LAB_Rank[T].X), (int)Math.Round(Yoff + LAB_Rank[T].Y), (int)Math.Round(LAB_Rank[T].Width), (int)Math.Round(LAB_Rank[T].Height)), linGrBrush);
-                                tPen = new Pen(new SolidBrush(LSRank.BorderColor));
-                                tPen.Width = LSRank.BorderWidth;
+                                tPen = new Pen(new SolidBrush(LSRank.BorderColor))
+                                {
+                                    Width = LSRank.BorderWidth
+                                };
                                 DrawRoundedRectangle_Max(Main_Gfx, new Rectangle((int)Math.Round(Xoff + LAB_Rank[T].X), (int)Math.Round(Yoff + LAB_Rank[T].Y), (int)Math.Round(LAB_Rank[T].Width), (int)Math.Round(LAB_Rank[T].Height)), tPen);
                                 break;
                             }
@@ -7006,8 +7420,10 @@ namespace MakoCelo
                         case 1: // R4.40 Normal.
                             {
                                 Main_Gfx.FillRectangle(linGrBrush, Xoff + LAB_Name[T].X, Yoff + LAB_Name[T].Y, LAB_Name[T].Width, LAB_Name[T].Height);
-                                tPen = new Pen(new SolidBrush(LSName.BorderColor));
-                                tPen.Width = LSName.BorderWidth;
+                                tPen = new Pen(new SolidBrush(LSName.BorderColor))
+                                {
+                                    Width = LSName.BorderWidth
+                                };
                                 Main_Gfx.DrawRectangle(tPen, Xoff + LAB_Name[T].X, Yoff + LAB_Name[T].Y, LAB_Name[T].Width, LAB_Name[T].Height);
                                 break;
                             }
@@ -7024,12 +7440,16 @@ namespace MakoCelo
                         case 3: // R4.40 3D
                             {
                                 Main_Gfx.FillRectangle(linGrBrush, Xoff + LAB_Name[T].X, Yoff + LAB_Name[T].Y, LAB_Name[T].Width, LAB_Name[T].Height);
-                                tPen = new Pen(new SolidBrush(LSName.BorderColor));
-                                tPen.Width = LSName.BorderWidth;
+                                tPen = new Pen(new SolidBrush(LSName.BorderColor))
+                                {
+                                    Width = LSName.BorderWidth
+                                };
                                 Main_Gfx.DrawLine(tPen, Xoff + LAB_Name[T].X, Yoff + LAB_Name[T].Y, Xoff + LAB_Name[T].X + LAB_Name[T].Width - 1f, Yoff + LAB_Name[T].Y);
                                 Main_Gfx.DrawLine(tPen, Xoff + LAB_Name[T].X, Yoff + LAB_Name[T].Y, Xoff + LAB_Name[T].X, Yoff + LAB_Name[T].Y + LAB_Name[T].Height - 1f);
-                                tPen = new Pen(new SolidBrush(Color.FromArgb(255, 0, 0, 0)));
-                                tPen.Width = LSName.BorderWidth;
+                                tPen = new Pen(new SolidBrush(Color.FromArgb(255, 0, 0, 0)))
+                                {
+                                    Width = LSName.BorderWidth
+                                };
                                 Main_Gfx.DrawLine(tPen, Xoff + LAB_Name[T].X, Yoff + LAB_Name[T].Y + LAB_Name[T].Height, Xoff + LAB_Name[T].X + LAB_Name[T].Width - 1f, Yoff + LAB_Name[T].Y + LAB_Name[T].Height);
                                 Main_Gfx.DrawLine(tPen, Xoff + LAB_Name[T].X + LAB_Name[T].Width, Yoff + LAB_Name[T].Y, Xoff + LAB_Name[T].X + LAB_Name[T].Width, Yoff + LAB_Name[T].Y + LAB_Name[T].Height - 1f);
                                 break;
@@ -7038,8 +7458,10 @@ namespace MakoCelo
                         case 4: // R4.40 Rounded Corners 4 pixels.
                             {
                                 FillRoundedRectangle(Main_Gfx, new Rectangle((int)Math.Round(Xoff + LAB_Name[T].X), (int)Math.Round(Yoff + LAB_Name[T].Y), (int)Math.Round(LAB_Name[T].Width), (int)Math.Round(LAB_Name[T].Height)), linGrBrush, 4);
-                                tPen = new Pen(new SolidBrush(LSName.BorderColor));
-                                tPen.Width = LSName.BorderWidth;
+                                tPen = new Pen(new SolidBrush(LSName.BorderColor))
+                                {
+                                    Width = LSName.BorderWidth
+                                };
                                 DrawRoundedRectangle(Main_Gfx, new Rectangle((int)Math.Round(Xoff + LAB_Name[T].X), (int)Math.Round(Yoff + LAB_Name[T].Y), (int)Math.Round(LAB_Name[T].Width), (int)Math.Round(LAB_Name[T].Height)), tPen, 4);
                                 break;
                             }
@@ -7047,8 +7469,10 @@ namespace MakoCelo
                         case 5: // R4.40 Rounded Corners 8 pixels.
                             {
                                 FillRoundedRectangle(Main_Gfx, new Rectangle((int)Math.Round(Xoff + LAB_Name[T].X), (int)Math.Round(Yoff + LAB_Name[T].Y), (int)Math.Round(LAB_Name[T].Width), (int)Math.Round(LAB_Name[T].Height)), linGrBrush, 8);
-                                tPen = new Pen(new SolidBrush(LSName.BorderColor));
-                                tPen.Width = LSName.BorderWidth;
+                                tPen = new Pen(new SolidBrush(LSName.BorderColor))
+                                {
+                                    Width = LSName.BorderWidth
+                                };
                                 DrawRoundedRectangle(Main_Gfx, new Rectangle((int)Math.Round(Xoff + LAB_Name[T].X), (int)Math.Round(Yoff + LAB_Name[T].Y), (int)Math.Round(LAB_Name[T].Width), (int)Math.Round(LAB_Name[T].Height)), tPen, 8);
                                 break;
                             }
@@ -7056,8 +7480,10 @@ namespace MakoCelo
                         case 6: // R4.40 Rounded Corners LARGE.
                             {
                                 FillRoundedRectangle_Max(Main_Gfx, new Rectangle((int)Math.Round(Xoff + LAB_Name[T].X), (int)Math.Round(Yoff + LAB_Name[T].Y), (int)Math.Round(LAB_Name[T].Width), (int)Math.Round(LAB_Name[T].Height)), linGrBrush);
-                                tPen = new Pen(new SolidBrush(LSName.BorderColor));
-                                tPen.Width = LSName.BorderWidth;
+                                tPen = new Pen(new SolidBrush(LSName.BorderColor))
+                                {
+                                    Width = LSName.BorderWidth
+                                };
                                 DrawRoundedRectangle_Max(Main_Gfx, new Rectangle((int)Math.Round(Xoff + LAB_Name[T].X), (int)Math.Round(Yoff + LAB_Name[T].Y), (int)Math.Round(LAB_Name[T].Width), (int)Math.Round(LAB_Name[T].Height)), tPen);
                                 break;
                             }
@@ -7096,7 +7522,9 @@ namespace MakoCelo
             // R3.10 Call any MID draw based FX MODE options like SHADOW, etc
             // *****************************************************************
             if (CFX3DActive[(int)clsGlobal.FXMode.Shadow])
+            {
                 GFX_FX_Shadow(Main_Gfx, Xoff, Yoff);
+            }
 
             // *****************************************************************
             // R3.00 Define paint/fill brushes for the RANK stats.
@@ -7114,11 +7542,19 @@ namespace MakoCelo
                 else
                 {
                     if (FLAG_EloMode == 0)
+                    {
                         tString = PlrRank[T];
+                    }
+
                     if (FLAG_EloMode == 1)
+                    {
                         tString = PlrELO[T];
+                    }
+
                     if (FLAG_EloMode == 2)
+                    {
                         tString = PlrLVL[T];
+                    }
                 }
 
                 // R3.00 Create a clipping area so names do not draw past the rectangle.
@@ -7128,7 +7564,9 @@ namespace MakoCelo
                 Cx = (int)Math.Round(LAB_Rank[T].X + LAB_Rank[T].Width / 2f - Main_Gfx.MeasureString(tString, FONT_Rank).Width / 2f);
                 Cy = (int)Math.Round(LAB_Rank[T].Y + LAB_Rank[T].Height / 2f - Main_Gfx.MeasureString(tString, FONT_Rank).Height / 2f);
                 if (LSRank.ShadowX != 0 | LSRank.ShadowY != 0)
+                {
                     Main_Gfx.DrawString(tString, FONT_Rank, tBrushShadow, (float)(Xoff + Cx + LSRank.ShadowX * Conversion.Val(LSRank.ShadowDepth)), (float)(Yoff + Cy + LSRank.ShadowY * Conversion.Val(LSRank.ShadowDepth)));
+                }
 
                 // R3.00 Draw the RANK text.
                 if (LSRank.FDir == 0)
@@ -7172,7 +7610,9 @@ namespace MakoCelo
 
                 // R3.40 Adjust the text X position if RIGHT justified.
                 if (LAB_Name_Align[T].Alignment == StringAlignment.Far)
+                {
                     LAB_Name[T].Xtext = LAB_Name[T].X + LAB_Name[T].Width;
+                }
 
                 // R4.00 Draw the NAME shadow text.
                 Cx = (int)Math.Round(Xoff + LAB_Name[T].Xtext);
@@ -7186,7 +7626,9 @@ namespace MakoCelo
                         {
                             Main_Gfx.DrawString(PlrName[T], FONT_Name, tBrushShadow, (float)(Cx + 18 + LSName.ShadowX * Conversion.Val(LSName.ShadowDepth)), (float)(Cy + LSName.ShadowY * Conversion.Val(LSName.ShadowDepth)), LAB_Name_Align[T]);
                             if (!string.IsNullOrEmpty(PlrCountry[T]))
+                            {
                                 Main_Gfx.FillRectangle(tBrushShadow, (float)(Cx + LSName.ShadowX * Conversion.Val(LSName.ShadowDepth) + 4d), (float)(Yoff + LAB_Name[T].Y + tLabHgt - 6f + LSName.ShadowY * Conversion.Val(LSName.ShadowDepth)), 16f, 11f);
+                            }
                         }
                         // R4.50 Centered X layout style.
                         else if (Conversions.ToBoolean(T % 2))
@@ -7194,14 +7636,18 @@ namespace MakoCelo
                             // R4.46 ODD players.
                             Main_Gfx.DrawString(PlrName[T], FONT_Name, tBrushShadow, (float)(Cx - 19 + LSName.ShadowX * Conversion.Val(LSName.ShadowDepth)), (float)(Cy + LSName.ShadowY * Conversion.Val(LSName.ShadowDepth)), LAB_Name_Align[T]);
                             if (!string.IsNullOrEmpty(PlrCountry[T]))
+                            {
                                 Main_Gfx.FillRectangle(tBrushShadow, (float)(Cx + LSName.ShadowX * Conversion.Val(LSName.ShadowDepth) - 20d), (float)(Yoff + LAB_Name[T].Y + tLabHgt - 6f + LSName.ShadowY * Conversion.Val(LSName.ShadowDepth)), 16f, 11f);
+                            }
                         }
                         else
                         {
                             // R4.50 Even players.
                             Main_Gfx.DrawString(PlrName[T], FONT_Name, tBrushShadow, (float)(Cx + 19 + LSName.ShadowX * Conversion.Val(LSName.ShadowDepth)), (float)(Cy + LSName.ShadowY * Conversion.Val(LSName.ShadowDepth)), LAB_Name_Align[T]);
                             if (!string.IsNullOrEmpty(PlrCountry[T]))
+                            {
                                 Main_Gfx.FillRectangle(tBrushShadow, (float)(Cx + LSName.ShadowX * Conversion.Val(LSName.ShadowDepth) + 4d), (float)(Yoff + LAB_Name[T].Y + tLabHgt - 6f + LSName.ShadowY * Conversion.Val(LSName.ShadowDepth)), 16f, 11f);
+                            }
                         }
                     }
                     else
@@ -7238,7 +7684,9 @@ namespace MakoCelo
                         {
                             var BM_Country = My.Resources.Resources.ResourceManager.GetObject("flag_" + PlrCountry[T]) as Bitmap;
                             if (!Information.IsNothing(BM_Country))
-                                Main_Gfx.DrawImage(BM_Country, new Point(Cx + 4, (int)Math.Round((float)Yoff + LAB_Name[T].Y + (float)tLabHgt - 6f)));
+                            {
+                                Main_Gfx.DrawImage(BM_Country, new Point(Cx + 4, (int)Math.Round(Yoff + LAB_Name[T].Y + tLabHgt - 6f)));
+                            }
                         }
                     }
                     // R4.46 Centered X layout style.
@@ -7250,7 +7698,9 @@ namespace MakoCelo
                         {
                             var BM_Country = My.Resources.Resources.ResourceManager.GetObject("flag_" + PlrCountry[T]) as Bitmap;
                             if (!Information.IsNothing(BM_Country))
-                                Main_Gfx.DrawImage(BM_Country, new Point(Cx - 20, (int)Math.Round((float)Yoff + LAB_Name[T].Y + (float)tLabHgt - 6f)));
+                            {
+                                Main_Gfx.DrawImage(BM_Country, new Point(Cx - 20, (int)Math.Round(Yoff + LAB_Name[T].Y + tLabHgt - 6f)));
+                            }
                         }
                     }
                     else
@@ -7261,7 +7711,9 @@ namespace MakoCelo
                         {
                             var BM_Country = My.Resources.Resources.ResourceManager.GetObject("flag_" + PlrCountry[T]) as Bitmap;
                             if (!Information.IsNothing(BM_Country))
-                                Main_Gfx.DrawImage(BM_Country, new Point(Cx + 4, (int)Math.Round((float)Yoff + LAB_Name[T].Y + (float)tLabHgt - 6f)));
+                            {
+                                Main_Gfx.DrawImage(BM_Country, new Point(Cx + 4, (int)Math.Round(Yoff + LAB_Name[T].Y + tLabHgt - 6f)));
+                            }
                         }
                     }
                 }
@@ -7278,7 +7730,9 @@ namespace MakoCelo
             // R3.10 Call any foreground based FX MODE options like SHADOW, etc
             // *****************************************************************
             if (CFX3DActive[(int)clsGlobal.FXMode.Emboss])
+            {
                 GFX_FX_Emboss(Main_Gfx, Main_BM, Xoff, Yoff);
+            }
 
 
             // *****************************************************************
@@ -7302,7 +7756,9 @@ namespace MakoCelo
                             {
                                 var loopTo1 = Main_BM.Width;
                                 for (tX = 0; NAME_OVLBmp.Width >= 0 ? tX <= loopTo1 : tX >= loopTo1; tX += NAME_OVLBmp.Width)
+                                {
                                     Main_Gfx.DrawImage(NAME_OVLBmp, tX, tY, NAME_OVLBmp.Width, NAME_OVLBmp.Height);
+                                }
                             }
 
                             break;
@@ -7544,9 +8000,15 @@ namespace MakoCelo
             }
 
             if (BlurBias < 1f)
+            {
                 BlurBias = 1f;
+            }
+
             if (1.1d < BlurBias)
+            {
                 BlurBias = 1.1f;
+            }
+
             BlurBias = 1f + (BlurBias - 1f) * 4f;      // R3.40 Reworked BLUR routines so Bias needs to be bigger.
 
             // R3.40 Setup the BLUR amount.
@@ -7560,7 +8022,9 @@ namespace MakoCelo
             }
 
             if (Blur == 0f)
+            {
                 Blur = 0.8f;
+            }
 
             // Copy the RGB values into the array.
             Marshal.Copy(ptr, rgbValues, 0, bytes);
@@ -7594,7 +8058,10 @@ namespace MakoCelo
             // Copy the RGB values back to the bitmap
             Marshal.Copy(rgbValues, 0, ptr, bytes);
             if (3 < LSRank.BorderMode | 3 < LSName.BorderMode)
+            {
                 MainBlur_BM.UnlockBits(MainBlur_Data);
+            }
+
             BM.UnlockBits(bmpData);
 
             // Draw the modified image.
@@ -7655,11 +8122,19 @@ namespace MakoCelo
                 else
                 {
                     if (FLAG_EloMode == 0)
+                    {
                         tString = PlrRank[T];
+                    }
+
                     if (FLAG_EloMode == 1)
+                    {
                         tString = PlrELO[T];
+                    }
+
                     if (FLAG_EloMode == 2)
+                    {
                         tString = PlrLVL[T];
+                    }
                 }
 
                 // R3.00 Create a clipping area so names do not draw past the rectangle.
@@ -7736,7 +8211,9 @@ namespace MakoCelo
                 }
 
                 if (CFX3DVar[(int)clsGlobal.FXMode.Shadow, (int)clsGlobal.FXVarDefs.ShadeAng] != "--")
+                {
                     Main_Gfx2.DrawString(tString, FONT_Rank, tBrushShadow, Xoff + Cx + Cx2, Yoff + Cy + Cy2);
+                }
 
                 // R3.00 Clear the clipping area.
                 Main_Gfx2.Clip = new Region(new Rectangle(0, 0, Main_BM2.Width, Main_BM2.Height));
@@ -7750,7 +8227,10 @@ namespace MakoCelo
 
                 // R3.40 Adjust the text X position if RIGHT justified.
                 if (LAB_Name_Align[T].Alignment == StringAlignment.Far)
+                {
                     LAB_Name[T].Xtext = LAB_Name[T].X + LAB_Name[T].Width;
+                }
+
                 Cx = (int)Math.Round(Xoff + LAB_Name[T].Xtext);
                 Cy = (int)Math.Round(Yoff + LAB_Name[T].Y + tLabHgt - TextHgt12);
                 switch (CFX3DVar[(int)clsGlobal.FXMode.Shadow, (int)clsGlobal.FXVarDefs.ShadeAng] ?? "")
@@ -7828,7 +8308,9 @@ namespace MakoCelo
                         {
                             Main_Gfx2.DrawString(PlrName[T], FONT_Name, tBrushShadow, Cx + 18 + Cx2, Cy + Cy2, LAB_Name_Align[T]);
                             if (!string.IsNullOrEmpty(PlrCountry[T]))
+                            {
                                 Main_Gfx2.FillRectangle(tBrushShadow, Cx + 4, Yoff + LAB_Name[T].Y + tLabHgt - 6f, 16f, 11f);
+                            }
                         }
                         // R4.50 Centered X layout style.
                         else if (Conversions.ToBoolean(T % 2))
@@ -7836,14 +8318,18 @@ namespace MakoCelo
                             // R4.46 ODD players.
                             Main_Gfx2.DrawString(PlrName[T], FONT_Name, tBrushShadow, Cx - 19 + Cx2, Cy + Cy2, LAB_Name_Align[T]);
                             if (!string.IsNullOrEmpty(PlrCountry[T]))
+                            {
                                 Main_Gfx2.FillRectangle(tBrushShadow, Cx - 20 + Cx2, Yoff + LAB_Name[T].Y + tLabHgt - 6f + Cy2, 16f, 11f);
+                            }
                         }
                         else
                         {
                             // R4.50 Even players.
                             Main_Gfx2.DrawString(PlrName[T], FONT_Name, tBrushShadow, Cx + 19 + Cx2, Cy + Cy2, LAB_Name_Align[T]);
                             if (!string.IsNullOrEmpty(PlrCountry[T]))
+                            {
                                 Main_Gfx2.FillRectangle(tBrushShadow, Cx + 4 + Cx2, Yoff + LAB_Name[T].Y + tLabHgt - 6f + Cy2, 16f, 11f);
+                            }
                         }
                     }
                     else
@@ -7882,9 +8368,15 @@ namespace MakoCelo
             }
 
             if (BlrFac < 1f)
+            {
                 BlrFac = 1f;
+            }
+
             if (1.1d < BlrFac)
+            {
                 BlrFac = 1.1f;
+            }
+
             BlrFac = 1f + (BlrFac - 1f) * 16f;
 
             // R3.10 Calculate the Blur Amount.
@@ -7898,7 +8390,10 @@ namespace MakoCelo
             }
 
             if (Blr1 == 0f)
+            {
                 Blr1 = 0.8f;
+            }
+
             Blr2 = 1f - Blr1;
 
             // R3.00 Fill in the SHADOW color, and BLUR the alpha channel to make it bigger or smaller.
@@ -7960,7 +8455,10 @@ namespace MakoCelo
                 // R3.40 Colors get dim when blurred.
                 Ca2 = (int)Math.Round(rgbValues[Idx] * BlrFac);
                 if (255 < Ca2)
+                {
                     Ca2 = 255;
+                }
+
                 rgbValues[Idx] = (byte)Ca2;
                 Idx += 4;
             }
@@ -8022,11 +8520,19 @@ namespace MakoCelo
                 else
                 {
                     if (FLAG_EloMode == 0)
+                    {
                         tString = PlrRank[T];
+                    }
+
                     if (FLAG_EloMode == 1)
+                    {
                         tString = PlrELO[T];
+                    }
+
                     if (FLAG_EloMode == 2)
+                    {
                         tString = PlrLVL[T];
+                    }
                 }
 
                 // R3.00 Create a clipping area so names do not draw past the rectangle/label.
@@ -8051,7 +8557,10 @@ namespace MakoCelo
 
                 // R3.40 Adjust the text X position if RIGHT justified.
                 if (LAB_Name_Align[T].Alignment == StringAlignment.Far)
+                {
                     LAB_Name[T].Xtext = LAB_Name[T].X + LAB_Name[T].Width;
+                }
+
                 Cx = (int)Math.Round(Xoff + LAB_Name[T].Xtext);
                 Cy = (int)Math.Round(Yoff + LAB_Name[T].Y + LabYCenter - TextHgt12);
 
@@ -8063,7 +8572,9 @@ namespace MakoCelo
                     {
                         Gfx2.DrawString(PlrName[T], FONT_Name, tBrushShadow, Cx + 18, Cy, LAB_Name_Align[T]);
                         if (!string.IsNullOrEmpty(PlrCountry[T]))
+                        {
                             Gfx2.FillRectangle(tBrushShadow, Cx + 4, Yoff + LAB_Name[T].Y + LabYCenter - 6f, 16f, 11f);
+                        }
                     }
                     // R4.46 Centered X layout style.
                     else if (Conversions.ToBoolean(T % 2))
@@ -8071,14 +8582,18 @@ namespace MakoCelo
                         // R4.50 ODD players.
                         Gfx2.DrawString(PlrName[T], FONT_Name, tBrushShadow, Cx - 19, Cy, LAB_Name_Align[T]);
                         if (!string.IsNullOrEmpty(PlrCountry[T]))
+                        {
                             Gfx2.FillRectangle(tBrushShadow, Cx - 20, Yoff + LAB_Name[T].Y + LabYCenter - 6f, 16f, 11f);
+                        }
                     }
                     else
                     {
                         // R4.50 Even players.
                         Gfx2.DrawString(PlrName[T], FONT_Name, tBrushShadow, Cx + 19, Cy, LAB_Name_Align[T]);
                         if (!string.IsNullOrEmpty(PlrCountry[T]))
+                        {
                             Gfx2.FillRectangle(tBrushShadow, Cx + 4, Yoff + LAB_Name[T].Y + LabYCenter - 6f, 16f, 11f);
+                        }
                     }
                 }
                 else
@@ -8165,9 +8680,15 @@ namespace MakoCelo
             }
 
             if (BlrBias < 1f)
+            {
                 BlrBias = 1f;
+            }
+
             if (1.5d < BlrBias)
+            {
                 BlrBias = 1.5f;
+            }
+
             BlrBias = 1f + (BlrBias - 1f) * 16f;
             if (1 < Strings.Len(CFX3DVar[(int)clsGlobal.FXMode.Emboss, (int)clsGlobal.FXVarDefs.ShadeAmount]))
             {
@@ -8179,7 +8700,10 @@ namespace MakoCelo
             }
 
             if (Blr1 == 0f)
+            {
                 Blr1 = 0.8f;
+            }
+
             Blr2 = 1f - Blr1;
 
             // ************************************************************************
@@ -8243,7 +8767,10 @@ namespace MakoCelo
                 // R3.40 Colors get dim when blurred.
                 Ca2 = (int)Math.Round(rgbValues[Idx] * BlrBias);
                 if (255 < Ca2)
+                {
                     Ca2 = 255;
+                }
+
                 rgbValues[Idx] = (byte)Ca2;
 
                 // R4.50 Added tFac for possible optimization.
@@ -8286,17 +8813,34 @@ namespace MakoCelo
 
             // R4.10 ADDED checks for new OFFSET code.
             if (pbStats.Width < Left)
+            {
                 return;
+            }
+
             if (pbStats.Height < Top)
+            {
                 return;
+            }
+
             if (Left < 0)
+            {
                 Left = 0;
+            }
+
             if (Top < 0)
+            {
                 Top = 0;
+            }
+
             if (pbStats.Width < Left + Width)
+            {
                 Width = pbStats.Width - Left;
+            }
+
             if (pbStats.Height < Top + Height)
+            {
                 Height = pbStats.Height - Top;
+            }
 
             // R3.30 BLUR the selected rectangle area.
             // R3.40 Added -1 to Height and Width calcs.
@@ -8357,17 +8901,26 @@ namespace MakoCelo
                 {
                     tC = (int)Math.Round(Conversion.Int(Cb * Blr1 + rgbValues[Idx] * Blr2) * BlurBias);
                     if (255 < tC)
+                    {
                         tC = 255;
+                    }
+
                     rgbValues[Idx] = (byte)tC;
                     Cb = rgbValues[Idx];
                     tC = (int)Math.Round(Conversion.Int(Cg * Blr1 + rgbValues[Idx + 1] * Blr2) * BlurBias);
                     if (255 < tC)
+                    {
                         tC = 255;
+                    }
+
                     rgbValues[Idx + 1] = (byte)tC;
                     Cg = rgbValues[Idx + 1];
                     tC = (int)Math.Round(Conversion.Int(Cr * Blr1 + rgbValues[Idx + 2] * Blr2) * BlurBias);
                     if (255 < tC)
+                    {
                         tC = 255;
+                    }
+
                     rgbValues[Idx + 2] = (byte)tC;
                     Cr = rgbValues[Idx + 2];
                     Idx -= Stride;
@@ -8390,17 +8943,34 @@ namespace MakoCelo
 
             // R4.50 ADDED checks for new OFFSET code.
             if (pbStats.Width < Left)
+            {
                 return;
+            }
+
             if (pbStats.Height < Top)
+            {
                 return;
+            }
+
             if (Left < 0)
+            {
                 Left = 0;
+            }
+
             if (Top < 0)
+            {
                 Top = 0;
+            }
+
             if (pbStats.Width < Left + Width)
+            {
                 Width = pbStats.Width - Left;
+            }
+
             if (pbStats.Height < Top + Height)
+            {
                 Height = pbStats.Height - Top;
+            }
 
 
             // R4.50 BLUR the selected rectangle area.
@@ -8476,17 +9046,26 @@ namespace MakoCelo
                     {
                         tC = (int)Math.Round(Conversion.Int(Cb * Blr1 + rgbValues[Idx] * Blr2) * BlurBias);
                         if (255 < tC)
+                        {
                             tC = 255;
+                        }
+
                         rgbValues[Idx] = (byte)tC;
                         Cb = rgbValues[Idx];
                         tC = (int)Math.Round(Conversion.Int(Cg * Blr1 + rgbValues[Idx + 1] * Blr2) * BlurBias);
                         if (255 < tC)
+                        {
                             tC = 255;
+                        }
+
                         rgbValues[Idx + 1] = (byte)tC;
                         Cg = rgbValues[Idx + 1];
                         tC = (int)Math.Round(Conversion.Int(Cr * Blr1 + rgbValues[Idx + 2] * Blr2) * BlurBias);
                         if (255 < tC)
+                        {
                             tC = 255;
+                        }
+
                         rgbValues[Idx + 2] = (byte)tC;
                         Cr = rgbValues[Idx + 2];
                     }
@@ -8504,7 +9083,9 @@ namespace MakoCelo
             A = A + "Ranks are usually limited to 5 digits." + Constants.vbCr + Constants.vbCr;
             A = A + "Do you wish to continue?";
             if (Interaction.MsgBox(A, (MsgBoxStyle)((int)MsgBoxStyle.Information + (int)MsgBoxStyle.DefaultButton1 + (int)MsgBoxStyle.YesNo)) == MsgBoxResult.No)
+            {
                 return;
+            }
 
             // R3.00 Create some worst case scenario data to show n user setup.
             for (int t = 1; t <= 8; t++)
@@ -8568,7 +9149,10 @@ namespace MakoCelo
             if (FLAG_ShowPlayerCard == 0)
             {
                 if (FLAG_EloUse)
+                {
                     timELOCycle.Enabled = true;
+                }
+
                 GFX_DrawStats();
                 return;
             }
@@ -8599,7 +9183,10 @@ namespace MakoCelo
             }
 
             if (FLAG_EloUse)
+            {
                 timELOCycle.Enabled = false;
+            }
+
             if (FLAG_ShowPlayerCard == 1)
             {
                 GFX_DrawPlayerCard(Hit);
@@ -8610,9 +9197,15 @@ namespace MakoCelo
                 scrStats.Maximum = TeamListCnt[Hit] * 90;
                 T = (PlrTeam[Hit] - 1) * 90;
                 if (T < 0)
+                {
                     T = 0;
+                }
+
                 if (scrStats.Maximum < T)
+                {
                     T = scrStats.Maximum;
+                }
+
                 scrStats.Value = T;
                 GFX_DrawTeams(Hit);
             }
@@ -8670,10 +9263,11 @@ namespace MakoCelo
         private void pbStats_MouseLeave(object sender, EventArgs e)
         {
             if (GUI_Active == false)
+            {
                 return;
+            }
 
             // R3.00 We are not hovering over any players.
-            GUI_Mouse_PlrIndex = 0;
             GFX_DrawStats();
         }
 
@@ -8724,7 +9318,9 @@ namespace MakoCelo
             for (t = 1; t <= 8; t++)
             {
                 if (!string.IsNullOrEmpty(PlrName[t]))
+                {
                     Cnt += 1;
+                }
             }
 
             PLR_CountRet = Cnt;
@@ -8759,7 +9355,10 @@ namespace MakoCelo
 
                 TeamListCnt[t] = TeamListCnt_Last[t];
                 for (int T2 = 1, loopTo = TeamList.GetUpperBound(1); T2 <= loopTo; T2++)
+                {
                     TeamList[t, T2] = TeamList_Last[t, T2];
+                }
+
                 PlrELO[t] = PlrELO_Last[t];
                 PlrLVL[t] = PlrLVL_Last[t];
             }
@@ -8773,12 +9372,18 @@ namespace MakoCelo
         {
             int N;
             if (FLAG_Loading)
+            {
                 return;
+            }
+
             ColorDialog1.Color = CFX3DC[1];
             ColorDialog1.ShowDialog();
             N = cboFXVar1.SelectedIndex;
             if (0 < N)
+            {
                 CFX3DC[N] = ColorDialog1.Color;
+            }
+
             GFX_DrawStats();
             SETTINGS_Save("");
         }
@@ -8789,7 +9394,10 @@ namespace MakoCelo
 
             // R3.40 Added drawing flag.
             if (FLAG_Loading | FLAG_Drawing)
+            {
                 return;
+            }
+
             FLAG_Drawing = true;
             N = cboFXVar1.SelectedIndex;
             if (0 < N)
@@ -8813,7 +9421,10 @@ namespace MakoCelo
 
             // R3.40 Added drawing flag.
             if (FLAG_Loading | FLAG_Drawing)
+            {
                 return;
+            }
+
             FLAG_Drawing = true;
             N = cboFXVar1.SelectedIndex;
             if (0 < N)
@@ -8837,7 +9448,10 @@ namespace MakoCelo
 
             // R3.40 Added drawing flag.
             if (FLAG_Loading | FLAG_Drawing)
+            {
                 return;
+            }
+
             FLAG_Drawing = true;
             N = cboFXVar1.SelectedIndex;
             if (0 < N)
@@ -8859,7 +9473,10 @@ namespace MakoCelo
         {
             int N;
             if (FLAG_Loading)
+            {
                 return;
+            }
+
             FLAG_Loading = true;
 
             // R3.20 Get the updated FX settings.
@@ -8896,13 +9513,22 @@ namespace MakoCelo
                 }
 
                 if (string.IsNullOrEmpty(CFX3DVar[N, 2]))
+                {
                     CFX3DVar[N, 2] = Conversions.ToString(cboFXVar2.Items[1]);
+                }
+
                 cboFXVar2.Text = CFX3DVar[N, 2];
                 if (string.IsNullOrEmpty(CFX3DVar[N, 3]))
+                {
                     CFX3DVar[N, 3] = Conversions.ToString(cboFxVar3.Items[1]);
+                }
+
                 cboFxVar3.Text = CFX3DVar[N, 3];
                 if (string.IsNullOrEmpty(CFX3DVar[N, 4]))
+                {
                     CFX3DVar[N, 4] = Conversions.ToString(cboFxVar4.Items[1]);
+                }
+
                 cboFxVar4.Text = CFX3DVar[N, 4];
             }
             else
@@ -9025,7 +9651,10 @@ namespace MakoCelo
             bool tState;
             int N;
             if (FLAG_Loading)
+            {
                 return;
+            }
+
             if (chkFX.Checked)
             {
                 tState = true;
@@ -9056,7 +9685,10 @@ namespace MakoCelo
             var tmpImg = new Bitmap(pbStats.Image, pbStats.Width, pbStats.Height);
             fd.Title = "Save Stats Image";
             if (!string.IsNullOrEmpty(PATH_SaveStatsImage))
+            {
                 fd.InitialDirectory = PATH_SaveStatsImage;
+            }
+
             fd.Filter = "Png (*.png)|*.png|Gif (*.gif)|*.gif|Jpeg (*.jpg)|*.jpg";
             fd.FilterIndex = 3;
             if (fd.ShowDialog() == DialogResult.OK)
@@ -9082,11 +9714,11 @@ namespace MakoCelo
         {
             if (chkMismatch.Checked)
             {
-                FLAG_ShowMismatch = true;
+                //FLAG_ShowMismatch = true;
             }
             else
             {
-                FLAG_ShowMismatch = false;
+                //FLAG_ShowMismatch = false;
             }
         }
 
@@ -9239,7 +9871,10 @@ namespace MakoCelo
                         NoteAnim.TextCurrent = 1;
                         Note_Text[1] = NoteAnim_Text[1];   // R4.00 Only show the first line.
                         if (!string.IsNullOrEmpty(Note_Text[1]))
+                        {
                             HasText = true;
+                        }
+
                         break;
                     }
 
@@ -9250,11 +9885,15 @@ namespace MakoCelo
                         for (int t = 1; t <= 10; t++)
                         {
                             if (!string.IsNullOrEmpty(Strings.Trim(NoteAnim_Text[t])))
+                            {
                                 Cnt += 1;
+                            }
                         }
 
                         if (1 < Cnt)
+                        {
                             tDelim = NoteAnim.Delim;
+                        }
 
                         // R4.00 Build a giant string with all notes in it. Place Delimiter string in between each line.
                         Note_Text[1] = "";
@@ -9548,7 +10187,9 @@ namespace MakoCelo
                             for (tY = 0; BackBmp.Height >= 0 ? tY <= loopTo : tY >= loopTo; tY += BackBmp.Height)
                             {
                                 for (int tX = 0, loopTo1 = BM.Width; BackBmp.Width >= 0 ? tX <= loopTo1 : tX >= loopTo1; tX += BackBmp.Width)
+                                {
                                     Gfx.DrawImage(BackBmp, tX, tY, BackBmp.Width, BackBmp.Height);
+                                }
                             }
 
                             break;
@@ -9607,7 +10248,10 @@ namespace MakoCelo
                         {
                             NoteAnim.Y += NoteAnim.Ydir;
                             if (NoteAnim.Y <= NoteAnim.Yend)
+                            {
                                 NoteAnim.Y = NoteAnim.Yend;
+                            }
+
                             break;
                         }
 
@@ -9615,7 +10259,10 @@ namespace MakoCelo
                         {
                             NoteAnim.Y += NoteAnim.Ydir;
                             if (NoteAnim.Y >= NoteAnim.Yend)
+                            {
                                 NoteAnim.Y = NoteAnim.Yend;
+                            }
+
                             break;
                         }
 
@@ -9623,9 +10270,15 @@ namespace MakoCelo
                         {
                             NoteAnim.Ystart += NoteAnim.Ydir;
                             if (255f < NoteAnim.Ystart)
+                            {
                                 NoteAnim.Ystart = 255f;
+                            }
+
                             if (NoteAnim.Y >= NoteAnim.Yend)
+                            {
                                 NoteAnim.Y = NoteAnim.Yend;
+                            }
+
                             break;
                         }
                 }
@@ -9654,7 +10307,9 @@ namespace MakoCelo
             }
 
             if (NoteAnim.Mode == 1)
+            {
                 SF.Alignment = StringAlignment.Near;
+            }
 
             // R4.00 Draw the TEXT SHADOW if one has been selected.
             if (0 != LSNote.ShadowX | 0 != LSNote.ShadowY)
@@ -9670,7 +10325,9 @@ namespace MakoCelo
                     {
                         sY2 = sY + (TextHgt12 + TextHgt12) * t;
                         if (sY2 < pbNote.Height)
+                        {
                             Gfx.DrawString(Note[NoteAnim.TextCurrent + t], tFont, tBrush, sX, sY2, SF);
+                        }
                     }
                 }
             }
@@ -9746,7 +10403,9 @@ namespace MakoCelo
                             for (tY = 0; OVLBmp.Height >= 0 ? tY <= loopTo4 : tY >= loopTo4; tY += OVLBmp.Height)
                             {
                                 for (int tX = 0, loopTo5 = BM.Width; OVLBmp.Width >= 0 ? tX <= loopTo5 : tX >= loopTo5; tX += OVLBmp.Width)
+                                {
                                     Gfx.DrawImage(OVLBmp, tX, tY, OVLBmp.Width, OVLBmp.Height);
+                                }
                             }
 
                             break;
@@ -9828,7 +10487,9 @@ namespace MakoCelo
 
             NoteAnim.TimeAcc += 33L;
             if (NoteAnim.TimeHold * 1000L < NoteAnim.TimeAcc)
+            {
                 NoteAnim.Holding = false;   // R4.00 TimeHold is in secs, need mS.
+            }
 
             // R4.00 Are we done animating a section/Line.
             if (NoteAnim.Holding == false)
@@ -9838,7 +10499,10 @@ namespace MakoCelo
                     case 1:
                         {
                             if (NoteAnim.X < NoteAnim.Xend)
+                            {
                                 NoteAnim.X = NoteAnim.Xstart;
+                            }
+
                             break;
                         }
 
@@ -9863,7 +10527,9 @@ namespace MakoCelo
                                 {
                                     NoteAnim.TextCurrent = 1;
                                     if (NoteAnim.Mode == 5)
+                                    {
                                         NoteAnim.Y = NoteAnim.Ystart;
+                                    }
                                 }
                             }
 
@@ -9878,7 +10544,9 @@ namespace MakoCelo
                                 NoteAnim.Y = NoteAnim.Ystart;
                                 NoteAnim.TextCurrent += 1;
                                 if (NoteAnim.TextCount < NoteAnim.TextCurrent)
+                                {
                                     NoteAnim.TextCurrent = 1;
+                                }
                             }
 
                             break;
@@ -9892,7 +10560,9 @@ namespace MakoCelo
                                 NoteAnim.Ystart = 0f;
                                 NoteAnim.TextCurrent += 1;
                                 if (NoteAnim.TextCount < NoteAnim.TextCurrent)
+                                {
                                     NoteAnim.TextCurrent = 1;
+                                }
                             }
 
                             break;
@@ -9952,34 +10622,63 @@ namespace MakoCelo
         {
             tsmSetVolTo100.Checked = false;
             if (Vol == 100)
+            {
                 tsmSetVolTo100.Checked = true;
+            }
+
             tsmSetVolTo90.Checked = false;
             if (Vol == 90)
+            {
                 tsmSetVolTo90.Checked = true;
+            }
+
             tsmSetVolTo80.Checked = false;
             if (Vol == 80)
+            {
                 tsmSetVolTo80.Checked = true;
+            }
+
             tsmSetVolTo70.Checked = false;
             if (Vol == 70)
+            {
                 tsmSetVolTo70.Checked = true;
+            }
+
             tsmSetVolTo60.Checked = false;
             if (Vol == 60)
+            {
                 tsmSetVolTo60.Checked = true;
+            }
+
             tsmSetVolTo50.Checked = false;
             if (Vol == 50)
+            {
                 tsmSetVolTo50.Checked = true;
+            }
+
             tsmSetVolTo40.Checked = false;
             if (Vol == 40)
+            {
                 tsmSetVolTo40.Checked = true;
+            }
+
             tsmSetVolTo30.Checked = false;
             if (Vol == 30)
+            {
                 tsmSetVolTo30.Checked = true;
+            }
+
             tsmSetVolTo20.Checked = false;
             if (Vol == 20)
+            {
                 tsmSetVolTo20.Checked = true;
+            }
+
             tsmSetVolTo10.Checked = false;
             if (Vol == 10)
+            {
                 tsmSetVolTo10.Checked = true;
+            }
         }
 
         private string SOUND_GetName(string tFile)
@@ -10016,7 +10715,9 @@ namespace MakoCelo
             // R4.34 Stop ALL audio being played. Sound Pads and Rank reader.
             _soundPlayer.Stop();
             if (FLAG_SpeechOK)
+            {
                 SpeechSynth.SpeakAsyncCancelAll();
+            }
         }
 
         private void cmSound01_Click(object sender, EventArgs e)
@@ -10612,13 +11313,19 @@ namespace MakoCelo
         {
             var DlgNotes = new frmNotes(chkTips.Checked);
             for (int t = 1; t <= 10; t++)
-                DlgNotes.set_NoteText(t, NoteAnim01_Text[t]);
+            {
+                DlgNotes.NoteText[t] = NoteAnim01_Text[t];
+        }
+
             DlgNotes.NoteAnim = NoteAnim01;
             DlgNotes.ShowDialog();
             if (DlgNotes.Cancel == false)
             {
                 for (int t = 1; t <= 10; t++)
-                    NoteAnim01_Text[t] = DlgNotes.get_NoteText(t);
+                {
+                    NoteAnim01_Text[t] = DlgNotes.NoteText[t];
+                }
+
                 NoteAnim01 = DlgNotes.NoteAnim;
                 SETTINGS_Save("");
             }
@@ -10630,13 +11337,19 @@ namespace MakoCelo
         {
             var DlgNotes = new frmNotes(chkTips.Checked);
             for (int t = 1; t <= 10; t++)
-                DlgNotes.set_NoteText(t, NoteAnim02_Text[t]);
+            {
+                DlgNotes.NoteText[t] = NoteAnim02_Text[t];
+            }
+
             DlgNotes.NoteAnim = NoteAnim02;
             DlgNotes.ShowDialog();
             if (DlgNotes.Cancel == false)
             {
                 for (int t = 1; t <= 10; t++)
-                    NoteAnim02_Text[t] = DlgNotes.get_NoteText(t);
+                {
+                    NoteAnim02_Text[t] = DlgNotes.NoteText[t];
+                }
+
                 NoteAnim02 = DlgNotes.NoteAnim;
                 SETTINGS_Save("");
             }
@@ -10648,13 +11361,19 @@ namespace MakoCelo
         {
             var DlgNotes = new frmNotes(chkTips.Checked);
             for (int t = 1; t <= 10; t++)
-                DlgNotes.set_NoteText(t, NoteAnim03_Text[t]);
+            {
+                DlgNotes.NoteText[t] = NoteAnim03_Text[t];
+            }
+
             DlgNotes.NoteAnim = NoteAnim03;
             DlgNotes.ShowDialog();
             if (DlgNotes.Cancel == false)
             {
                 for (int t = 1; t <= 10; t++)
-                    NoteAnim03_Text[t] = DlgNotes.get_NoteText(t);
+                {
+                    NoteAnim03_Text[t] = DlgNotes.NoteText[t];
+                }
+
                 NoteAnim03 = DlgNotes.NoteAnim;
                 SETTINGS_Save("");
             }
@@ -10666,13 +11385,19 @@ namespace MakoCelo
         {
             var DlgNotes = new frmNotes(chkTips.Checked);
             for (int t = 1; t <= 10; t++)
-                DlgNotes.set_NoteText(t, NoteAnim04_Text[t]);
+            {
+                DlgNotes.NoteText[t] = NoteAnim04_Text[t];
+            }
+
             DlgNotes.NoteAnim = NoteAnim04;
             DlgNotes.ShowDialog();
             if (DlgNotes.Cancel == false)
             {
                 for (int t = 1; t <= 10; t++)
-                    NoteAnim04_Text[t] = DlgNotes.get_NoteText(t);
+                {
+                    NoteAnim04_Text[t] = DlgNotes.NoteText[t];
+                }
+
                 NoteAnim04 = DlgNotes.NoteAnim;
                 SETTINGS_Save("");
             }
@@ -10707,9 +11432,15 @@ namespace MakoCelo
             // R4.00 Scrollbars are bugged.
             currentVolume = scrVolume.Value;
             if (currentVolume < 0)
+            {
                 currentVolume = 0;
+            }
+
             if (100 < currentVolume)
+            {
                 currentVolume = 100;
+            }
+
             AUDIO_SetVolume(currentVolume, 100);
             lbVolume.Text = currentVolume.ToString();
         }
@@ -10730,7 +11461,10 @@ namespace MakoCelo
         private void cboNoteSpace_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (FLAG_Loading)
+            {
                 return;
+            }
+
             NOTE_Spacing = cboNoteSpace.SelectedIndex;
             SCREEN_Organize();
             SETTINGS_Save("");
@@ -10824,12 +11558,16 @@ namespace MakoCelo
 
         private void AUDIO_SelectFile(int index)
         {
-            var fd = new OpenFileDialog();
-            fd.Title = "Select a sound to play";
+            var fd = new OpenFileDialog
+            {
+                Title = "Select a sound to play"
+            };
             if (string.IsNullOrEmpty(SOUND_File[index]))
             {
                 if (!string.IsNullOrEmpty(PATH_SoundFiles))
+                {
                     fd.InitialDirectory = PATH_SoundFiles;
+                }
             }
             else
             {
@@ -10899,7 +11637,10 @@ namespace MakoCelo
         {
             // R4.10 Added drawing flag.
             if (FLAG_Loading | FLAG_Drawing)
+            {
                 return;
+            }
+
             FLAG_Drawing = true;
             SETTINGS_Save("");
             GFX_DrawStats();
@@ -10910,7 +11651,10 @@ namespace MakoCelo
         {
             // R4.10 Added drawing flag.
             if (FLAG_Loading | FLAG_Drawing)
+            {
                 return;
+            }
+
             FLAG_Drawing = true;
             SETTINGS_Save("");
             GFX_DrawStats();
@@ -10920,11 +11664,16 @@ namespace MakoCelo
         private void tbXoff_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (Conversions.ToString(e.KeyChar) != Constants.vbCr)
+            {
                 return;
+            }
 
             // R4.10 Added drawing flag.
             if (FLAG_Loading | FLAG_Drawing)
+            {
                 return;
+            }
+
             FLAG_Drawing = true;
 
             // R4.50 Force STATS redraw.
@@ -10937,11 +11686,16 @@ namespace MakoCelo
         private void tbYoff_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (Conversions.ToString(e.KeyChar) != Constants.vbCr)
+            {
                 return;
+            }
 
             // R4.10 Added drawing flag.
             if (FLAG_Loading | FLAG_Drawing)
+            {
                 return;
+            }
+
             FLAG_Drawing = true;
 
             // R4.50 Force STATS redraw.
@@ -10958,11 +11712,16 @@ namespace MakoCelo
         private void tbXsize_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (Conversions.ToString(e.KeyChar) != Constants.vbCr)
+            {
                 return;
+            }
 
             // R4.10 Added drawing flag.
             if (FLAG_Loading | FLAG_Drawing)
+            {
                 return;
+            }
+
             FLAG_Drawing = true;
             STATS_ClipXY((float)Conversion.Val(tbXsize.Text), (float)Conversion.Val(tbYSize.Text));
             STATS_AdjustSize();
@@ -10981,11 +11740,16 @@ namespace MakoCelo
         private void tbYSize_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (Conversions.ToString(e.KeyChar) != Constants.vbCr)
+            {
                 return;
+            }
 
             // R4.10 Added drawing flag.
             if (FLAG_Loading | FLAG_Drawing)
+            {
                 return;
+            }
+
             FLAG_Drawing = true;
             STATS_ClipXY((float)Conversion.Val(tbXsize.Text), (float)Conversion.Val(tbYSize.Text));
             STATS_AdjustSize();
@@ -11003,9 +11767,15 @@ namespace MakoCelo
 
             int result = (int)MessageBox.Show("You have chosen to restore all STATS pages settings to their default state." + Constants.vbCr + Constants.vbCr + "Do you wish To continue?", "STATS - Restore Defaults", MessageBoxButtons.YesNoCancel);
             if (result == (int)DialogResult.Cancel | result == (int)DialogResult.No)
+            {
                 return;
+            }
+
             if (FLAG_Loading | FLAG_Drawing)
+            {
                 return;
+            }
+
             FLAG_Drawing = true;
 
             // R4.30 Updated.
@@ -11236,7 +12006,9 @@ namespace MakoCelo
             for (int t = 1; t <= 7; t++)
             {
                 for (int tt = 1; tt <= 4; tt++)
-                    PSDialog.set_LVLs(t, tt, LVLS[t, tt]);
+                {
+                    PSDialog.LVLs[t, tt] = LVLS[t, tt];
+                }
             }
 
             // R4.00 Call the setup dialog and default to CANCEL being pressed.
@@ -11246,7 +12018,9 @@ namespace MakoCelo
                 for (int t = 1; t <= 7; t++)
                 {
                     for (int tt = 1; tt <= 4; tt++)
-                        LVLS[t, tt] = PSDialog.get_LVLs(t, tt);
+                    {
+                        LVLS[t, tt] = PSDialog.LVLs[t, tt];
+                    }
                 }
 
                 SETTINGS_Save("");
@@ -11263,7 +12037,9 @@ namespace MakoCelo
                 for (int T2 = 1; T2 <= 4; T2++)
                 {
                     if (Conversion.Val(LVLS[T1, T2]) < 1d)
+                    {
                         BadData = true;
+                    }
                 }
             }
 
@@ -11272,7 +12048,9 @@ namespace MakoCelo
                 for (int T2 = 2; T2 <= 4; T2++)
                 {
                     if (Conversion.Val(LVLS[T1, T2]) < 1d)
+                    {
                         BadData = true;
+                    }
                 }
             }
 
@@ -11456,7 +12234,10 @@ namespace MakoCelo
                                 P3 = Strings.InStr(P2, RawResp, "rank");
                                 PlrRankALL[PLRSlot, T1, T2] = (int)Math.Round(Conversion.Val(RawResp.Substring(P3 + 5, 10)));
                                 if (PlrRankALL[PLRSlot, T1, T2] == -1)
+                                {
                                     PlrRankALL[PLRSlot, T1, T2] = 0;
+                                }
+
                                 if (0 < PlrRankWin[PLRSlot, T1, T2])
                                 {
                                     PlrRankPerc[PLRSlot, T1, T2] = (100 * PlrRankWin[PLRSlot, T1, T2] / (double)(PlrRankWin[PLRSlot, T1, T2] + PlrRankLoss[PLRSlot, T1, T2])).ToString("#0");
@@ -11472,7 +12253,7 @@ namespace MakoCelo
                     P2 = Strings.InStr(P2 + 15, RawResp, "leaderboard_id");
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // R4.41 Added logging and color change.
                 lbError1.Text = "RID error:" + PLRSlot.ToString();
@@ -11481,7 +12262,9 @@ namespace MakoCelo
             }
 
             if (!string.IsNullOrEmpty(RawResp))
+            {
                 STAT_GetTeamsFromRID(RawResp, PLRSlot);
+            }
         }
 
         private void STAT_GetTeamsFromRID(string RawResp, int PLRslot) // R4.45 Was  RID As Integer, PLRSlot As Integer)
@@ -11489,7 +12272,6 @@ namespace MakoCelo
             string s;
             string A = "";
             int P1, P2, PEnd;
-            string SearchCnt = "4";
             string PLR1 = "";
             string PLR2 = "";
             string PLR3 = "";
@@ -11673,7 +12455,7 @@ namespace MakoCelo
                     P1 = Strings.InStr(P1 + 5, RawResp, "statgroup_id");
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // R4.41 Added logging and color change.
                 lbError1.Text = "Team Error";
@@ -11694,7 +12476,9 @@ namespace MakoCelo
                 // *****************************************************************
                 FLAG_EloMode += 1;
                 if (2 < FLAG_EloMode)
+                {
                     FLAG_EloMode = 0;
+                }
 
                 // R4.20 Moved sub for outside calls.
                 GFX_DrawStats();
@@ -11737,9 +12521,15 @@ namespace MakoCelo
                 }
 
                 if (Yold < scrStats.Minimum)
+                {
                     Yold = scrStats.Minimum;
+                }
+
                 if (scrStats.Maximum < Yold)
+                {
                     Yold = scrStats.Maximum;
+                }
+
                 scrStats.Value = (int)Yold;
 
                 // R4.50 Data is drawn in scrollbar code.
@@ -11783,10 +12573,16 @@ namespace MakoCelo
             int y1, y2;
             y1 = r.Top + d;
             if (Mid < y1)
+            {
                 y1 = Mid;
+            }
+
             y2 = r.Bottom - d;
             if (y2 < Mid)
+            {
                 y2 = Mid;
+            }
+
             path.AddLine(r.Left + d, r.Top, r.Right - d, r.Top);
             path.AddArc(Rectangle.FromLTRB(r.Right - d, r.Top, r.Right, r.Top + d), -90, 90f);
             path.AddLine(r.Right, y1, r.Right, y2);
@@ -11847,7 +12643,6 @@ namespace MakoCelo
 
         private void RES_GetCountryData()
         {
-            string A = "";
             var Cnt = default(int);
 
             // R4.46 Default to no country names available.

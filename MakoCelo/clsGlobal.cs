@@ -77,7 +77,7 @@ namespace MakoCelo
             public float Height;
         }
 
-        public struct t_NoteAnimation
+        public class t_NoteAnimation
         {
             public bool Active;
             public int Mode;

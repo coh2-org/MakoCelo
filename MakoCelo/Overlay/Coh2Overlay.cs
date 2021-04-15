@@ -30,15 +30,25 @@ namespace MakoCelo.Overlay
 
             if (e.RecreateResources)
             {
-                foreach (var pair in _brushes) pair.Value.Dispose();
-                foreach (var pair in _images) pair.Value.Dispose();
+                foreach (var pair in _brushes)
+                {
+                    pair.Value.Dispose();
+                }
+
+                foreach (var pair in _images)
+                {
+                    pair.Value.Dispose();
+                }
             }
 
             _brushes["black"] = gfx.CreateSolidBrush(0, 0, 0, 0.8F);
             _brushes["green"] = gfx.CreateSolidBrush(0, 255, 0, 0.8F);
             _brushes["background"] = gfx.CreateSolidBrush(0x33, 0x36, 0x3F, 0);
 
-            if (e.RecreateResources) return;
+            if (e.RecreateResources)
+            {
+                return;
+            }
 
             _fonts["consolas"] = gfx.CreateFont("Consolas", 14);
 
@@ -46,9 +56,20 @@ namespace MakoCelo.Overlay
 
         private void _window_DestroyGraphics(object sender, DestroyGraphicsEventArgs e)
         {
-            foreach (var pair in _brushes) pair.Value.Dispose();
-            foreach (var pair in _fonts) pair.Value.Dispose();
-            foreach (var pair in _images) pair.Value.Dispose();
+            foreach (var pair in _brushes)
+            {
+                pair.Value.Dispose();
+            }
+
+            foreach (var pair in _fonts)
+            {
+                pair.Value.Dispose();
+            }
+
+            foreach (var pair in _images)
+            {
+                pair.Value.Dispose();
+            }
         }
 
         private void _window_DrawGraphics(object sender, DrawGraphicsEventArgs e)

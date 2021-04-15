@@ -38,13 +38,24 @@ namespace MakoCelo
             else
             {
                 if (!string.IsNullOrEmpty(frmMain.PATH_Note01_Bmp))
+                {
                     tPath = PATH_StripFilename(frmMain.PATH_Note01_Bmp);
+                }
+
                 if (!string.IsNullOrEmpty(frmMain.PATH_Note02_Bmp))
+                {
                     tPath = PATH_StripFilename(frmMain.PATH_Note02_Bmp);
+                }
+
                 if (!string.IsNullOrEmpty(frmMain.PATH_Note03_Bmp))
+                {
                     tPath = PATH_StripFilename(frmMain.PATH_Note03_Bmp);
+                }
+
                 if (!string.IsNullOrEmpty(frmMain.PATH_Note04_Bmp))
+                {
                     tPath = PATH_StripFilename(frmMain.PATH_Note04_Bmp);
+                }
             }
 
             PATH_GetAnyPathRet = tPath;

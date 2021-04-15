@@ -30,46 +30,12 @@ namespace MakoCelo
         }
         // R4.00 This class should be rewritten to use properties.
 
-        private clsGlobal.t_NoteAnimation _NoteAnim;
-        private bool _Cancel = true;
-        private string[] _NoteText = new string[12];
+        public string[] NoteText { get; set; } = new string[12];
         private readonly bool _displayTooltips;
 
-        public clsGlobal.t_NoteAnimation NoteAnim
-        {
-            get
-            {
-                return _NoteAnim;
-            }
+        public clsGlobal.t_NoteAnimation NoteAnim { get; set; }
 
-            set
-            {
-                _NoteAnim = value;
-            }
-        }
-
-        public bool Cancel
-        {
-            get
-            {
-                return _Cancel;
-            }
-
-            set
-            {
-                _Cancel = value;
-            }
-        }
-
-        public string get_NoteText(int Index)
-        {
-            return _NoteText[Index];
-        }
-
-        public void set_NoteText(int Index, string value)
-        {
-            _NoteText[Index] = value;
-        }
+        public bool Cancel { get; set; } = true;
 
         private void frmNotes_Load(object sender, EventArgs e)
         {
@@ -86,25 +52,28 @@ namespace MakoCelo
                 ToolTip1.Active = false;
             }
 
-            tbN01.Text = _NoteText[1];
-            tbN02.Text = _NoteText[2];
-            tbN03.Text = _NoteText[3];
-            tbN04.Text = _NoteText[4];
-            tbN05.Text = _NoteText[5];
-            tbN06.Text = _NoteText[6];
-            tbN07.Text = _NoteText[7];
-            tbN08.Text = _NoteText[8];
-            tbN09.Text = _NoteText[9];
-            tbN10.Text = _NoteText[10];
+            tbN01.Text = NoteText[1];
+            tbN02.Text = NoteText[2];
+            tbN03.Text = NoteText[3];
+            tbN04.Text = NoteText[4];
+            tbN05.Text = NoteText[5];
+            tbN06.Text = NoteText[6];
+            tbN07.Text = NoteText[7];
+            tbN08.Text = NoteText[8];
+            tbN09.Text = NoteText[9];
+            tbN10.Text = NoteText[10];
             cboMode.Items.Add("0 - None");
             cboMode.Items.Add("1 - L<-R Crawler");
             cboMode.Items.Add("2 - Up Crawler");
             cboMode.Items.Add("3 - Down Crawler");
             cboMode.Items.Add("4 - Fade In");
             cboMode.Items.Add("5 - Up Roll");
-            N = _NoteAnim.Mode;
+            N = NoteAnim.Mode;
             if (N < 0)
+            {
                 N = 0;
+            }
+
             cboMode.SelectedIndex = N;
             cboSpeed.Items.Add("0");
             cboSpeed.Items.Add("1");
@@ -117,9 +86,12 @@ namespace MakoCelo
             cboSpeed.Items.Add("8");
             cboSpeed.Items.Add("9");
             cboSpeed.Items.Add("10");
-            N = _NoteAnim.Speed;
+            N = NoteAnim.Speed;
             if (N < 0)
+            {
                 N = 0;
+            }
+
             cboSpeed.SelectedIndex = N;
             cboHoldTime.Items.Add("0 Secs");
             cboHoldTime.Items.Add("1 Secs");
@@ -132,21 +104,27 @@ namespace MakoCelo
             cboHoldTime.Items.Add("8 Secs");
             cboHoldTime.Items.Add("9 Secs");
             cboHoldTime.Items.Add("10 Secs");
-            N = (int)_NoteAnim.TimeHold;
+            N = (int)NoteAnim.TimeHold;
             if (N < 0)
+            {
                 N = 0;
+            }
+
             cboHoldTime.SelectedIndex = N;
-            tbDelim.Text = _NoteAnim.Delim;
+            tbDelim.Text = NoteAnim.Delim;
             cboAlign.Items.Add("0 - Left");
             cboAlign.Items.Add("1 - Center");
             cboAlign.Items.Add("2 - Right");
-            cboAlign.Text = _NoteAnim.Align;
-            N = _NoteAnim.Mode;
+            cboAlign.Text = NoteAnim.Align;
+            N = NoteAnim.Mode;
             if (N < 0)
+            {
                 N = 0;
+            }
+
             cboMode.SelectedIndex = N;
-            tbXoff.Text = _NoteAnim.Xoffset.ToString();
-            tbYoff.Text = _NoteAnim.Yoffset.ToString();
+            tbXoff.Text = NoteAnim.Xoffset.ToString();
+            tbYoff.Text = NoteAnim.Yoffset.ToString();
         }
 
         private void ToolTip_Setup()
@@ -162,28 +140,37 @@ namespace MakoCelo
 
         private void cmOK_Click(object sender, EventArgs e)
         {
-            _NoteText[1] = tbN01.Text;
-            _NoteText[2] = tbN02.Text;
-            _NoteText[3] = tbN03.Text;
-            _NoteText[4] = tbN04.Text;
-            _NoteText[5] = tbN05.Text;
-            _NoteText[6] = tbN06.Text;
-            _NoteText[7] = tbN07.Text;
-            _NoteText[8] = tbN08.Text;
-            _NoteText[9] = tbN09.Text;
-            _NoteText[10] = tbN10.Text;
-            _NoteAnim.Mode = cboMode.SelectedIndex;
-            if (_NoteAnim.Mode < 0)
-                _NoteAnim.Mode = 0;
-            _NoteAnim.Speed = cboSpeed.SelectedIndex;
-            if (_NoteAnim.Speed < 0)
-                _NoteAnim.Speed = 0;
-            _NoteAnim.TimeHold = cboHoldTime.SelectedIndex;
-            if (_NoteAnim.TimeHold < 0L)
-                _NoteAnim.TimeHold = 0L;
-            _NoteAnim.Delim = tbDelim.Text;
-            _NoteAnim.Xoffset = (int)Math.Round(Conversion.Val(tbXoff.Text));
-            _NoteAnim.Yoffset = (int)Math.Round(Conversion.Val(tbYoff.Text));
+            NoteText[1] = tbN01.Text;
+            NoteText[2] = tbN02.Text;
+            NoteText[3] = tbN03.Text;
+            NoteText[4] = tbN04.Text;
+            NoteText[5] = tbN05.Text;
+            NoteText[6] = tbN06.Text;
+            NoteText[7] = tbN07.Text;
+            NoteText[8] = tbN08.Text;
+            NoteText[9] = tbN09.Text;
+            NoteText[10] = tbN10.Text;
+            NoteAnim.Mode = cboMode.SelectedIndex;
+            if (NoteAnim.Mode < 0)
+            {
+                NoteAnim.Mode = 0;
+            }
+
+            NoteAnim.Speed = cboSpeed.SelectedIndex;
+            if (NoteAnim.Speed < 0)
+            {
+                NoteAnim.Speed = 0;
+            }
+
+            NoteAnim.TimeHold = cboHoldTime.SelectedIndex;
+            if (NoteAnim.TimeHold < 0L)
+            {
+                NoteAnim.TimeHold = 0L;
+            }
+
+            NoteAnim.Delim = tbDelim.Text;
+            NoteAnim.Xoffset = (int)Math.Round(Conversion.Val(tbXoff.Text));
+            NoteAnim.Yoffset = (int)Math.Round(Conversion.Val(tbYoff.Text));
 
             // R4.00 We selected OK and close.
             Cancel = false;
@@ -247,7 +234,7 @@ namespace MakoCelo
 
         private void cboAlign_SelectedIndexChanged(object sender, EventArgs e)
         {
-            _NoteAnim.Align = cboAlign.Text;
+            NoteAnim.Align = cboAlign.Text;
         }
 
         private void Button11_Click(object sender, EventArgs e)
