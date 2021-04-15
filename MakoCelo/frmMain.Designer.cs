@@ -197,7 +197,6 @@ namespace MakoCelo
             this.SS1_Sep3 = new System.Windows.Forms.ToolStripStatusLabel();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this._chkToggleOverlay = new System.Windows.Forms.CheckBox();
-            this._chkMismatch = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.pbFact01)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbFact02)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbFact03)).BeginInit();
@@ -1079,7 +1078,6 @@ namespace MakoCelo
             this.gbFX.Controls.Add(this._cboFXVar2);
             this.gbFX.Controls.Add(this.lbFXVar2);
             this.gbFX.Controls.Add(this.lbFXVar4);
-            this.gbFX.Controls.Add(this._chkMismatch);
             this.gbFX.Location = new System.Drawing.Point(535, 0);
             this.gbFX.Name = "gbFX";
             this.gbFX.Size = new System.Drawing.Size(145, 195);
@@ -2034,20 +2032,6 @@ namespace MakoCelo
             this._chkToggleOverlay.UseVisualStyleBackColor = true;
             this._chkToggleOverlay.CheckedChanged += new System.EventHandler(this._chkToggleOverlay_CheckedChanged);
             // 
-            // _chkMismatch
-            // 
-            this._chkMismatch.AutoSize = true;
-            this._chkMismatch.Checked = true;
-            this._chkMismatch.CheckState = System.Windows.Forms.CheckState.Checked;
-            this._chkMismatch.Location = new System.Drawing.Point(9, 143);
-            this._chkMismatch.Name = "_chkMismatch";
-            this._chkMismatch.Size = new System.Drawing.Size(102, 17);
-            this._chkMismatch.TabIndex = 11;
-            this._chkMismatch.Text = "Show Bad Stats";
-            this._chkMismatch.UseVisualStyleBackColor = true;
-            this._chkMismatch.Visible = false;
-            this._chkMismatch.CheckedChanged += new System.EventHandler(this.chkMismatch_CheckedChanged);
-            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2701,30 +2685,6 @@ namespace MakoCelo
         }
 
         internal SaveFileDialog SaveFileDialog1;
-
-        internal CheckBox chkMismatch
-        {
-            [MethodImpl(MethodImplOptions.Synchronized)]
-            get
-            {
-                return _chkMismatch;
-            }
-
-            [MethodImpl(MethodImplOptions.Synchronized)]
-            set
-            {
-                if (_chkMismatch != null)
-                {
-                    _chkMismatch.CheckedChanged -= chkMismatch_CheckedChanged;
-                }
-
-                _chkMismatch = value;
-                if (_chkMismatch != null)
-                {
-                    _chkMismatch.CheckedChanged += chkMismatch_CheckedChanged;
-                }
-            }
-        }
 
         internal ToolTip ToolTip1;
         private CheckBox _chkTips;
@@ -4754,6 +4714,5 @@ namespace MakoCelo
         internal ToolStripStatusLabel SS1_Sep3;
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
         private CheckBox _chkToggleOverlay;
-        private CheckBox _chkMismatch;
     }
 }
