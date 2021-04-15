@@ -10,7 +10,7 @@ namespace MakoCelo
 {
     public class Settings
     {
-        private frmMain _frmMain;
+        private readonly frmMain _frmMain;
 
         public Settings(frmMain frmMain1)
         {
@@ -173,7 +173,7 @@ namespace MakoCelo
 
                     FileSystem.Input(1, ref A); // R2.00 SCREEN SIZE
                     FileSystem.Input(1, ref A); // cboPageSize.Text = Trim(A)
-                    _frmMain.SETTINGS_GetStatSize(A); // R4.10 Changed size.
+                    SETTINGS_GetStatSize(A); // R4.10 Changed size.
                     FileSystem.Input(1, ref A); // R2.00 PAGE LAYOUT Y
                     FileSystem.Input(1, ref A);
                     _frmMain.cboLayoutY.Text = Strings.Trim(A);
@@ -897,7 +897,7 @@ namespace MakoCelo
             }
 
             _frmMain.FX_SetVarControls();
-            _frmMain.SETTINGS_SetupAfterLoad();
+            SETTINGS_SetupAfterLoad();
             FileSystem.FileClose(1);
         }
 
@@ -1080,7 +1080,7 @@ namespace MakoCelo
 
                     sr.ReadLine(); // R2.00 SCREEN SIZE
                     A = sr.ReadLine(); // cboPageSize.Text = Trim(A)
-                    _frmMain.SETTINGS_GetStatSize(A);
+                    SETTINGS_GetStatSize(A);
                     sr.ReadLine(); // R2.00 PAGE LAYOUT Y
                     A = sr.ReadLine();
                     _frmMain.cboLayoutY.Text = Strings.Trim(A);
@@ -2110,7 +2110,7 @@ namespace MakoCelo
             }
 
             _frmMain.FX_SetVarControls();
-            _frmMain.SETTINGS_SetupAfterLoad();
+            SETTINGS_SetupAfterLoad();
         }
 
         public void SETTINGS_Save(string tFile)
@@ -2294,12 +2294,12 @@ namespace MakoCelo
 
                 sw.WriteLine("FX VARS");
                 for (var N = 1; N <= 10; N++)
-                    for (var t = 1; t <= 10; t++)
-                    {
-                        if (string.IsNullOrEmpty(_frmMain.CFX3DVar[N, t])) _frmMain.CFX3DVar[N, t] = "";
+                for (var t = 1; t <= 10; t++)
+                {
+                    if (string.IsNullOrEmpty(_frmMain.CFX3DVar[N, t])) _frmMain.CFX3DVar[N, t] = "";
 
-                        sw.WriteLine(_frmMain.CFX3DVar[N, t]);
-                    }
+                    sw.WriteLine(_frmMain.CFX3DVar[N, t]);
+                }
 
                 sw.WriteLine("FX ACTIVE");
                 for (var N = 1; N <= 10; N++) sw.WriteLine(_frmMain.CFX3DActive[N] ? "True" : "False");
@@ -2531,9 +2531,9 @@ namespace MakoCelo
                 sw.WriteLine(_frmMain.scrVolume.Value);
                 sw.WriteLine("WINDOW STATE");
                 A = "Normal";
-                if ((int)_frmMain.WindowState == 1) A = "Minimized";
+                if ((int) _frmMain.WindowState == 1) A = "Minimized";
 
-                if ((int)_frmMain.WindowState == 2) A = "Maximized";
+                if ((int) _frmMain.WindowState == 2) A = "Maximized";
 
                 sw.WriteLine(A);
                 sw.WriteLine(_frmMain.Location.X);
@@ -2553,7 +2553,7 @@ namespace MakoCelo
 
                 // R4.30 Added.
                 sw.WriteLine("SCAN TIME");
-                sw.WriteLine((int)Conversion.Val(_frmMain.cboDelay.Items[_frmMain.cboDelay.SelectedIndex]));
+                sw.WriteLine((int) Conversion.Val(_frmMain.cboDelay.Items[_frmMain.cboDelay.SelectedIndex]));
 
                 // R4.30 Added.
                 sw.WriteLine("MATCH ALARM ON");
@@ -2565,8 +2565,8 @@ namespace MakoCelo
 
                 sw.WriteLine("LEVEL STORAGE");
                 for (var t = 1; t <= 7; t++)
-                    for (var tt = 1; tt <= 4; tt++)
-                        sw.WriteLine(_frmMain.LVLS[t, tt]);
+                for (var tt = 1; tt <= 4; tt++)
+                    sw.WriteLine(_frmMain.LVLS[t, tt]);
 
                 // R4.30 Added.
                 sw.WriteLine("CYCLE ELO");
@@ -2660,6 +2660,409 @@ namespace MakoCelo
                 fs.Close();
                 fs.Dispose();
             }
+        }
+
+        public bool SETTINGS_Load_CheckVersion(string tFile, ref bool IsOldStyle)
+        {
+            string tPath;
+            string A;
+            var FileOK = false;
+
+            // R4.20 Added Load/Save setups options.
+            tPath = string.IsNullOrEmpty(tFile) ? Application.StartupPath + @"\MakoCelo_settings.dat" : tFile;
+
+            if (!File.Exists(tPath)) return false;
+
+            // R4.00 Create a stream reader to read the file in UTF8 mode.
+            FileStream fs = null;
+            StreamReader sr = null;
+            try
+            {
+                fs = new FileStream(tPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                sr = new StreamReader(fs, Encoding.UTF8);
+
+                // R4.00 Read VERSION from file.
+                A = sr.ReadLine();
+                switch (A ?? "")
+                {
+                    case "\"VERSION MC300\"":
+                    {
+                        FileOK = true;
+                        IsOldStyle = true;
+                        break;
+                    }
+
+                    case "\"VERSION MC400\"":
+                    {
+                        FileOK = true;
+                        IsOldStyle = true;
+                        break;
+                    }
+
+                    case "VERSION MC300":
+                    {
+                        FileOK = true;
+                        IsOldStyle = true;
+                        break;
+                    }
+
+                    case "VERSION MC400":
+                    {
+                        FileOK = true;
+                        IsOldStyle = true;
+                        break;
+                    }
+
+                    case "VERSION MC500":
+                    {
+                        FileOK = true;
+                        IsOldStyle = false;
+                        break;
+                    }
+
+                    case "VERSION MC600":
+                    {
+                        FileOK = true;
+                        IsOldStyle = false;
+                        break;
+                    }
+
+                    default:
+                    {
+                        // R4.30 Changed this message to give users a chance to not destroy settings when going back a rev of code.
+                        A = "WARNING: The MakoCelo settings file seems to be from an unknown version of code." +
+                            Constants.vbCr + Constants.vbCr;
+                        A = A + "Do you wish to try to use these settings?" + Constants.vbCr + Constants.vbCr;
+                        A = A + "NOTE: A new version of the settings file will be created later." + Constants.vbCr +
+                            Constants.vbCr;
+                        var result = (DialogResult) Interaction.MsgBox(A, MsgBoxStyle.YesNo, "MakoCelo Startup Checks");
+
+                        // R4.30 User selected YES, so load the file as the newest version and assume the file is newer than our code.
+                        if (result == DialogResult.Yes)
+                        {
+                            FileOK = true;
+                            IsOldStyle = false;
+                        }
+
+                        break;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Interaction.MsgBox(
+                    "ERROR: " + ex.Message + Constants.vbCr + Constants.vbCr + "Unable to read the saved settings." +
+                    Constants.vbCr + "The last known setup could not be loaded." + Constants.vbCr + Constants.vbCr +
+                    "If running a new version, this error may fix itself when a new setup is saved.",
+                    MsgBoxStyle.Critical, "MakoCelo - Setup Error");
+            }
+
+            sr.Close();
+            sr.Dispose();
+            fs.Close();
+            fs.Dispose();
+            return FileOK;
+        }
+
+        public void SETTINGS_GetStatSize(string OldSizeMethod)
+        {
+            int X, Y;
+
+            // R4.10 Changed from premade sizes to adjustable sizes.
+            X = 980;
+            Y = 180;
+            switch (OldSizeMethod ?? "")
+            {
+                case "0 - 580 x 140":
+                    {
+                        X = 580;
+                        Y = 140;
+                        break;
+                    }
+
+                case "1 - 640 x 160":
+                    {
+                        X = 640;
+                        Y = 160;
+                        break;
+                    }
+
+                case "2 - 720 x 180":
+                    {
+                        X = 720;
+                        Y = 180;
+                        break;
+                    }
+
+                case "3 - 800 x 200":
+                    {
+                        X = 800;
+                        Y = 200;
+                        break;
+                    }
+
+                case "4 - 960 x 240":
+                    {
+                        X = 960;
+                        Y = 240;
+                        break;
+                    }
+
+                case "5 - 1280 x 320":
+                    {
+                        X = 1280;
+                        Y = 320;
+                        break;
+                    }
+
+                case "6 - 580 x 120":
+                    {
+                        X = 580;
+                        Y = 120;
+                        break;
+                    }
+
+                case "7 - 640 x 128":
+                    {
+                        X = 640;
+                        Y = 128;
+                        break;
+                    }
+
+                case "8 - 720 x 144":
+                    {
+                        X = 720;
+                        Y = 144;
+                        break;
+                    }
+
+                case "9 - 800 x 160":
+                    {
+                        X = 800;
+                        Y = 160;
+                        break;
+                    }
+
+                case "10 - 900 x 180":
+                    {
+                        X = 900;
+                        Y = 180;
+                        break;
+                    }
+
+                case "11 - 980 x 180":
+                    {
+                        X = 980;
+                        Y = 180;
+                        break;
+                    }
+
+                case "12 - 1280 x 256":
+                    {
+                        X = 1280;
+                        Y = 256;
+                        break;
+                    }
+
+                case "13 - 580 x 68":
+                    {
+                        X = 580;
+                        Y = 68;
+                        break;
+                    }
+
+                case "14 - 640 x 80":
+                    {
+                        X = 640;
+                        Y = 80;
+                        break;
+                    }
+
+                case "15 - 720 x 92":
+                    {
+                        X = 720;
+                        Y = 92;
+                        break;
+                    }
+
+                case "16 - 800 x 100":
+                    {
+                        X = 800;
+                        Y = 100;
+                        break;
+                    }
+
+                case "17 - 900 x 120":
+                    {
+                        X = 900;
+                        Y = 120;
+                        break;
+                    }
+
+                case "18 - 980 x 120":
+                    {
+                        X = 980;
+                        Y = 120;
+                        break;
+                    }
+
+                case "19 - 1280 x 160":
+                    {
+                        X = 1280;
+                        Y = 160;
+                        break;
+                    }
+            }
+
+            _frmMain.tbXsize.Text = X.ToString();
+            _frmMain.tbYSize.Text = Y.ToString();
+            _frmMain.STATS_SizeX = X;
+            _frmMain.STATS_SizeY = Y;
+        }
+
+        public void SETTINGS_SetupAfterLoad()
+        {
+            // *****************************************************
+            // R4.40 Setup the NOTE FONTS. This was BUGGED badly. Fixed.
+            frmMain.FONT_Note01 = new Font(frmMain.FONT_Note01_Name, Conversions.ToSingle(frmMain.FONT_Note01_Size), FontStyle.Regular);
+            if (frmMain.FONT_Note01_Bold == "True")
+                frmMain.FONT_Note01 = new Font(frmMain.FONT_Note01_Name, Conversions.ToSingle(frmMain.FONT_Name_Size), FontStyle.Bold);
+
+            if (frmMain.FONT_Note01_Italic == "True")
+                frmMain.FONT_Note01 = new Font(frmMain.FONT_Note01_Name, Conversions.ToSingle(frmMain.FONT_Name_Size), FontStyle.Italic);
+
+            frmMain.FONT_Note02 = new Font(frmMain.FONT_Note02_Name, Conversions.ToSingle(frmMain.FONT_Note02_Size), FontStyle.Regular);
+            if (frmMain.FONT_Note02_Bold == "True")
+                frmMain.FONT_Note02 = new Font(frmMain.FONT_Note02_Name, Conversions.ToSingle(frmMain.FONT_Name_Size), FontStyle.Bold);
+
+            if (frmMain.FONT_Note02_Italic == "True")
+                frmMain.FONT_Note02 = new Font(frmMain.FONT_Note02_Name, Conversions.ToSingle(frmMain.FONT_Name_Size), FontStyle.Italic);
+
+            frmMain.FONT_Note03 = new Font(frmMain.FONT_Note03_Name, Conversions.ToSingle(frmMain.FONT_Note03_Size), FontStyle.Regular);
+            if (frmMain.FONT_Note03_Bold == "True")
+                frmMain.FONT_Note03 = new Font(frmMain.FONT_Note03_Name, Conversions.ToSingle(frmMain.FONT_Name_Size), FontStyle.Bold);
+
+            if (frmMain.FONT_Note03_Italic == "True")
+                frmMain.FONT_Note03 = new Font(frmMain.FONT_Note03_Name, Conversions.ToSingle(frmMain.FONT_Name_Size), FontStyle.Italic);
+
+            frmMain.FONT_Note04 = new Font(frmMain.FONT_Note04_Name, Conversions.ToSingle(frmMain.FONT_Note04_Size), FontStyle.Regular);
+            if (frmMain.FONT_Note04_Bold == "True")
+                frmMain.FONT_Note04 = new Font(frmMain.FONT_Note04_Name, Conversions.ToSingle(frmMain.FONT_Name_Size), FontStyle.Bold);
+
+            if (frmMain.FONT_Note04_Italic == "True")
+                frmMain.FONT_Note04 = new Font(frmMain.FONT_Note04_Name, Conversions.ToSingle(frmMain.FONT_Name_Size), FontStyle.Italic);
+            // *****************************************************
+
+            // *****************************************************
+            // R4.00 Setup Bitmaps
+            if (File.Exists(frmMain.PATH_Name_OVLBmp))
+                _frmMain.NameOvlBmp = new Bitmap(frmMain.PATH_Name_OVLBmp);
+            else if (!string.IsNullOrEmpty(frmMain.PATH_Name_OVLBmp))
+                Interaction.MsgBox("ERROR: The User Settings NAME OVERLAY image no longer exists." + Constants.vbCr +
+                                   Constants.vbCr + "File:" + frmMain.PATH_Name_OVLBmp);
+
+            if (0 < _frmMain.Width) _frmMain.PbNote1.Width = _frmMain.Width;
+
+            if (0 < _frmMain.Height) _frmMain.PbNote1.Height = _frmMain.Height;
+
+            if (File.Exists(frmMain.PATH_Note01_Bmp))
+                frmMain.Note01_BackBmp = new Bitmap(frmMain.PATH_Note01_Bmp);
+            else if (!string.IsNullOrEmpty(frmMain.PATH_Note01_Bmp))
+                Interaction.MsgBox("ERROR: The User Settings NOTE 1 OVERLAY image no longer exists." + Constants.vbCr +
+                                   Constants.vbCr + "File:" + frmMain.PATH_Note01_Bmp);
+
+            if (File.Exists(frmMain.PATH_Note01_OVLBmp))
+                frmMain.Note01_OVLBmp = new Bitmap(frmMain.PATH_Note01_OVLBmp);
+            else if (!string.IsNullOrEmpty(frmMain.PATH_Note01_OVLBmp))
+                Interaction.MsgBox("ERROR: The User Settings NOTE 1 OVERLAY image no longer exists." + Constants.vbCr +
+                                   Constants.vbCr + "File:" + frmMain.PATH_Note01_OVLBmp);
+
+            if (0 < _frmMain.Width) _frmMain.PbNote2.Width = _frmMain.Width;
+
+            if (0 < _frmMain.Height) _frmMain.PbNote2.Height = _frmMain.Height;
+
+            if (File.Exists(frmMain.PATH_Note02_Bmp))
+                frmMain.Note02_BackBmp = new Bitmap(frmMain.PATH_Note02_Bmp);
+            else if (!string.IsNullOrEmpty(frmMain.PATH_Note01_Bmp))
+                Interaction.MsgBox("ERROR: The User Settings NOTE 2 background image no longer exists." +
+                                   Constants.vbCr + Constants.vbCr + "File:" + frmMain.PATH_Note02_Bmp);
+
+            if (File.Exists(frmMain.PATH_Note02_OVLBmp))
+                frmMain.Note02_OVLBmp = new Bitmap(frmMain.PATH_Note02_OVLBmp);
+            else if (!string.IsNullOrEmpty(frmMain.PATH_Note01_OVLBmp))
+                Interaction.MsgBox("ERROR: The User Settings NOTE 2 OVERLAY image no longer exists." + Constants.vbCr +
+                                   Constants.vbCr + "File:" + frmMain.PATH_Note02_OVLBmp);
+
+            if (0 < _frmMain.Width) _frmMain.PbNote3.Width = _frmMain.Width;
+
+            if (0 < _frmMain.Height) _frmMain.PbNote3.Height = _frmMain.Height;
+
+            if (File.Exists(frmMain.PATH_Note03_Bmp))
+                frmMain.Note03_BackBmp = new Bitmap(frmMain.PATH_Note03_Bmp);
+            else if (!string.IsNullOrEmpty(frmMain.PATH_Note03_Bmp))
+                Interaction.MsgBox("ERROR: The User Settings NOTE 3 background image no longer exists." +
+                                   Constants.vbCr + Constants.vbCr + "File:" + frmMain.PATH_Note03_Bmp);
+
+            if (File.Exists(frmMain.PATH_Note03_OVLBmp))
+                frmMain.Note03_OVLBmp = new Bitmap(frmMain.PATH_Note03_OVLBmp);
+            else if (!string.IsNullOrEmpty(frmMain.PATH_Note03_OVLBmp))
+                Interaction.MsgBox("ERROR: The User Settings NOTE 3 OVERLAY image no longer exists." + Constants.vbCr +
+                                   Constants.vbCr + "File:" + frmMain.PATH_Note03_OVLBmp);
+
+            if (0 < _frmMain.Width) _frmMain.PbNote4.Width = _frmMain.Width;
+
+            if (0 < _frmMain.Height) _frmMain.PbNote4.Height = _frmMain.Height;
+
+            if (File.Exists(frmMain.PATH_Note04_Bmp))
+                frmMain.Note04_BackBmp = new Bitmap(frmMain.PATH_Note04_Bmp);
+            else if (!string.IsNullOrEmpty(frmMain.PATH_Note04_Bmp))
+                Interaction.MsgBox("ERROR: The User Settings NOTE 4 background image no longer exists." +
+                                   Constants.vbCr + Constants.vbCr + "File:" + frmMain.PATH_Note04_Bmp);
+
+            if (File.Exists(frmMain.PATH_Note04_OVLBmp))
+                frmMain.Note04_OVLBmp = new Bitmap(frmMain.PATH_Note04_OVLBmp);
+            else if (!string.IsNullOrEmpty(frmMain.PATH_Note04_OVLBmp))
+                Interaction.MsgBox("ERROR: The User Settings NOTE 4 OVERLAY image no longer exists." + Constants.vbCr +
+                                   Constants.vbCr + "File:" + frmMain.PATH_Note04_OVLBmp);
+            // *****************************************************
+
+            // *****************************************************
+            // R4.00 Get a texture path from defined textures.
+            if (!string.IsNullOrEmpty(frmMain.PATH_BackgroundImage))
+            {
+                frmMain.PATH_DlgBmp = Utilities.PATH_StripFilename(frmMain.PATH_BackgroundImage);
+            }
+            else
+            {
+                if (!string.IsNullOrEmpty(frmMain.PATH_Note01_Bmp)) frmMain.PATH_DlgBmp = Utilities.PATH_StripFilename(frmMain.PATH_Note01_Bmp);
+
+                if (!string.IsNullOrEmpty(frmMain.PATH_Note02_Bmp)) frmMain.PATH_DlgBmp = Utilities.PATH_StripFilename(frmMain.PATH_Note02_Bmp);
+
+                if (!string.IsNullOrEmpty(frmMain.PATH_Note03_Bmp)) frmMain.PATH_DlgBmp = Utilities.PATH_StripFilename(frmMain.PATH_Note03_Bmp);
+
+                if (!string.IsNullOrEmpty(frmMain.PATH_Note04_Bmp)) frmMain.PATH_DlgBmp = Utilities.PATH_StripFilename(frmMain.PATH_Note04_Bmp);
+            }
+            // *****************************************************
+
+            // *****************************************************
+            // R4.00 Get a SOUND file path from defined sounds.
+            if (string.IsNullOrEmpty(_frmMain.PathSoundFiles))
+                for (var t = 1; t <= 15; t++)
+                    if (!string.IsNullOrEmpty(_frmMain.SOUND_File[t]))
+                        _frmMain.PathSoundFiles = Utilities.PATH_StripFilename(_frmMain.SOUND_File[t]);
+            // *****************************************************
+
+            // *****************************************************
+            // R4.00 Initialize the SHADOW XY coordinates.
+            _frmMain.LS_SetShadowXY(ref _frmMain.LSRank);
+            _frmMain.LS_SetShadowXY(ref _frmMain.LSName);
+            _frmMain.LS_SetShadowXY(ref frmMain.LSNote01);
+            _frmMain.LS_SetShadowXY(ref frmMain.LSNote02);
+            _frmMain.LS_SetShadowXY(ref frmMain.LSNote03);
+            _frmMain.LS_SetShadowXY(ref frmMain.LSNote04);
+            // *****************************************************
+
+            _frmMain.cboNoteSpace.SelectedIndex = _frmMain.NOTE_Spacing;
         }
     }
 }

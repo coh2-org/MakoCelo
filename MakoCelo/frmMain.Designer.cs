@@ -3622,7 +3622,7 @@ namespace MakoCelo
 
         private ComboBox _cboNoteSpace;
 
-        internal ComboBox cboNoteSpace
+        public ComboBox cboNoteSpace
         {
             [MethodImpl(MethodImplOptions.Synchronized)]
             get

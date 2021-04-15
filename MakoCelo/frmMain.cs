@@ -102,7 +102,7 @@ namespace MakoCelo
         public static Bitmap Note02_OVLBmp;
         public static Bitmap Note03_OVLBmp;
         public static Bitmap Note04_OVLBmp;
-        private readonly Coh2Overlay _overlay = new();
+        public readonly Coh2Overlay _overlay = new();
         private readonly SoundPlayer _soundPlayer = new();
         public readonly bool[] CFX3DActive = new bool[11];
         public readonly Color[] CFX3DC = new Color[11];
@@ -117,59 +117,59 @@ namespace MakoCelo
         private readonly clsGlobal.t_Box[] LAB_Rank = new clsGlobal.t_Box[9]; // R2.00 Defs for current label layout. 
         private readonly float[] LVLpercs = new float[21];
         public readonly string[,] LVLS = new string[8, 5];
-        private readonly string[] PlrCountry = new string[9]; // R4.45 Added contry.
-        private readonly string[] PlrCountry_Buffer = new string[9];
+        public readonly string[] PlrCountry = new string[9]; // R4.45 Added contry.
+        public readonly string[] PlrCountry_Buffer = new string[9];
         private readonly string[] PlrCountry_Last = new string[9];
-        private readonly string[] PlrCountryName = new string[9]; // R4.46 Added contry.
-        private readonly string[] PlrCountryName_Buffer = new string[9]; // R4.46 Added contry.
+        public readonly string[] PlrCountryName = new string[9]; // R4.46 Added contry.
+        public readonly string[] PlrCountryName_Buffer = new string[9]; // R4.46 Added contry.
         private readonly string[] PlrCountryName_Last = new string[9]; // R4.46 Added contry.
-        private readonly string[] PlrELO = new string[9];
-        private readonly string[] PlrELO_Buffer = new string[9];
+        public readonly string[] PlrELO = new string[9];
+        public readonly string[] PlrELO_Buffer = new string[9];
         private readonly string[] PlrELO_Last = new string[9];
-        private readonly string[] PlrFact = new string[9];
-        private readonly string[] PlrFact_Buffer = new string[9];
+        public readonly string[] PlrFact = new string[9];
+        public readonly string[] PlrFact_Buffer = new string[9];
         private readonly string[] PlrFact_Last = new string[9];
-        private readonly int[] PlrGLVL = new int[9];
-        private readonly int[] PlrGLVL_Buffer = new int[9];
+        public readonly int[] PlrGLVL = new int[9];
+        public readonly int[] PlrGLVL_Buffer = new int[9];
         private readonly int[] PlrGLVL_Last = new int[9];
-        private readonly int[] PlrLoss = new int[9];
-        private readonly string[] PlrLVL = new string[9];
-        private readonly string[] PlrLVL_Buffer = new string[9];
+        public readonly int[] PlrLoss = new int[9];
+        public readonly string[] PlrLVL = new string[9];
+        public readonly string[] PlrLVL_Buffer = new string[9];
         private readonly string[] PlrLVL_Last = new string[9];
-        private readonly string[] PlrName = new string[9];
-        private readonly string[] PlrName_Buffer = new string[9];
+        public readonly string[] PlrName = new string[9];
+        public readonly string[] PlrName_Buffer = new string[9];
         private readonly string[] PlrName_Last = new string[9];
-        private readonly string[] PlrRank = new string[9];
-        private readonly string[] PlrRank_Buffer = new string[9];
+        public readonly string[] PlrRank = new string[9];
+        public readonly string[] PlrRank_Buffer = new string[9];
         private readonly string[] PlrRank_Last = new string[9];
-        private readonly int[,,] PlrRankALL = new int[9, 8, 5]; // R4.30 Rank from RID for all game modes.
-        private readonly int[,,] PlrRankALL_Buffer = new int[9, 8, 5]; // R4.30 Rank from RID for all game modes.
+        public readonly int[,,] PlrRankALL = new int[9, 8, 5]; // R4.30 Rank from RID for all game modes.
+        public readonly int[,,] PlrRankALL_Buffer = new int[9, 8, 5]; // R4.30 Rank from RID for all game modes.
         private readonly int[,,] PlrRankALL_Last = new int[9, 8, 5]; // R4.30 Rank from RID for all game modes.
-        private readonly int[,,] PlrRankLoss = new int[9, 8, 5]; // R4.30 Rank from RID for all game modes.
-        private readonly int[,,] PlrRankLoss_Buffer = new int[9, 8, 5]; // R4.30 Rank from RID for all game modes.
+        public readonly int[,,] PlrRankLoss = new int[9, 8, 5]; // R4.30 Rank from RID for all game modes.
+        public readonly int[,,] PlrRankLoss_Buffer = new int[9, 8, 5]; // R4.30 Rank from RID for all game modes.
         private readonly int[,,] PlrRankLoss_Last = new int[9, 8, 5]; // R4.30 Rank from RID for all game modes.
-        private readonly string[,,] PlrRankPerc = new string[9, 8, 5]; // R4.30 Rank from RID for all game modes.
-        private readonly string[,,] PlrRankPerc_Buffer = new string[9, 8, 5]; // R4.30 Rank from RID for all game modes.
+        public readonly string[,,] PlrRankPerc = new string[9, 8, 5]; // R4.30 Rank from RID for all game modes.
+        public readonly string[,,] PlrRankPerc_Buffer = new string[9, 8, 5]; // R4.30 Rank from RID for all game modes.
         private readonly string[,,] PlrRankPerc_Last = new string[9, 8, 5]; // R4.30 Rank from RID for all game modes.
-        private readonly int[,,] PlrRankWin = new int[9, 8, 5]; // R4.30 Rank from RID for all game modes.
-        private readonly int[,,] PlrRankWin_Buffer = new int[9, 8, 5]; // R4.30 Rank from RID for all game modes.
+        public readonly int[,,] PlrRankWin = new int[9, 8, 5]; // R4.30 Rank from RID for all game modes.
+        public readonly int[,,] PlrRankWin_Buffer = new int[9, 8, 5]; // R4.30 Rank from RID for all game modes.
         private readonly int[,,] PlrRankWin_Last = new int[9, 8, 5]; // R4.30 Rank from RID for all game modes.
-        private readonly int[] PlrRID = new int[9];
-        private readonly int[] PlrRID_Buffer = new int[9];
+        public readonly int[] PlrRID = new int[9];
+        public readonly int[] PlrRID_Buffer = new int[9];
         private readonly int[] PlrRID_Last = new int[9];
-        private readonly string[] PlrSteam = new string[9];
-        private readonly string[] PlrSteam_Buffer = new string[9];
+        public readonly string[] PlrSteam = new string[9];
+        public readonly string[] PlrSteam_Buffer = new string[9];
         private readonly string[] PlrSteam_Last = new string[9];
-        private readonly int[] PlrTeam = new int[9];
-        private readonly int[] PlrTeam_Buffer = new int[9];
+        public readonly int[] PlrTeam = new int[9];
+        public readonly int[] PlrTeam_Buffer = new int[9];
         private readonly int[] PlrTeam_Last = new int[9];
-        private readonly int[] PlrTLoss = new int[9];
-        private readonly int[] PlrTLoss_Buffer = new int[9];
+        public readonly int[] PlrTLoss = new int[9];
+        public readonly int[] PlrTLoss_Buffer = new int[9];
         private readonly int[] PlrTLoss_Last = new int[9];
-        private readonly int[] PlrTWin = new int[9];
-        private readonly int[] PlrTWin_Buffer = new int[9];
+        public readonly int[] PlrTWin = new int[9];
+        public readonly int[] PlrTWin_Buffer = new int[9];
         private readonly int[] PlrTWin_Last = new int[9];
-        private readonly int[] PlrWin = new int[9];
+        public readonly int[] PlrWin = new int[9];
 
         // R4.30 Get player info from RELICID
         // R4.30 ID for each game mode.
@@ -184,17 +184,17 @@ namespace MakoCelo
 
         private readonly SpeechSynthesizer SpeechSynth = new(); // R4.34 Added for TEXT-TO-SPEECH option.
 
-        private readonly clsGlobal.t_TeamList[,]
+        public readonly clsGlobal.t_TeamList[,]
             TeamList = new clsGlobal.t_TeamList[10, 1001]; // R4.34 Added for JSON team parsing.
 
-        private readonly clsGlobal.t_TeamList[,]
+        public readonly clsGlobal.t_TeamList[,]
             TeamList_Buffer = new clsGlobal.t_TeamList[10, 1001]; // R4.34 Added for JSON team parsing.
 
         private readonly clsGlobal.t_TeamList[,]
             TeamList_Last = new clsGlobal.t_TeamList[10, 1001]; // R4.34 Added for JSON team parsing.
 
-        private readonly int[] TeamListCnt = new int[10];
-        private readonly int[] TeamListCnt_Buffer = new int[10];
+        public readonly int[] TeamListCnt = new int[10];
+        public readonly int[] TeamListCnt_Buffer = new int[10];
         private readonly int[] TeamListCnt_Last = new int[10];
         private bool ANIMATION_Smooth;
         public long Celo_Height;
@@ -212,11 +212,11 @@ namespace MakoCelo
         private int CountryCount;
         private bool FLAG_CheckingLog;
         private bool FLAG_Drawing; // R3.40 Dont let combo boxes call when we are drawing.
-        private int FLAG_EloMode; // R4.30 Which value are we showing right now. Cycles with Scans.
+        public int FLAG_EloMode; // R4.30 Which value are we showing right now. Cycles with Scans.
         public bool FLAG_EloUse; // R4.30 Try to draw the ELO values on screen?
         private bool FLAG_EloValid; // R4.30 Are the current ELO values valid?
         private bool FLAG_HideMissing; // R4.30 Added to hide blanks on Overlays/Green Screens.
-        private bool FLAG_InitialScanning; // R4.30 Added a flag to clear player data. 
+        public bool FLAG_InitialScanning; // R4.30 Added a flag to clear player data. 
         public bool FLAG_Loading; // R2.00 Flag that we are loading, so do not update.
         private int FLAG_ShowPlayerCard; // R4.30 Toggle STATS and PLAYERCARD display.
         private int FLAG_ShowPlayerCardNum; // R4.30 Toggle STATS and PLAYERCARD display.
@@ -238,7 +238,7 @@ namespace MakoCelo
         private bool MainBlur_Valid;
         private Bitmap MainBuffer_BM; // R4.50 Store the premade STATS background.  
         private Graphics MainBuffer_Gfx;
-        private bool MainBuffer_Valid;
+        public bool MainBuffer_Valid;
         private Bitmap MainBuffer1_BM; // R4.50 Store the premade STATS GFX with RANK.  
         private Graphics MainBuffer1_Gfx;
         private bool MainBuffer1_Valid;
@@ -289,7 +289,7 @@ namespace MakoCelo
         private string PATH_SaveStatsImage = "";
         private string PATH_SetupPath = ""; // R4.20 Raw path for dialogs.
         private string PATH_SoundFiles = ""; // R4.00 Added sound playing.
-        private bool SCAN_Enabled;
+        public bool SCAN_Enabled;
         private long SCAN_SecCnt; // R4.30 Counter for how many secs before Auto Scan.
         public long SCAN_Time; // R4.30 Added variable scan delays.
         public int STATS_SizeX = 900;
@@ -301,6 +301,7 @@ namespace MakoCelo
         private HttpWebRequest WBrequest;
         private HttpWebResponse WBresponse;
         private readonly Settings _settings;
+        private readonly LogScanner _logScanner;
 
         public frmMain()
         {
@@ -397,13 +398,53 @@ namespace MakoCelo
             _cmErrLog.Name = "cmErrLog";
             _chkCountry.Name = "chkCountry";
             _settings = new Settings(this);
-            _settings = new Settings(this);
-            _settings = new Settings(this);
+            _logScanner = new LogScanner(this);
         }
 
         public Settings Settings
         {
             get { return _settings; }
+        }
+
+        public LogScanner LogScanner
+        {
+            get { return _logScanner; }
+        }
+
+        public Bitmap NameOvlBmp
+        {
+            set { NAME_OVLBmp = value; }
+            get { return NAME_OVLBmp; }
+        }
+
+        public PictureBox PbNote1
+        {
+            set { pbNote1 = value; }
+            get { return pbNote1; }
+        }
+
+        public PictureBox PbNote2
+        {
+            set { pbNote2 = value; }
+            get { return pbNote2; }
+        }
+
+        public PictureBox PbNote3
+        {
+            set { pbNote3 = value; }
+            get { return pbNote3; }
+        }
+
+        public PictureBox PbNote4
+        {
+            set { pbNote4 = value; }
+            get { return pbNote4; }
+        }
+
+        public string PathSoundFiles
+        {
+            set { PATH_SoundFiles = value; }
+            get { return PATH_SoundFiles; }
         }
 
         private void cmCheckLog_Click(object sender, EventArgs e)
@@ -418,7 +459,7 @@ namespace MakoCelo
             MainBuffer_Valid = false;
 
             // R4.30 Removed extra GFX draw here.
-            LOG_Scan();
+            LogScanner.LOG_Scan();
 
             // R4.41 Added.
             lbStatus.BackColor = Color.FromArgb(255, 192, 192, 192);
@@ -451,7 +492,7 @@ namespace MakoCelo
             LVLpercs[1] = 0.94022f;
         }
 
-        private void STATS_StoreLast()
+        public void STATS_StoreLast()
         {
             int t;
             var Hit = default(int);
@@ -497,551 +538,7 @@ namespace MakoCelo
                 }
         }
 
-        private void LOG_Scan()
-        {
-            // R4.00 Read the RELIC log file and get the match stats.
-            // R4.00 Stats come in two sections. Each has a Relic ID #.
-            // R4.00 Match the two sections using the Relic ID #.
-            // R4.50 Relic broke the file so now there is only one section.
-            string A, B;
-            bool FindMatch;
-            bool FindPlayers;
-            int PlrCnt;
-            var MatchMode = default(int); // R4.30 1-1v1.2-2v2,etc
-            int tLen;
-            long test1;
-            long test2;
-            long tRank;
-            var tPlrRank = new string[10]; // R3.10 Added Storage to place old vals on screen if no new onesa are found.
-            var tPlrName = new string[10];
-            var tPlrSteam = new string[10];
-            var tPlrRID = new int[10];
-            var tPlrFact = new string[10];
-            var tPlrTWin = new int[10];
-            var tPlrTLoss = new int[10];
-            var tPlrTeam = new int[10];
-            var tPlrCountry = new string[10];
-            var tPlrCountryName = new string[10];
-            var tempTL = new clsGlobal.t_TeamList();
-            var tTeamList = new clsGlobal.t_TeamList[10, 1001];
-            var tTeamListCnt = new int[10];
-            var tPlrRankALL = new int[9, 8, 5]; // R4.30 Rank from RID for all game modes.
-            var tPlrRankWin = new int[9, 8, 5]; // R4.30 Rank from RID for all game modes.
-            var tPlrRankLoss = new int[9, 8, 5]; // R4.30 Rank from RID for all game modes.
-            var tPlrRankPerc = new string[9, 8, 5]; // R4.30 Rank from RID for all game modes.
-            var tPlrELO = new string[10];
-            var tPlrLVL = new string[10];
-            var tPlrGLVL = new int[10];
-            var MatchRID = new long[10];
-            var GameRID = new long[10];
-            int tCnt;
-
-            // R3.40 Reset the on screen ERROR labels.
-            lbError1.Text = "";
-            lbError1.BackColor = Color.FromArgb(255, 192, 192, 192);
-            lbError2.Text = "";
-            lbError2.BackColor = Color.FromArgb(255, 192, 192, 192);
-
-            // R1.00 If we dont have a valid log file path, exit with help notice.
-            if (!File.Exists(PATH_Game))
-            {
-                if (string.IsNullOrEmpty(PATH_Game))
-                    Interaction.MsgBox(
-                        "Please locate the warnings.log file in your COH2 My Games directory." + Constants.vbCr +
-                        Constants.vbCr + "Click on FIND LOG FILE to search and select.", MsgBoxStyle.Information);
-                else
-                    Interaction.MsgBox(
-                        "ERROR: The LOG file location does not appear to be valid." + Constants.vbCr + Constants.vbCr +
-                        "Unable to open the LOG file to get stats." + Constants.vbCr + "Verify this file/path exists." +
-                        Constants.vbCr + Constants.vbCr + PATH_Game, MsgBoxStyle.Critical);
-
-                return;
-            }
-
-            // R4.30 Delete the initial pretend setup player information.
-            if (!FLAG_InitialScanning)
-            {
-                FLAG_InitialScanning = true;
-                for (var t = 1; t <= 8; t++)
-                {
-                    PlrRank[t] = "---";
-                    PlrName[t] = "";
-                    PlrSteam[t] = "";
-                    PlrFact[t] = "";
-                    PlrTWin[t] = 0;
-                    PlrTLoss[t] = 0;
-                    PlrTeam[t] = 0;
-                    PlrCountry[t] = "";
-                    PlrCountryName[t] = "";
-                    for (var T2 = 1; T2 <= 5; T2++)
-                    for (var T3 = 1; T3 <= 4; T3++)
-                    {
-                        PlrRankALL[t, T2, T3] = 0;
-                        PlrRankWin[t, T2, T3] = 0;
-                        PlrRankLoss[t, T2, T3] = 0;
-                        PlrRankPerc[t, T2, T3] = "";
-                    }
-
-                    TeamListCnt[t] = 0;
-                    for (int T2 = 1, loopTo = TeamList.GetUpperBound(1); T2 <= loopTo; T2++) TeamList[t, T2] = tempTL;
-
-                    PlrELO[t] = "";
-                    PlrLVL[t] = "";
-                    PlrGLVL[t] = 0;
-                }
-            }
-
-            // R3.00 Clear the Last Valid Match stats if necessary.
-            // Call STATS_StoreLast()
-
-            // R3.10 Clear the current match and find new data below. 
-            for (var t = 1; t <= 8; t++)
-            {
-                tPlrRank[t] = PlrRank[t];
-                PlrRank[t] = "---";
-                tPlrName[t] = PlrName[t];
-                PlrName[t] = "";
-                tPlrSteam[t] = PlrSteam[t];
-                PlrSteam[t] = "";
-                tPlrRID[t] = PlrRID[t];
-                PlrRID[t] = 0;
-                tPlrFact[t] = PlrFact[t];
-                PlrFact[t] = "";
-                tPlrTeam[t] = PlrTeam[t];
-                PlrTeam[t] = 0;
-                tPlrTWin[t] = PlrTWin[t];
-                PlrTWin[t] = 0;
-                tPlrTLoss[t] = PlrTLoss[t];
-                PlrTLoss[t] = 0;
-                tPlrCountry[t] = PlrCountry[t];
-                PlrCountry[t] = "";
-                tPlrCountryName[t] = PlrCountryName[t];
-                PlrCountryName[t] = "";
-                for (var T2 = 1; T2 <= 5; T2++)
-                for (var T3 = 1; T3 <= 4; T3++)
-                {
-                    tPlrRankALL[t, T2, T3] = PlrRankALL[t, T2, T3];
-                    PlrRankALL[t, T2, T3] = 0;
-                    tPlrRankWin[t, T2, T3] = PlrRankWin[t, T2, T3];
-                    PlrRankWin[t, T2, T3] = 0;
-                    tPlrRankLoss[t, T2, T3] = PlrRankLoss[t, T2, T3];
-                    PlrRankLoss[t, T2, T3] = 0;
-                    tPlrRankPerc[t, T2, T3] = PlrRankPerc[t, T2, T3];
-                    PlrRankPerc[t, T2, T3] = "";
-                }
-
-                tTeamListCnt[t] = TeamListCnt[t];
-                TeamListCnt[t] = 0;
-                for (int T2 = 1, loopTo1 = TeamList.GetUpperBound(1); T2 <= loopTo1; T2++)
-                {
-                    tTeamList[t, T2] = TeamList[t, T2];
-                    TeamList[t, T2] = tempTL;
-                }
-
-                tPlrELO[t] = PlrELO[t];
-                PlrELO[t] = "";
-                tPlrLVL[t] = PlrLVL[t];
-                PlrLVL[t] = "";
-                tPlrGLVL[t] = PlrGLVL[t];
-                PlrGLVL[t] = 0;
-
-                // R4.30 Store PUBLIC copy for LAST MATCH ability.
-                PlrRank_Buffer[t] = tPlrRank[t];
-                PlrName_Buffer[t] = tPlrName[t];
-                PlrSteam_Buffer[t] = tPlrSteam[t];
-                PlrRID_Buffer[t] = tPlrRID[t];
-                PlrFact_Buffer[t] = tPlrFact[t];
-                PlrTeam_Buffer[t] = tPlrTeam[t];
-                PlrTWin_Buffer[t] = tPlrTWin[t];
-                PlrTLoss_Buffer[t] = tPlrTLoss[t];
-                PlrCountry_Buffer[t] = tPlrCountry[t]; // R4.45 Added.
-                PlrCountryName_Buffer[t] = tPlrCountryName[t]; // R4.45 Added.
-                for (var T2 = 1; T2 <= 5; T2++)
-                for (var T3 = 1; T3 <= 4; T3++)
-                {
-                    PlrRankALL_Buffer[t, T2, T3] = tPlrRankALL[t, T2, T3];
-                    PlrRankWin_Buffer[t, T2, T3] = tPlrRankWin[t, T2, T3];
-                    PlrRankLoss_Buffer[t, T2, T3] = tPlrRankLoss[t, T2, T3];
-                    PlrRankPerc_Buffer[t, T2, T3] = tPlrRankPerc[t, T2, T3];
-                }
-
-                TeamListCnt_Buffer[t] = tTeamListCnt[t];
-                for (int T2 = 1, loopTo2 = TeamList_Buffer.GetUpperBound(1); T2 <= loopTo2; T2++)
-                    TeamList_Buffer[t, T2] = tTeamList[t, T2];
-
-                PlrELO_Buffer[t] = tPlrELO[t];
-                PlrLVL_Buffer[t] = tPlrLVL[t];
-                PlrGLVL_Buffer[t] = tPlrGLVL[t];
-            }
-
-            lbStatus.Text = "Open file...";
-            Application.DoEvents();
-            Cursor = Cursors.WaitCursor;
-
-            // R2.01 OPEN log file and start parsing.
-            var fs = new FileStream(PATH_Game, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-            var sr = new StreamReader(fs, Encoding.UTF8);
-            using (sr)
-            {
-                PlrCnt = 0;
-
-                // R2.01 Loop thru the file looking for the match stats.
-                while (!sr.EndOfStream)
-                {
-                    A = sr.ReadLine();
-
-                    // **********************************************************************************
-                    // R3.20 If Match Started string is found, find all of the other match stats lines.
-                    // **********************************************************************************
-                    if (Conversions.ToBoolean(Strings.InStr(A, "Match Started")))
-                    {
-                        FindMatch = true;
-
-                        // R3.20 We have found a new section so clear the previous data.
-                        for (var t = 1; t <= 8; t++)
-                        {
-                            PlrRank[t] = "---";
-                            PlrSteam[t] = "";
-                            MatchRID[t] = 0L;
-                        }
-
-                        PlrCnt = 0;
-                        while (!sr.EndOfStream & FindMatch)
-                        {
-                            PlrCnt += 1;
-                            B = Strings.Trim(Strings.Mid(A, 98, 20));
-                            if ((B == "-1") | string.IsNullOrEmpty(B)) // R2.01 Added +1 to rank code. 
-                            {
-                                B = ""; // R1.00 Show unranked as --       
-                            }
-                            else
-                            {
-                                tRank = (long) Math.Round(Conversion.Val(B));
-                                B = (tRank + 1L).ToString();
-                            }
-
-                            PlrRank[PlrCnt] = B;
-
-                            // R3.20 Get SteamID. If valid, get RelicID also.
-                            PlrSteam[PlrCnt] = Strings.Mid(A, 57, 17);
-                            if (Strings.Mid(PlrSteam[PlrCnt], 1, 4) != "7656")
-                            {
-                                PlrSteam[PlrCnt] = "";
-                                MatchRID[PlrCnt] = 0L;
-                            }
-                            else
-                            {
-                                MatchRID[PlrCnt] =
-                                    LOG_HexToLong(Strings.Mid(A, 41,
-                                        8)); // R3.20 <-- Convert.ToInt64(Mid(A, 41, 8), 16)
-                                if (MatchRID[PlrCnt] == -1) MatchRID[PlrCnt] = 0L;
-                            }
-
-                            // R3.20 Read the next line of the file and exit if all of the match lines have been found.
-                            A = sr.ReadLine();
-                            if (Strings.InStr(A, "Match Started") == 0) FindMatch = false;
-                        }
-                    }
-
-
-                    // **********************************************************************************
-                    // 3.20 If we find a GAME Human Player string, find all of the other player stats.
-                    // **********************************************************************************
-                    if (Conversions.ToBoolean(Strings.InStr(A, "GAME ")))
-                        if (Conversions.ToBoolean(Strings.InStr(A, "Human Player") | Strings.InStr(A, "AI Player")))
-                        {
-                            // R3.20 We have found a new section so clear the previous data.
-                            for (var t = 1; t <= 8; t++)
-                            {
-                                PlrName[t] = "";
-                                PlrFact[t] = "";
-                                PlrRID[t] = 0;
-                                PlrTeam[t] = 0;
-                                PlrTWin[t] = 0;
-                                PlrTLoss[t] = 0;
-                                PlrCountry[t] = ""; // R4.45 Added.
-                                PlrCountryName[t] = ""; // R4.46 Added.
-                                for (var T2 = 1; T2 <= 5; T2++)
-                                for (var T3 = 1; T3 <= 4; T3++)
-                                {
-                                    PlrRankALL[t, T2, T3] = 0;
-                                    PlrRankWin[t, T2, T3] = 0;
-                                    PlrRankLoss[t, T2, T3] = 0;
-                                    PlrRankPerc[t, T2, T3] = "";
-                                }
-
-                                TeamListCnt[t] = 0;
-                                for (int T2 = 1, loopTo3 = TeamList.GetUpperBound(1); T2 <= loopTo3; T2++)
-                                    TeamList[t, T2] = tempTL;
-
-                                GameRID[t] = 0L;
-                            }
-
-                            PlrCnt = 0;
-                            FindPlayers = true;
-                            while (!sr.EndOfStream & FindPlayers)
-                            {
-                                PlrCnt += 1;
-                                test1 = Strings.InStr(A, "Human Player");
-                                if (Conversions.ToBoolean(test1))
-                                {
-                                    PlrName[PlrCnt] =
-                                        LOG_FindPlayer(A,
-                                            39); // R2.01 Names are not Delimited, need to search for end of name from the end of line.
-                                    GameRID[PlrCnt] = LOG_Find_RelicID(A); // R3.20 Get the RelicID for this player.  
-                                    PlrRID[PlrCnt] = (int) GameRID[PlrCnt]; // R4.30 Added.
-                                }
-                                else
-                                {
-                                    PlrName[PlrCnt] = LOG_FindPlayer(A, 36); // R2.01 AI player. 
-                                    // PlrRank(PlrCnt) = ""                     'R4.30 Added for match tracking.
-                                    GameRID[PlrCnt] = 0L; // R3.20 AI has no RelicID.
-                                    PlrRID[PlrCnt] = 0;
-                                } // R4.30 Added.
-
-                                // R3.40 The last part of the string will have faction.
-                                tLen = Strings.Len(A); // R3.40 Get the lenght of the string.
-                                if (20 < tLen) // R3.40 This should never happen, but just in case.
-                                {
-                                    if (Strings.Mid(A, tLen - 5, 6) == "german") PlrFact[PlrCnt] = "01";
-
-                                    if (Strings.Mid(A, tLen - 5, 6) == "soviet") PlrFact[PlrCnt] = "02";
-
-                                    if (Strings.Mid(A, tLen - 10, 11) == "west_german") PlrFact[PlrCnt] = "03";
-
-                                    if (Strings.Mid(A, tLen - 2, 3) == "aef") PlrFact[PlrCnt] = "04";
-
-                                    if (Strings.Mid(A, tLen - 6, 7) == "british") PlrFact[PlrCnt] = "05";
-                                }
-
-                                // R3.20 Read the next line of the file.
-                                A = sr.ReadLine();
-                                test1 = Strings.InStr(A, "Human Player");
-                                test2 = Strings.InStr(A, "AI Player");
-                                if ((test1 == 0L) & (test2 == 0L)) FindPlayers = false;
-                            }
-                        }
-                }
-            }
-
-
-            // R2.01 Close / Clean up  streams?
-            sr.Close(); // R4.00 Should not need, is inside USING.
-            sr.Dispose();
-            fs.Close();
-            fs.Dispose();
-
-
-            // R4.30 Play the MATCH FOUND ALERT if this a NEW match and are we in AUTO mode.
-            var F_NewData = false;
-            for (var t = 1; t <= 8; t++)
-            {
-                if ((PlrName[t] ?? "") != (tPlrName[t] ?? ""))
-                {
-                    F_NewData = true;
-                    break;
-                }
-
-                if (PlrRID[t] != tPlrRID[t])
-                {
-                    F_NewData = true;
-                    break;
-                }
-
-                if ((PlrFact[t] ?? "") != (tPlrFact[t] ?? ""))
-                {
-                    F_NewData = true;
-                    break;
-                }
-                // If PlrSteam(t) <> tPlrSteam(t) Then F_NewData = True : Exit For  'R4.30 Not in file anymore.
-                // If PlrRank(t) <> tPlrRank(t) Then F_NewData = True : Exit For    'R4.30 Not in file anymore.
-            }
-
-            // R4.30 Clear the Last Valid Match stats if necessary.
-            if (F_NewData)
-            {
-                // R4.30 Reset the ELO cycle mode.
-                FLAG_EloMode = 0;
-                STATS_StoreLast();
-                if (SCAN_Enabled && chkFoundSound.Checked && !string.IsNullOrEmpty(SOUND_File[15]) & (0 < PlrCnt))
-                {
-                    AUDIO_SetVolume(100, Conversions.ToInteger(SOUND_Vol[15]));
-                    SOUND_Play(SOUND_File[15]);
-                }
-
-                // R4.50 Show time on status bar.
-                SS1_Time.Text = "Match found: " + DateTime.Now.ToString("HH:mm"); // TimeString.ToString("HH:mm")
-            }
-
-            // R3.10 If no new data was found, show the old data.
-            if (F_NewData == false)
-                for (var t = 1; t <= 8; t++)
-                {
-                    PlrRank[t] = tPlrRank[t];
-                    PlrName[t] = tPlrName[t];
-                    PlrSteam[t] = tPlrSteam[t];
-                    PlrRID[t] = tPlrRID[t];
-                    PlrFact[t] = tPlrFact[t];
-                    PlrTeam[t] = tPlrTeam[t];
-                    PlrTWin[t] = tPlrTWin[t];
-                    PlrTLoss[t] = tPlrTLoss[t];
-                    PlrCountry[t] = tPlrCountry[t]; // R4.45 Added.
-                    PlrCountryName[t] = tPlrCountryName[t]; // R4.46 Added.
-                    for (var T2 = 1; T2 <= 5; T2++)
-                    for (var T3 = 1; T3 <= 4; T3++)
-                    {
-                        PlrRankALL[t, T2, T3] = tPlrRankALL[t, T2, T3];
-                        PlrRankWin[t, T2, T3] = tPlrRankWin[t, T2, T3];
-                        PlrRankLoss[t, T2, T3] = tPlrRankLoss[t, T2, T3];
-                        PlrRankPerc[t, T2, T3] = tPlrRankPerc[t, T2, T3];
-                    }
-
-                    TeamListCnt[t] = tTeamListCnt[t];
-                    for (int T2 = 1, loopTo4 = TeamList.GetUpperBound(1); T2 <= loopTo4; T2++)
-                        TeamList[t, T2] = tTeamList[t, T2];
-
-                    PlrELO[t] = tPlrELO[t];
-                    PlrLVL[t] = tPlrLVL[t];
-                }
-
-            lbStatus.Text = "Render...";
-            Application.DoEvents();
-            if (0 < PlrCnt) MatchMode = 1;
-
-            if (2 < PlrCnt) MatchMode = 2;
-
-            if (4 < PlrCnt) MatchMode = 3;
-
-            if (6 < PlrCnt) MatchMode = 4;
-
-            // R4.30 Adjust NAME and RANKS before drawing.
-            if ((0 < PlrCnt) & (F_NewData | !SCAN_Enabled))
-            {
-                lstLog.Items.Clear(); // R4.42 Clear error log.
-
-                // R4.30 Get player ranks from the RELIC API.
-                for (var t = 1; t <= 8; t++)
-                    if (!string.IsNullOrEmpty(PlrName[t]) & !string.IsNullOrEmpty(PlrFact[t]) &
-                        (0d < Conversion.Val(GameRID[t])))
-                    {
-                        lbStatus.Text = "Web Player: " + t;
-                        Application.DoEvents();
-                        STAT_GetFromRID(GameRID[t].ToString(), t);
-                        lbStatus.Text = "";
-                        Application.DoEvents();
-                        PlrRank[t] = PlrRankALL[t, Conversions.ToInteger(PlrFact[t]), MatchMode].ToString();
-                        if (PlrRank[t] == "0") PlrRank[t] = "---";
-
-                        PlrWin[t] = PlrRankWin[t, Conversions.ToInteger(PlrFact[t]), MatchMode];
-                        PlrLoss[t] = PlrRankLoss[t, Conversions.ToInteger(PlrFact[t]), MatchMode];
-                    }
-
-                lstLog.Items.Add(DateAndTime.Now.ToLongTimeString() + " - Get RID - Complete.");
-                for (var t = 1; t <= 8; t++)
-                {
-                    // R4.30 See if any players are a premade team.
-                    tCnt = 0;
-                    if (t % 2 == 1)
-                    {
-                        for (var t2 = 1; t2 <= 7; t2 += 2)
-                            if ((PlrRank[t] ?? "") == (PlrRank[t2] ?? ""))
-                                tCnt += 1;
-                    }
-                    else
-                    {
-                        for (var t2 = 2; t2 <= 8; t2 += 2)
-                            if ((PlrRank[t] ?? "") == (PlrRank[t2] ?? ""))
-                                tCnt += 1;
-                    }
-
-                    // R4.30 Update the MAX player counts if on a premade team.
-                    PlrGLVL[t] =
-                        (int) Math.Round(Conversion.Val(LVLS[(int) Math.Round(Conversion.Val(PlrFact[t])), MatchMode]));
-                    if (tCnt == 2) // R4.30 AT 2v2
-                    {
-                        if ((PlrFact[t] == "01") | (PlrFact[t] == "03"))
-                            PlrGLVL[t] = (int) Math.Round(Conversion.Val(LVLS[7, 2]));
-                        else
-                            PlrGLVL[t] = (int) Math.Round(Conversion.Val(LVLS[6, 2]));
-                    }
-
-                    if (tCnt == 3) // R4.30 AT 3v3
-                    {
-                        if ((PlrFact[t] == "01") | (PlrFact[t] == "03"))
-                            PlrGLVL[t] = (int) Math.Round(Conversion.Val(LVLS[7, 3]));
-                        else
-                            PlrGLVL[t] = (int) Math.Round(Conversion.Val(LVLS[6, 3]));
-                    }
-
-                    if (tCnt == 4) // R4.30 AT 4v4
-                    {
-                        if ((PlrFact[t] == "01") | (PlrFact[t] == "03"))
-                            PlrGLVL[t] = (int) Math.Round(Conversion.Val(LVLS[7, 4]));
-                        else
-                            PlrGLVL[t] = (int) Math.Round(Conversion.Val(LVLS[6, 4]));
-                    }
-
-                    // R4.30 Calc ELO % and LEVEL values.
-                    if (string.IsNullOrEmpty(PlrRank[t])) PlrRank[t] = "---";
-
-                    if (string.IsNullOrEmpty(PlrName[t]))
-                    {
-                        PlrRank[t] = "";
-                        PlrELO[t] = "";
-                        PlrLVL[t] = "";
-                    }
-                    // R4.30 We have a valid player so calc ELO % and approximate LEVEL value.
-                    else if (0d < Conversion.Val(LVLS[Conversions.ToInteger(PlrFact[t]), MatchMode]))
-                    {
-                        if (PlrRank[t] == "---")
-                        {
-                            PlrELO[t] = "---";
-                            PlrLVL[t] = "---";
-                        }
-                        else
-                        {
-                            PlrELO[t] = (100d * (Conversion.Val(PlrRank[t]) / PlrGLVL[t])).ToString("##.0") + "%";
-                            PlrLVL[t] = "L-" + LOG_CalcLevel((int) Math.Round(Conversion.Val(PlrRank[t])), PlrGLVL[t]);
-                        }
-                    }
-                    else
-                    {
-                        PlrELO[t] = "";
-                        PlrLVL[t] = "";
-                    }
-                }
-            }
-
-            // R4.34 Dont write over the ELO cycle unless we have new data.
-            if (F_NewData | !SCAN_Enabled)
-            {
-                // R4.34 See if we should search the net for team ranks.
-                if (chkGetTeams.Checked)
-                {
-                    // R4.34 Set ranks if players are a team.
-                    STAT_GetCheckForTeam();
-                    lstLog.Items.Add(DateAndTime.Now.ToLongTimeString() + " - TEAM Check - Completed.");
-                }
-
-                // R4.34 Text-to-Speech the ranks.
-                if (chkSpeech.Checked) STATS_ReadAloud();
-
-                // R4.50 Force the STATS image redraw.
-                MainBuffer_Valid = false;
-
-                // R4.34 Draw the updated ranks.
-                GFX_DrawStats();
-            }
-
-            // R5.00 Overlay
-            if (SCAN_Enabled && F_NewData && _chkToggleOverlay.Checked) _overlay.Run(PlrName, PlrRank);
-            // R4.30 Clean up our GUI user indicators.
-            Cursor = Cursors.Default;
-            lbStatus.Text = "Ready";
-            Application.DoEvents();
-        }
-
-        private void STAT_GetCheckForTeam()
+        public void STAT_GetCheckForTeam()
         {
             // R4.34 Added.
             long TempRank;
@@ -1341,7 +838,7 @@ namespace MakoCelo
             }
         }
 
-        private void STATS_ReadAloud()
+        public void STATS_ReadAloud()
         {
             // R4.34 Added.
             var A = "";
@@ -1481,7 +978,7 @@ namespace MakoCelo
             if (!string.IsNullOrEmpty(A)) SpeechSynth.SpeakAsync(A);
         }
 
-        private long LOG_HexToLong(string A)
+        public long LOG_HexToLong(string A)
         {
             long L;
 
@@ -1498,7 +995,7 @@ namespace MakoCelo
             return L;
         }
 
-        private int LOG_CalcLevel(int PlrRank, int tMax)
+        public int LOG_CalcLevel(int PlrRank, int tMax)
         {
             int TL;
 
@@ -1524,7 +1021,7 @@ namespace MakoCelo
             return TL;
         }
 
-        private long LOG_Find_RelicID(string A)
+        public long LOG_Find_RelicID(string A)
         {
             var RID = 0L;
             string C;
@@ -1556,7 +1053,7 @@ namespace MakoCelo
             return RID;
         }
 
-        private string LOG_FindPlayer(string A, int CharStart)
+        public string LOG_FindPlayer(string A, int CharStart)
         {
             string C;
             int T;
@@ -1580,410 +1077,7 @@ namespace MakoCelo
             return C;
         }
 
-        private bool SETTINGS_Load_CheckVersion(string tFile, ref bool IsOldStyle)
-        {
-            string tPath;
-            string A;
-            var FileOK = false;
-
-            // R4.20 Added Load/Save setups options.
-            tPath = string.IsNullOrEmpty(tFile) ? Application.StartupPath + @"\MakoCelo_settings.dat" : tFile;
-
-            if (!File.Exists(tPath)) return false;
-
-            // R4.00 Create a stream reader to read the file in UTF8 mode.
-            FileStream fs = null;
-            StreamReader sr = null;
-            try
-            {
-                fs = new FileStream(tPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-                sr = new StreamReader(fs, Encoding.UTF8);
-
-                // R4.00 Read VERSION from file.
-                A = sr.ReadLine();
-                switch (A ?? "")
-                {
-                    case "\"VERSION MC300\"":
-                    {
-                        FileOK = true;
-                        IsOldStyle = true;
-                        break;
-                    }
-
-                    case "\"VERSION MC400\"":
-                    {
-                        FileOK = true;
-                        IsOldStyle = true;
-                        break;
-                    }
-
-                    case "VERSION MC300":
-                    {
-                        FileOK = true;
-                        IsOldStyle = true;
-                        break;
-                    }
-
-                    case "VERSION MC400":
-                    {
-                        FileOK = true;
-                        IsOldStyle = true;
-                        break;
-                    }
-
-                    case "VERSION MC500":
-                    {
-                        FileOK = true;
-                        IsOldStyle = false;
-                        break;
-                    }
-
-                    case "VERSION MC600":
-                    {
-                        FileOK = true;
-                        IsOldStyle = false;
-                        break;
-                    }
-
-                    default:
-                    {
-                        // R4.30 Changed this message to give users a chance to not destroy settings when going back a rev of code.
-                        A = "WARNING: The MakoCelo settings file seems to be from an unknown version of code." +
-                            Constants.vbCr + Constants.vbCr;
-                        A = A + "Do you wish to try to use these settings?" + Constants.vbCr + Constants.vbCr;
-                        A = A + "NOTE: A new version of the settings file will be created later." + Constants.vbCr +
-                            Constants.vbCr;
-                        var result = (DialogResult) Interaction.MsgBox(A, MsgBoxStyle.YesNo, "MakoCelo Startup Checks");
-
-                        // R4.30 User selected YES, so load the file as the newest version and assume the file is newer than our code.
-                        if (result == DialogResult.Yes)
-                        {
-                            FileOK = true;
-                            IsOldStyle = false;
-                        }
-
-                        break;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Interaction.MsgBox(
-                    "ERROR: " + ex.Message + Constants.vbCr + Constants.vbCr + "Unable to read the saved settings." +
-                    Constants.vbCr + "The last known setup could not be loaded." + Constants.vbCr + Constants.vbCr +
-                    "If running a new version, this error may fix itself when a new setup is saved.",
-                    MsgBoxStyle.Critical, "MakoCelo - Setup Error");
-            }
-
-            sr.Close();
-            sr.Dispose();
-            fs.Close();
-            fs.Dispose();
-            return FileOK;
-        }
-
-        public void SETTINGS_GetStatSize(string OldSizeMethod)
-        {
-            int X, Y;
-
-            // R4.10 Changed from premade sizes to adjustable sizes.
-            X = 980;
-            Y = 180;
-            switch (OldSizeMethod ?? "")
-            {
-                case "0 - 580 x 140":
-                {
-                    X = 580;
-                    Y = 140;
-                    break;
-                }
-
-                case "1 - 640 x 160":
-                {
-                    X = 640;
-                    Y = 160;
-                    break;
-                }
-
-                case "2 - 720 x 180":
-                {
-                    X = 720;
-                    Y = 180;
-                    break;
-                }
-
-                case "3 - 800 x 200":
-                {
-                    X = 800;
-                    Y = 200;
-                    break;
-                }
-
-                case "4 - 960 x 240":
-                {
-                    X = 960;
-                    Y = 240;
-                    break;
-                }
-
-                case "5 - 1280 x 320":
-                {
-                    X = 1280;
-                    Y = 320;
-                    break;
-                }
-
-                case "6 - 580 x 120":
-                {
-                    X = 580;
-                    Y = 120;
-                    break;
-                }
-
-                case "7 - 640 x 128":
-                {
-                    X = 640;
-                    Y = 128;
-                    break;
-                }
-
-                case "8 - 720 x 144":
-                {
-                    X = 720;
-                    Y = 144;
-                    break;
-                }
-
-                case "9 - 800 x 160":
-                {
-                    X = 800;
-                    Y = 160;
-                    break;
-                }
-
-                case "10 - 900 x 180":
-                {
-                    X = 900;
-                    Y = 180;
-                    break;
-                }
-
-                case "11 - 980 x 180":
-                {
-                    X = 980;
-                    Y = 180;
-                    break;
-                }
-
-                case "12 - 1280 x 256":
-                {
-                    X = 1280;
-                    Y = 256;
-                    break;
-                }
-
-                case "13 - 580 x 68":
-                {
-                    X = 580;
-                    Y = 68;
-                    break;
-                }
-
-                case "14 - 640 x 80":
-                {
-                    X = 640;
-                    Y = 80;
-                    break;
-                }
-
-                case "15 - 720 x 92":
-                {
-                    X = 720;
-                    Y = 92;
-                    break;
-                }
-
-                case "16 - 800 x 100":
-                {
-                    X = 800;
-                    Y = 100;
-                    break;
-                }
-
-                case "17 - 900 x 120":
-                {
-                    X = 900;
-                    Y = 120;
-                    break;
-                }
-
-                case "18 - 980 x 120":
-                {
-                    X = 980;
-                    Y = 120;
-                    break;
-                }
-
-                case "19 - 1280 x 160":
-                {
-                    X = 1280;
-                    Y = 160;
-                    break;
-                }
-            }
-
-            tbXsize.Text = X.ToString();
-            tbYSize.Text = Y.ToString();
-            STATS_SizeX = X;
-            STATS_SizeY = Y;
-        }
-
-        public void SETTINGS_SetupAfterLoad()
-        {
-            // *****************************************************
-            // R4.40 Setup the NOTE FONTS. This was BUGGED badly. Fixed.
-            FONT_Note01 = new Font(FONT_Note01_Name, Conversions.ToSingle(FONT_Note01_Size), FontStyle.Regular);
-            if (FONT_Note01_Bold == "True")
-                FONT_Note01 = new Font(FONT_Note01_Name, Conversions.ToSingle(FONT_Name_Size), FontStyle.Bold);
-
-            if (FONT_Note01_Italic == "True")
-                FONT_Note01 = new Font(FONT_Note01_Name, Conversions.ToSingle(FONT_Name_Size), FontStyle.Italic);
-
-            FONT_Note02 = new Font(FONT_Note02_Name, Conversions.ToSingle(FONT_Note02_Size), FontStyle.Regular);
-            if (FONT_Note02_Bold == "True")
-                FONT_Note02 = new Font(FONT_Note02_Name, Conversions.ToSingle(FONT_Name_Size), FontStyle.Bold);
-
-            if (FONT_Note02_Italic == "True")
-                FONT_Note02 = new Font(FONT_Note02_Name, Conversions.ToSingle(FONT_Name_Size), FontStyle.Italic);
-
-            FONT_Note03 = new Font(FONT_Note03_Name, Conversions.ToSingle(FONT_Note03_Size), FontStyle.Regular);
-            if (FONT_Note03_Bold == "True")
-                FONT_Note03 = new Font(FONT_Note03_Name, Conversions.ToSingle(FONT_Name_Size), FontStyle.Bold);
-
-            if (FONT_Note03_Italic == "True")
-                FONT_Note03 = new Font(FONT_Note03_Name, Conversions.ToSingle(FONT_Name_Size), FontStyle.Italic);
-
-            FONT_Note04 = new Font(FONT_Note04_Name, Conversions.ToSingle(FONT_Note04_Size), FontStyle.Regular);
-            if (FONT_Note04_Bold == "True")
-                FONT_Note04 = new Font(FONT_Note04_Name, Conversions.ToSingle(FONT_Name_Size), FontStyle.Bold);
-
-            if (FONT_Note04_Italic == "True")
-                FONT_Note04 = new Font(FONT_Note04_Name, Conversions.ToSingle(FONT_Name_Size), FontStyle.Italic);
-            // *****************************************************
-
-            // *****************************************************
-            // R4.00 Setup Bitmaps
-            if (File.Exists(PATH_Name_OVLBmp))
-                NAME_OVLBmp = new Bitmap(PATH_Name_OVLBmp);
-            else if (!string.IsNullOrEmpty(PATH_Name_OVLBmp))
-                Interaction.MsgBox("ERROR: The User Settings NAME OVERLAY image no longer exists." + Constants.vbCr +
-                                   Constants.vbCr + "File:" + PATH_Name_OVLBmp);
-
-            if (0 < LSNote01.Width) pbNote1.Width = LSNote01.Width;
-
-            if (0 < LSNote01.Height) pbNote1.Height = LSNote01.Height;
-
-            if (File.Exists(PATH_Note01_Bmp))
-                Note01_BackBmp = new Bitmap(PATH_Note01_Bmp);
-            else if (!string.IsNullOrEmpty(PATH_Note01_Bmp))
-                Interaction.MsgBox("ERROR: The User Settings NOTE 1 OVERLAY image no longer exists." + Constants.vbCr +
-                                   Constants.vbCr + "File:" + PATH_Note01_Bmp);
-
-            if (File.Exists(PATH_Note01_OVLBmp))
-                Note01_OVLBmp = new Bitmap(PATH_Note01_OVLBmp);
-            else if (!string.IsNullOrEmpty(PATH_Note01_OVLBmp))
-                Interaction.MsgBox("ERROR: The User Settings NOTE 1 OVERLAY image no longer exists." + Constants.vbCr +
-                                   Constants.vbCr + "File:" + PATH_Note01_OVLBmp);
-
-            if (0 < LSNote02.Width) pbNote2.Width = LSNote02.Width;
-
-            if (0 < LSNote02.Height) pbNote2.Height = LSNote02.Height;
-
-            if (File.Exists(PATH_Note02_Bmp))
-                Note02_BackBmp = new Bitmap(PATH_Note02_Bmp);
-            else if (!string.IsNullOrEmpty(PATH_Note01_Bmp))
-                Interaction.MsgBox("ERROR: The User Settings NOTE 2 background image no longer exists." +
-                                   Constants.vbCr + Constants.vbCr + "File:" + PATH_Note02_Bmp);
-
-            if (File.Exists(PATH_Note02_OVLBmp))
-                Note02_OVLBmp = new Bitmap(PATH_Note02_OVLBmp);
-            else if (!string.IsNullOrEmpty(PATH_Note01_OVLBmp))
-                Interaction.MsgBox("ERROR: The User Settings NOTE 2 OVERLAY image no longer exists." + Constants.vbCr +
-                                   Constants.vbCr + "File:" + PATH_Note02_OVLBmp);
-
-            if (0 < LSNote03.Width) pbNote3.Width = LSNote03.Width;
-
-            if (0 < LSNote03.Height) pbNote3.Height = LSNote03.Height;
-
-            if (File.Exists(PATH_Note03_Bmp))
-                Note03_BackBmp = new Bitmap(PATH_Note03_Bmp);
-            else if (!string.IsNullOrEmpty(PATH_Note03_Bmp))
-                Interaction.MsgBox("ERROR: The User Settings NOTE 3 background image no longer exists." +
-                                   Constants.vbCr + Constants.vbCr + "File:" + PATH_Note03_Bmp);
-
-            if (File.Exists(PATH_Note03_OVLBmp))
-                Note03_OVLBmp = new Bitmap(PATH_Note03_OVLBmp);
-            else if (!string.IsNullOrEmpty(PATH_Note03_OVLBmp))
-                Interaction.MsgBox("ERROR: The User Settings NOTE 3 OVERLAY image no longer exists." + Constants.vbCr +
-                                   Constants.vbCr + "File:" + PATH_Note03_OVLBmp);
-
-            if (0 < LSNote04.Width) pbNote4.Width = LSNote04.Width;
-
-            if (0 < LSNote04.Height) pbNote4.Height = LSNote04.Height;
-
-            if (File.Exists(PATH_Note04_Bmp))
-                Note04_BackBmp = new Bitmap(PATH_Note04_Bmp);
-            else if (!string.IsNullOrEmpty(PATH_Note04_Bmp))
-                Interaction.MsgBox("ERROR: The User Settings NOTE 4 background image no longer exists." +
-                                   Constants.vbCr + Constants.vbCr + "File:" + PATH_Note04_Bmp);
-
-            if (File.Exists(PATH_Note04_OVLBmp))
-                Note04_OVLBmp = new Bitmap(PATH_Note04_OVLBmp);
-            else if (!string.IsNullOrEmpty(PATH_Note04_OVLBmp))
-                Interaction.MsgBox("ERROR: The User Settings NOTE 4 OVERLAY image no longer exists." + Constants.vbCr +
-                                   Constants.vbCr + "File:" + PATH_Note04_OVLBmp);
-            // *****************************************************
-
-            // *****************************************************
-            // R4.00 Get a texture path from defined textures.
-            if (!string.IsNullOrEmpty(PATH_BackgroundImage))
-            {
-                PATH_DlgBmp = Utilities.PATH_StripFilename(PATH_BackgroundImage);
-            }
-            else
-            {
-                if (!string.IsNullOrEmpty(PATH_Note01_Bmp)) PATH_DlgBmp = Utilities.PATH_StripFilename(PATH_Note01_Bmp);
-
-                if (!string.IsNullOrEmpty(PATH_Note02_Bmp)) PATH_DlgBmp = Utilities.PATH_StripFilename(PATH_Note02_Bmp);
-
-                if (!string.IsNullOrEmpty(PATH_Note03_Bmp)) PATH_DlgBmp = Utilities.PATH_StripFilename(PATH_Note03_Bmp);
-
-                if (!string.IsNullOrEmpty(PATH_Note04_Bmp)) PATH_DlgBmp = Utilities.PATH_StripFilename(PATH_Note04_Bmp);
-            }
-            // *****************************************************
-
-            // *****************************************************
-            // R4.00 Get a SOUND file path from defined sounds.
-            if (string.IsNullOrEmpty(PATH_SoundFiles))
-                for (var t = 1; t <= 15; t++)
-                    if (!string.IsNullOrEmpty(SOUND_File[t]))
-                        PATH_SoundFiles = Utilities.PATH_StripFilename(SOUND_File[t]);
-            // *****************************************************
-
-            // *****************************************************
-            // R4.00 Initialize the SHADOW XY coordinates.
-            LS_SetShadowXY(ref LSRank);
-            LS_SetShadowXY(ref LSName);
-            LS_SetShadowXY(ref LSNote01);
-            LS_SetShadowXY(ref LSNote02);
-            LS_SetShadowXY(ref LSNote03);
-            LS_SetShadowXY(ref LSNote04);
-            // *****************************************************
-
-            cboNoteSpace.SelectedIndex = NOTE_Spacing;
-        }
-
-        private void LS_SetShadowXY(ref clsGlobal.t_LabelSetup LS)
+        public void LS_SetShadowXY(ref clsGlobal.t_LabelSetup LS)
         {
             // *****************************************************
             // R4.00 Get a SOUND file path from defined sounds.
@@ -2200,7 +1294,7 @@ namespace MakoCelo
             // R3.00 Load the base USER settings. Do not load older files that Windows did not cleanup when uninstalled.
             // ***********************************************************************************************************
             var IsOldStyle = false;
-            if (SETTINGS_Load_CheckVersion("", ref IsOldStyle))
+            if (Settings.SETTINGS_Load_CheckVersion("", ref IsOldStyle))
             {
                 if (IsOldStyle)
                     Settings.SETTINGS_Load_Old("");
@@ -2538,7 +1632,7 @@ namespace MakoCelo
             {
                 SCAN_SecCnt = 0L;
                 FLAG_CheckingLog = true;
-                LOG_Scan();
+                LogScanner.LOG_Scan();
                 FLAG_CheckingLog = false;
             }
             else
@@ -4355,7 +3449,7 @@ namespace MakoCelo
                 }
         }
 
-        private void GFX_DrawStats()
+        public void GFX_DrawStats()
         {
             // R4.32 Adjust our working BMP if needed.
             STATS_AdjustSize();
@@ -6799,7 +5893,7 @@ namespace MakoCelo
             pbNote.Image = BM;
         }
 
-        private void SOUND_Play(string tFile)
+        public void SOUND_Play(string tFile)
         {
             try
             {
@@ -7632,7 +6726,7 @@ namespace MakoCelo
             lbVolume.Text = currentVolume.ToString();
         }
 
-        private void AUDIO_SetVolume(int MasterVol, int SoundVol)
+        public void AUDIO_SetVolume(int MasterVol, int SoundVol)
         {
             // R4.10 Receive a MASTER and CHAN/SOUND volume that is 0 - 100 (OFF to FULL volume).
 
@@ -7999,7 +7093,7 @@ namespace MakoCelo
             if (fd.ShowDialog() == DialogResult.OK)
             {
                 PATH_SetupPath = fd.FileName;
-                if (SETTINGS_Load_CheckVersion(PATH_SetupPath, ref IsOldStyle))
+                if (Settings.SETTINGS_Load_CheckVersion(PATH_SetupPath, ref IsOldStyle))
                 {
                     if (IsOldStyle)
                         Settings.SETTINGS_Load_Old(PATH_SetupPath);
@@ -8196,7 +7290,7 @@ namespace MakoCelo
             return tName;
         }
 
-        private void STAT_GetFromRID(string RID, int PLRSlot)
+        public void STAT_GetFromRID(string RID, int PLRSlot)
         {
             int P2;
             var RawResp = "";
