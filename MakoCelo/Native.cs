@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MakoCelo
 {
@@ -23,5 +19,10 @@ namespace MakoCelo
             public int Right;       // x position of lower-right corner
             public int Bottom;      // y position of lower-right corner
         }
+
+        [DllImport("winmm.dll")]
+        public static extern int waveOutGetVolume(IntPtr hwo, int dwVolume);
+        [DllImport("winmm.dll")]
+        public static extern int waveOutSetVolume(IntPtr hwo, uint dwVolume);
     }
 }

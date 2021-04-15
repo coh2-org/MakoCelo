@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.VisualBasic;
+using Microsoft.VisualBasic.CompilerServices;
+using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
@@ -9,10 +11,7 @@ using System.Media;
 using System.Net;
 using System.Runtime.InteropServices;
 using System.Speech.Synthesis;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace MakoCelo
 {
@@ -118,10 +117,7 @@ namespace MakoCelo
         // R4.00 NEEDS Check could be file size and date?
         // R4.00 NEEDS Could put STATS on clipboard for pasting into Coh2 Console for people who cant Alt-Tab without crashing.
 
-        [DllImport("winmm.dll")]
-        public static extern int waveOutGetVolume(IntPtr hwo, int dwVolume);
-        [DllImport("winmm.dll")]
-        public static extern int waveOutSetVolume(IntPtr hwo, uint dwVolume);
+
 
         private SpeechSynthesizer SpeechSynth = new SpeechSynthesizer();      // R4.34 Added for TEXT-TO-SPEECH option.
         private SoundPlayer _soundPlayer = new SoundPlayer();
@@ -10728,7 +10724,7 @@ namespace MakoCelo
             ulong NewVolumeAllChannels = (ulong)(NewVolume & 0xFFFFL | (long)Math.Round(NewVolume * Math.Pow(2d, 16d)));
 
             // Set the volume
-            waveOutSetVolume(IntPtr.Zero, (uint)NewVolumeAllChannels);
+            Native.waveOutSetVolume(IntPtr.Zero, (uint)NewVolumeAllChannels);
         }
 
         private void cboNoteSpace_SelectedIndexChanged(object sender, EventArgs e)
