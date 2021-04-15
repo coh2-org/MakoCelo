@@ -4713,6 +4713,6 @@ namespace MakoCelo
         internal ToolStripStatusLabel SS1_Time;
         internal ToolStripStatusLabel SS1_Sep3;
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
-        private CheckBox _chkToggleOverlay;
+        public CheckBox _chkToggleOverlay;
     }
 }

@@ -104,9 +104,9 @@ namespace MakoCelo
         public static Bitmap Note04_OVLBmp;
         private readonly Coh2Overlay _overlay = new();
         private readonly SoundPlayer _soundPlayer = new();
-        private readonly bool[] CFX3DActive = new bool[11];
-        private readonly Color[] CFX3DC = new Color[11];
-        private readonly string[,] CFX3DVar = new string[11, 11]; // R3.10 1=Mode
+        public readonly bool[] CFX3DActive = new bool[11];
+        public readonly Color[] CFX3DC = new Color[11];
+        public readonly string[,] CFX3DVar = new string[11, 11]; // R3.10 1=Mode
         private readonly string[] Country_Abbr = new string[301];
 
         // R4.46 Added Country Strings.
@@ -116,7 +116,7 @@ namespace MakoCelo
         private readonly StringFormat[] LAB_Name_Align = new StringFormat[9];
         private readonly clsGlobal.t_Box[] LAB_Rank = new clsGlobal.t_Box[9]; // R2.00 Defs for current label layout. 
         private readonly float[] LVLpercs = new float[21];
-        private readonly string[,] LVLS = new string[8, 5];
+        public readonly string[,] LVLS = new string[8, 5];
         private readonly string[] PlrCountry = new string[9]; // R4.45 Added contry.
         private readonly string[] PlrCountry_Buffer = new string[9];
         private readonly string[] PlrCountry_Last = new string[9];
@@ -174,9 +174,9 @@ namespace MakoCelo
         // R4.30 Get player info from RELICID
         // R4.30 ID for each game mode.
         private readonly string[,] RelDataLeaderID = new string[8, 5];
-        private readonly string[] SOUND_File = new string[31]; // R4.00 Added.
+        public readonly string[] SOUND_File = new string[31]; // R4.00 Added.
 
-        private readonly string[] SOUND_Vol = new string[31]; // R4.10 Added.
+        public readonly string[] SOUND_Vol = new string[31]; // R4.10 Added.
         // R4.00 NEEDS A fast check to see if LOG file has been updated since last check, since it hiccups the animation code.
         // R4.00 NEEDS Check could be file size and date?
         // R4.00 NEEDS Could put STATS on clipboard for pasting into Coh2 Console for people who cant Alt-Tab without crashing.
@@ -197,37 +197,37 @@ namespace MakoCelo
         private readonly int[] TeamListCnt_Buffer = new int[10];
         private readonly int[] TeamListCnt_Last = new int[10];
         private bool ANIMATION_Smooth;
-        private long Celo_Height;
-        private long Celo_Left;
+        public long Celo_Height;
+        public long Celo_Left;
         private int Celo_PopupHit; // R4.00 Toggle POPUP menu on/off.  
         private object CELO_PopUpObject;
-        private long Celo_Top;
-        private long Celo_Width;
+        public long Celo_Top;
+        public long Celo_Width;
 
         // R3.40 Public Variables
-        private string Celo_Windowstate; // R4.00 Aded CELO for window position storage.
-        private int COLOR_Back_Dir; // R3.00 Future gradient on background. 
-        private Color COLOR_Back1; // R3.00 Future gradient on background. 
-        private Color COLOR_Back2; // R3.00 Future gradient on background. 
+        public string Celo_Windowstate; // R4.00 Aded CELO for window position storage.
+        public int COLOR_Back_Dir; // R3.00 Future gradient on background. 
+        public Color COLOR_Back1; // R3.00 Future gradient on background. 
+        public Color COLOR_Back2; // R3.00 Future gradient on background. 
         private int CountryCount;
         private bool FLAG_CheckingLog;
         private bool FLAG_Drawing; // R3.40 Dont let combo boxes call when we are drawing.
         private int FLAG_EloMode; // R4.30 Which value are we showing right now. Cycles with Scans.
-        private bool FLAG_EloUse; // R4.30 Try to draw the ELO values on screen?
+        public bool FLAG_EloUse; // R4.30 Try to draw the ELO values on screen?
         private bool FLAG_EloValid; // R4.30 Are the current ELO values valid?
         private bool FLAG_HideMissing; // R4.30 Added to hide blanks on Overlays/Green Screens.
         private bool FLAG_InitialScanning; // R4.30 Added a flag to clear player data. 
-        private bool FLAG_Loading; // R2.00 Flag that we are loading, so do not update.
+        public bool FLAG_Loading; // R2.00 Flag that we are loading, so do not update.
         private int FLAG_ShowPlayerCard; // R4.30 Toggle STATS and PLAYERCARD display.
         private int FLAG_ShowPlayerCardNum; // R4.30 Toggle STATS and PLAYERCARD display.
         private bool FLAG_SpeechOK; // R4.34 Is this PC speech capable?
         private bool GUI_Active; // R3.10 If TRUE, gui will redraw when mouse over events happen. May be too slow.
-        private int GUI_ColorMode; // R2.01 Color scheme number. 0-Lite,1-Dark
+        public int GUI_ColorMode; // R2.01 Color scheme number. 0-Lite,1-Dark
         private float LAB_Height; // R2.00 Height of labels.
-        private clsGlobal.t_LabelSetup LSName;
+        public clsGlobal.t_LabelSetup LSName;
 
         // R4.00 Need these global so we can set them in frmLabelSetup objects. Could be properties.
-        private clsGlobal.t_LabelSetup LSRank;
+        public clsGlobal.t_LabelSetup LSRank;
         private Bitmap Main_BM; // R4.32 Used in GFX_Draw subs.
         private Bitmap Main_BM2; // R4.32 Used in GFX Effects subs.  
         private Graphics Main_Gfx;
@@ -248,9 +248,9 @@ namespace MakoCelo
         private Bitmap MainBuffer3_BM; // R4.50 Store the premade STATS GFX with %.  
         private Graphics MainBuffer3_Gfx;
         private bool MainBuffer3_Valid;
-        private Bitmap NAME_bmp;
+        public Bitmap NAME_bmp;
         private Bitmap NAME_OVLBmp;
-        private int NOTE_Spacing;
+        public int NOTE_Spacing;
         private Bitmap Note01_Bmp;
         private Graphics Note01_Gfx;
 
@@ -276,30 +276,31 @@ namespace MakoCelo
         private string[]
             Note04_Text = new string[21]; // R4.00 These are used during the animation and are modified in code.
 
-        private clsGlobal.t_NoteAnimation NoteAnim01 = new();
-        private string[] NoteAnim01_Text = new string[11]; // R4.00 Added.
-        private clsGlobal.t_NoteAnimation NoteAnim02 = new();
-        private string[] NoteAnim02_Text = new string[11]; // R4.00 Added.
-        private clsGlobal.t_NoteAnimation NoteAnim03 = new();
-        private string[] NoteAnim03_Text = new string[11]; // R4.00 Added.
-        private clsGlobal.t_NoteAnimation NoteAnim04 = new();
-        private string[] NoteAnim04_Text = new string[11]; // R4.00 Added.
-        private string PATH_Game = "";
+        public clsGlobal.t_NoteAnimation NoteAnim01 = new();
+        public string[] NoteAnim01_Text = new string[11]; // R4.00 Added.
+        public clsGlobal.t_NoteAnimation NoteAnim02 = new();
+        public string[] NoteAnim02_Text = new string[11]; // R4.00 Added.
+        public clsGlobal.t_NoteAnimation NoteAnim03 = new();
+        public string[] NoteAnim03_Text = new string[11]; // R4.00 Added.
+        public clsGlobal.t_NoteAnimation NoteAnim04 = new();
+        public string[] NoteAnim04_Text = new string[11]; // R4.00 Added.
+        public string PATH_Game = "";
         private string PATH_GamePath = ""; // R2.00 Raw path for dialogs.
         private string PATH_SaveStatsImage = "";
         private string PATH_SetupPath = ""; // R4.20 Raw path for dialogs.
         private string PATH_SoundFiles = ""; // R4.00 Added sound playing.
         private bool SCAN_Enabled;
         private long SCAN_SecCnt; // R4.30 Counter for how many secs before Auto Scan.
-        private long SCAN_Time; // R4.30 Added variable scan delays.
-        private int STATS_SizeX = 900;
-        private int STATS_SizeY = 180;
+        public long SCAN_Time; // R4.30 Added variable scan delays.
+        public int STATS_SizeX = 900;
+        public int STATS_SizeY = 180;
 
         private StreamReader WBreader;
 
         // R4.41 Made these PUBLIC.
         private HttpWebRequest WBrequest;
         private HttpWebResponse WBresponse;
+        private readonly Settings _settings;
 
         public frmMain()
         {
@@ -395,6 +396,14 @@ namespace MakoCelo
             _chkGetTeams.Name = "chkGetTeams";
             _cmErrLog.Name = "cmErrLog";
             _chkCountry.Name = "chkCountry";
+            _settings = new Settings(this);
+            _settings = new Settings(this);
+            _settings = new Settings(this);
+        }
+
+        public Settings Settings
+        {
+            get { return _settings; }
         }
 
         private void cmCheckLog_Click(object sender, EventArgs e)
@@ -1673,1213 +1682,7 @@ namespace MakoCelo
             return FileOK;
         }
 
-        private void SETTINGS_Load(string tFILE)
-        {
-            long Vlong;
-            string tPath;
-            string A;
-            int Ca, Cr, Cg, Cb;
-            var Frev = 0;
-
-            // R4.20 Added Load/Save setups options.
-            tPath = string.IsNullOrEmpty(tFILE) ? Application.StartupPath + @"\MakoCelo_settings.dat" : tFILE;
-
-            if (!File.Exists(tPath)) return;
-
-
-            // R2.01 OPEN log file and start parsing.
-            var fs = default(FileStream);
-            var sr = default(StreamReader);
-            try
-            {
-                fs = new FileStream(tPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-                sr = new StreamReader(fs, Encoding.UTF8);
-                A = sr.ReadLine();
-                switch (A ?? "")
-                {
-                    case "VERSION MC200":
-                    {
-                        Frev = 2;
-                        sr.ReadLine(); // R2.00 Read extra header line.
-                        break;
-                    }
-
-                    case "VERSION MC300":
-                    {
-                        Frev = 3;
-                        sr.ReadLine(); // R2.00 Read extra header line.
-                        break;
-                    }
-
-                    case "VERSION MC400":
-                    {
-                        Frev = 4;
-                        sr.ReadLine(); // R2.00 Read extra header line.
-                        break;
-                    }
-
-                    case "VERSION MC500":
-                    {
-                        Frev = 5;
-                        sr.ReadLine(); // R2.00 Read extra header line.
-                        break;
-                    }
-
-                    case "VERSION MC600":
-                    {
-                        Frev = 6;
-                        sr.ReadLine(); // R2.00 Read extra header line.
-                        break;
-                    }
-
-                    default:
-                    {
-                        Interaction.MsgBox(
-                            "WARNING: The startup data file appears to be corrupt or incorrect." + Constants.vbCr +
-                            Constants.vbCr + "Path: " + Application.StartupPath + @"\MakoCelo_settings.dat",
-                            Constants.vbCritical, "MakoCELO");
-                        break;
-                    }
-                }
-
-                sr.ReadLine();
-                sr.ReadLine();
-                sr.ReadLine();
-                sr.ReadLine();
-                sr.ReadLine(); // R1.00 BACK COLOR
-                sr.ReadLine();
-                sr.ReadLine();
-                sr.ReadLine();
-                sr.ReadLine();
-                sr.ReadLine(); // R1.00 ALPHA
-                sr.ReadLine();
-                sr.ReadLine(); // R1.00 BACK IMAGE 
-                A = sr.ReadLine();
-                if (File.Exists(A))
-                {
-                    NAME_bmp = new Bitmap(A); // R3.00 Switched to memory based image management.
-                    PATH_BackgroundImage = A; // R3.00 Removed pnlPlr.BackgroundImage = Image.FromFile(A)
-                }
-                // R3.30 Added notice if image is missing.
-                else if (string.IsNullOrEmpty(A))
-                {
-                    NAME_bmp = null;
-                    PATH_BackgroundImage =
-                        ""; // R4.46 Fixed bug where images did not get cleared on LOAD SETUP if no image was set.
-                }
-                else
-                {
-                    Interaction.MsgBox("ERROR: The User Settings background image no longer exists." + Constants.vbCr +
-                                       Constants.vbCr + "File:" + A);
-                }
-
-                sr.ReadLine(); // R1.00 GAME PATH
-                A = sr.ReadLine();
-                PATH_Game = Strings.Trim(A);
-                // R3.40 lbPath.Text = PATH_Game
-
-                sr.ReadLine(); // R1.00 FONT
-                A = sr.ReadLine();
-                FONT_Rank_Name = Strings.Trim(A);
-                A = sr.ReadLine();
-                FONT_Rank_Size = Strings.Trim(A);
-                A = sr.ReadLine();
-                FONT_Rank_Bold = Strings.Trim(A);
-                A = sr.ReadLine();
-                FONT_Rank_Italic = Strings.Trim(A);
-                if (FONT_Rank_Bold == "True")
-                {
-                }
-
-                if (FONT_Rank_Italic == "True")
-                {
-                }
-
-                FONT_Rank = new Font(FONT_Rank_Name, Conversions.ToSingle(FONT_Rank_Size), FontStyle.Regular);
-                if (FONT_Rank_Bold == "True")
-                    FONT_Rank = new Font(FONT_Rank_Name, Conversions.ToSingle(FONT_Rank_Size), FontStyle.Bold);
-
-                if (FONT_Rank_Italic == "True")
-                    FONT_Rank = new Font(FONT_Rank_Name, Conversions.ToSingle(FONT_Rank_Size), FontStyle.Italic);
-
-                // R3.10 Version 2.0 and above.
-                if (0 < Frev)
-                {
-                    sr.ReadLine(); // R1.00 FORE COLOR - DEPRECATED
-                    sr.ReadLine();
-                    sr.ReadLine();
-                    sr.ReadLine();
-                    sr.ReadLine();
-
-                    sr.ReadLine(); // R1.00 BACK COLOR - DEPRECATED
-                    sr.ReadLine();
-                    sr.ReadLine();
-                    sr.ReadLine();
-                    sr.ReadLine();
-
-                    sr.ReadLine(); // R1.00 ALPHA - DEPRECATED
-                    sr.ReadLine();
-
-                    sr.ReadLine(); // R1.00 FONT
-                    A = sr.ReadLine();
-                    FONT_Name_Name = Strings.Trim(A);
-                    A = sr.ReadLine();
-                    FONT_Name_Size = Strings.Trim(A);
-                    A = sr.ReadLine();
-                    FONT_Name_Bold = Strings.Trim(A);
-                    A = sr.ReadLine();
-                    FONT_Name_Italic = Strings.Trim(A);
-                    if (FONT_Name_Bold == "True")
-                    {
-                    }
-
-                    if (FONT_Name_Italic == "True")
-                    {
-                    }
-
-                    FONT_Name = new Font(FONT_Name_Name, Conversions.ToSingle(FONT_Name_Size), FontStyle.Regular);
-                    if (FONT_Name_Bold == "True")
-                        FONT_Name = new Font(FONT_Name_Name, Conversions.ToSingle(FONT_Name_Size), FontStyle.Bold);
-
-                    if (FONT_Name_Italic == "True")
-                        FONT_Name = new Font(FONT_Name_Name, Conversions.ToSingle(FONT_Name_Size), FontStyle.Italic);
-
-                    sr.ReadLine(); // R2.00 SCREEN SIZE
-                    A = sr.ReadLine(); // cboPageSize.Text = Trim(A)
-                    SETTINGS_GetStatSize(A);
-                    sr.ReadLine(); // R2.00 PAGE LAYOUT Y
-                    A = sr.ReadLine();
-                    cboLayoutY.Text = Strings.Trim(A);
-                    sr.ReadLine(); // R2.00 PAGE LAYOUT X
-                    A = sr.ReadLine();
-                    cboLayoutX.Text = Strings.Trim(A);
-                    sr.ReadLine(); // R2.00 PANEL BACK COLOR
-                    A = sr.ReadLine();
-                    Ca = (int) Math.Round(Conversion.Val(A));
-                    A = sr.ReadLine();
-                    Cr = (int) Math.Round(Conversion.Val(A));
-                    A = sr.ReadLine();
-                    Cg = (int) Math.Round(Conversion.Val(A));
-                    A = sr.ReadLine();
-                    Cb = (int) Math.Round(Conversion.Val(A));
-                    pbStats.BackColor = Color.FromArgb(Ca, Cr, Cg, Cb);
-                    LSName.BackC = pbStats.BackColor; // R4.00 Added.
-                    sr.ReadLine(); // R2.00 IMAGE SCALING
-                    A = sr.ReadLine(); // cboScaling.Text = Trim(A)
-                    LSName.Scaling = Strings.Trim(A); // R4.00 Added Scaling var.
-                    if (!sr.EndOfStream)
-                    {
-                        sr.ReadLine(); // R2.00 GUI COLOR SCHEME
-                        A = sr.ReadLine();
-                        GUI_ColorMode = (int) Math.Round(Conversion.Val(Strings.Trim(A)));
-                        if (GUI_ColorMode != 0) chkGUIMode.Checked = true; // R4.30 Added.
-                    }
-                    else
-                    {
-                        GUI_ColorMode = 0;
-                    }
-
-                    // R3.00 Rev 3 and above.
-                    if (2 < Frev)
-                    {
-                        // R3.00 RANK LABEL VARS
-                        sr.ReadLine(); // R3.00 RANK FORE COLOR 1 
-                        A = sr.ReadLine();
-                        Ca = (int) Math.Round(Conversion.Val(A));
-                        A = sr.ReadLine();
-                        Cr = (int) Math.Round(Conversion.Val(A));
-                        A = sr.ReadLine();
-                        Cg = (int) Math.Round(Conversion.Val(A));
-                        A = sr.ReadLine();
-                        Cb = (int) Math.Round(Conversion.Val(A));
-                        LSRank.F1 = Color.FromArgb(Ca, Cr, Cg, Cb);
-                        sr.ReadLine(); // R3.00 RANK FORE COLOR 2 
-                        A = sr.ReadLine();
-                        Ca = (int) Math.Round(Conversion.Val(A));
-                        A = sr.ReadLine();
-                        Cr = (int) Math.Round(Conversion.Val(A));
-                        A = sr.ReadLine();
-                        Cg = (int) Math.Round(Conversion.Val(A));
-                        A = sr.ReadLine();
-                        Cb = (int) Math.Round(Conversion.Val(A));
-                        LSRank.F2 = Color.FromArgb(Ca, Cr, Cg, Cb);
-                        sr.ReadLine(); // R3.00 RANK FORE GRADIENT 
-                        A = sr.ReadLine();
-                        LSRank.FDir = Conversions.ToInteger(A);
-                        sr.ReadLine(); // R3.00 RANK BACK COLOR 1 
-                        A = sr.ReadLine();
-                        Ca = (int) Math.Round(Conversion.Val(A));
-                        A = sr.ReadLine();
-                        Cr = (int) Math.Round(Conversion.Val(A));
-                        A = sr.ReadLine();
-                        Cg = (int) Math.Round(Conversion.Val(A));
-                        A = sr.ReadLine();
-                        Cb = (int) Math.Round(Conversion.Val(A));
-                        LSRank.B1 = Color.FromArgb(Ca, Cr, Cg, Cb);
-                        sr.ReadLine(); // R3.00 RANK BACK COLOR 2 
-                        A = sr.ReadLine();
-                        Ca = (int) Math.Round(Conversion.Val(A));
-                        A = sr.ReadLine();
-                        Cr = (int) Math.Round(Conversion.Val(A));
-                        A = sr.ReadLine();
-                        Cg = (int) Math.Round(Conversion.Val(A));
-                        A = sr.ReadLine();
-                        Cb = (int) Math.Round(Conversion.Val(A));
-                        LSRank.B2 = Color.FromArgb(Ca, Cr, Cg, Cb);
-                        sr.ReadLine(); // R3.00 RANK BACK GRADIENT 
-                        A = sr.ReadLine();
-                        LSRank.BDir = Conversions.ToInteger(A);
-
-                        // R3.00 NAME LABEL VARS
-                        sr.ReadLine(); // R3.00 NAME FORE COLOR 1 
-                        A = sr.ReadLine();
-                        Ca = (int) Math.Round(Conversion.Val(A));
-                        A = sr.ReadLine();
-                        Cr = (int) Math.Round(Conversion.Val(A));
-                        A = sr.ReadLine();
-                        Cg = (int) Math.Round(Conversion.Val(A));
-                        A = sr.ReadLine();
-                        Cb = (int) Math.Round(Conversion.Val(A));
-                        LSName.F1 = Color.FromArgb(Ca, Cr, Cg, Cb);
-                        sr.ReadLine(); // R3.00 NAME FORE COLOR 2 
-                        A = sr.ReadLine();
-                        Ca = (int) Math.Round(Conversion.Val(A));
-                        A = sr.ReadLine();
-                        Cr = (int) Math.Round(Conversion.Val(A));
-                        A = sr.ReadLine();
-                        Cg = (int) Math.Round(Conversion.Val(A));
-                        A = sr.ReadLine();
-                        Cb = (int) Math.Round(Conversion.Val(A));
-                        LSName.F2 = Color.FromArgb(Ca, Cr, Cg, Cb);
-                        sr.ReadLine(); // R3.00 NAME FORE GRADIENT 
-                        A = sr.ReadLine();
-                        LSName.FDir = Conversions.ToInteger(A);
-                        sr.ReadLine(); // R3.00 NAME BACK COLOR 1 
-                        A = sr.ReadLine();
-                        Ca = (int) Math.Round(Conversion.Val(A));
-                        A = sr.ReadLine();
-                        Cr = (int) Math.Round(Conversion.Val(A));
-                        A = sr.ReadLine();
-                        Cg = (int) Math.Round(Conversion.Val(A));
-                        A = sr.ReadLine();
-                        Cb = (int) Math.Round(Conversion.Val(A));
-                        LSName.B1 = Color.FromArgb(Ca, Cr, Cg, Cb);
-                        sr.ReadLine(); // R3.00 NAME BACK COLOR 2 
-                        A = sr.ReadLine();
-                        Ca = (int) Math.Round(Conversion.Val(A));
-                        A = sr.ReadLine();
-                        Cr = (int) Math.Round(Conversion.Val(A));
-                        A = sr.ReadLine();
-                        Cg = (int) Math.Round(Conversion.Val(A));
-                        A = sr.ReadLine();
-                        Cb = (int) Math.Round(Conversion.Val(A));
-                        LSName.B2 = Color.FromArgb(Ca, Cr, Cg, Cb);
-                        sr.ReadLine(); // R3.00 NAME BACK GRADIENT 
-                        A = sr.ReadLine();
-                        LSName.BDir = Conversions.ToInteger(A);
-                        sr.ReadLine(); // R3.00 RANK SHADOW COLOR 
-                        A = sr.ReadLine();
-                        Ca = (int) Math.Round(Conversion.Val(A));
-                        A = sr.ReadLine();
-                        Cr = (int) Math.Round(Conversion.Val(A));
-                        A = sr.ReadLine();
-                        Cg = (int) Math.Round(Conversion.Val(A));
-                        A = sr.ReadLine();
-                        Cb = (int) Math.Round(Conversion.Val(A));
-                        LSRank.ShadowColor = Color.FromArgb(Ca, Cr, Cg, Cb);
-                        sr.ReadLine(); // R3.00 RANK SHADOW DIR
-                        A = sr.ReadLine();
-                        LSRank.ShadowDir = A;
-                        sr.ReadLine(); // R3.00 RANK SHADOW DEPTH - Future
-                        A = sr.ReadLine();
-                        LSRank.ShadowDepth = A;
-                        sr.ReadLine(); // R3.00 NAME SHADOW COLOR 
-                        A = sr.ReadLine();
-                        Ca = (int) Math.Round(Conversion.Val(A));
-                        A = sr.ReadLine();
-                        Cr = (int) Math.Round(Conversion.Val(A));
-                        A = sr.ReadLine();
-                        Cg = (int) Math.Round(Conversion.Val(A));
-                        A = sr.ReadLine();
-                        Cb = (int) Math.Round(Conversion.Val(A));
-                        LSName.ShadowColor = Color.FromArgb(Ca, Cr, Cg, Cb);
-                        sr.ReadLine(); // R3.00 NAME SHADOW DIR
-                        A = sr.ReadLine();
-                        LSName.ShadowDir = A;
-                        sr.ReadLine(); // R3.00 NAME SHADOW DEPTH - Future
-                        A = sr.ReadLine();
-                        LSName.ShadowDepth = A;
-                        sr.ReadLine(); // R3.00 BACK GRADIENT COLOR 1 - Future
-                        A = sr.ReadLine();
-                        Ca = (int) Math.Round(Conversion.Val(A));
-                        A = sr.ReadLine();
-                        Cr = (int) Math.Round(Conversion.Val(A));
-                        A = sr.ReadLine();
-                        Cg = (int) Math.Round(Conversion.Val(A));
-                        A = sr.ReadLine();
-                        Cb = (int) Math.Round(Conversion.Val(A));
-                        COLOR_Back1 = Color.FromArgb(Ca, Cr, Cg, Cb);
-                        sr.ReadLine(); // R3.00 BACK GRADIENT COLOR 2 - Future
-                        A = sr.ReadLine();
-                        Ca = (int) Math.Round(Conversion.Val(A));
-                        A = sr.ReadLine();
-                        Cr = (int) Math.Round(Conversion.Val(A));
-                        A = sr.ReadLine();
-                        Cg = (int) Math.Round(Conversion.Val(A));
-                        A = sr.ReadLine();
-                        Cb = (int) Math.Round(Conversion.Val(A));
-                        COLOR_Back2 = Color.FromArgb(Ca, Cr, Cg, Cb);
-                        sr.ReadLine(); // R3.00 NAME SHADOW DIR - Future
-                        A = sr.ReadLine();
-                        COLOR_Back_Dir = Conversions.ToInteger(A);
-
-                        // R3.00 Rev 4 and above.
-                        if (3 < Frev)
-                        {
-                            sr.ReadLine(); // R3.10 FX COLORS
-                            for (var t = 1; t <= 10; t++)
-                            {
-                                A = sr.ReadLine();
-                                Ca = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                Cr = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                Cg = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                Cb = (int) Math.Round(Conversion.Val(A));
-                                CFX3DC[t] = Color.FromArgb(Ca, Cr, Cg, Cb);
-                            }
-
-                            sr.ReadLine(); // R3.10 FX VARS
-                            for (var N = 1; N <= 10; N++)
-                            for (var t = 1; t <= 10; t++)
-                            {
-                                A = sr.ReadLine();
-                                CFX3DVar[N, t] = Strings.Trim(A);
-                            }
-
-                            sr.ReadLine(); // R3.10 FX ACTIVE
-                            for (var N = 1; N <= 10; N++)
-                            {
-                                A = sr.ReadLine();
-                                if (A == "True")
-                                    CFX3DActive[N] = true;
-                                else
-                                    CFX3DActive[N] = false;
-                            }
-
-                            // **********************************************************
-                            // REV 5 and newer files
-                            // **********************************************************
-                            if (4 < Frev)
-                            {
-                                sr.ReadLine(); // NAME OVERLAY IMAGE
-                                A = sr.ReadLine();
-                                PATH_Name_OVLBmp = A;
-                                A = sr.ReadLine();
-                                LSName.OVLScaling = Conversion.Val(A).ToString();
-                                sr.ReadLine(); // NOTE 01 VARS
-                                A = sr.ReadLine();
-                                Ca = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                Cr = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                Cg = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                Cb = (int) Math.Round(Conversion.Val(A));
-                                LSNote01.B1 = Color.FromArgb(Ca, Cr, Cg, Cb);
-                                A = sr.ReadLine();
-                                Ca = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                Cr = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                Cg = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                Cb = (int) Math.Round(Conversion.Val(A));
-                                LSNote01.B2 = Color.FromArgb(Ca, Cr, Cg, Cb);
-                                A = sr.ReadLine();
-                                Ca = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                Cr = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                Cg = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                Cb = (int) Math.Round(Conversion.Val(A));
-                                LSNote01.BackC = Color.FromArgb(Ca, Cr, Cg, Cb);
-                                A = sr.ReadLine();
-                                LSNote01.BDir = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                Ca = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                Cr = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                Cg = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                Cb = (int) Math.Round(Conversion.Val(A));
-                                LSNote01.F1 = Color.FromArgb(Ca, Cr, Cg, Cb);
-                                A = sr.ReadLine();
-                                Ca = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                Cr = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                Cg = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                Cb = (int) Math.Round(Conversion.Val(A));
-                                LSNote01.F2 = Color.FromArgb(Ca, Cr, Cg, Cb);
-                                A = sr.ReadLine();
-                                LSNote01.FDir = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                LSNote01.Height = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                LSNote01.O1 = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                LSNote01.O2 = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                LSNote01.Scaling = Conversion.Val(A).ToString();
-                                A = sr.ReadLine();
-                                LSNote01.OVLScaling = Conversion.Val(A).ToString();
-                                A = sr.ReadLine();
-                                Ca = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                Cr = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                Cg = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                Cb = (int) Math.Round(Conversion.Val(A));
-                                LSNote01.ShadowColor = Color.FromArgb(Ca, Cr, Cg, Cb);
-                                A = sr.ReadLine();
-                                LSNote01.ShadowDepth = A;
-                                A = sr.ReadLine();
-                                LSNote01.ShadowDir = A;
-                                A = sr.ReadLine();
-                                LSNote01.Width = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                PATH_Note01_Bmp = A;
-                                A = sr.ReadLine();
-                                PATH_Note01_BmpPath = A;
-                                A = sr.ReadLine();
-                                PATH_Note01_OVLBmp = A;
-                                A = sr.ReadLine();
-                                PATH_Note01_OVLBmpPath = A;
-                                A = sr.ReadLine();
-                                FONT_Note01_Name = A;
-                                A = sr.ReadLine();
-                                FONT_Note01_Bold = A;
-                                A = sr.ReadLine();
-                                FONT_Note01_Italic = A;
-                                A = sr.ReadLine();
-                                FONT_Note01_Size = A;
-                                for (var t = 1; t <= 10; t++)
-                                {
-                                    A = sr.ReadLine();
-                                    NoteAnim01_Text[t] = A;
-                                }
-
-                                A = sr.ReadLine();
-                                NoteAnim01.Mode = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                NoteAnim01.Speed = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                NoteAnim01.TimeHold = (long) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                NoteAnim01.Align = A;
-                                A = sr.ReadLine();
-                                NoteAnim01.Delim = A;
-                                A = sr.ReadLine();
-                                NoteAnim01.Xoffset = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                NoteAnim01.Yoffset = (int) Math.Round(Conversion.Val(A));
-                                sr.ReadLine(); // NOTE 02 VARS
-                                A = sr.ReadLine();
-                                Ca = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                Cr = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                Cg = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                Cb = (int) Math.Round(Conversion.Val(A));
-                                LSNote02.B1 = Color.FromArgb(Ca, Cr, Cg, Cb);
-                                A = sr.ReadLine();
-                                Ca = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                Cr = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                Cg = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                Cb = (int) Math.Round(Conversion.Val(A));
-                                LSNote02.B2 = Color.FromArgb(Ca, Cr, Cg, Cb);
-                                A = sr.ReadLine();
-                                Ca = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                Cr = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                Cg = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                Cb = (int) Math.Round(Conversion.Val(A));
-                                LSNote02.BackC = Color.FromArgb(Ca, Cr, Cg, Cb);
-                                A = sr.ReadLine();
-                                LSNote02.BDir = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                Ca = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                Cr = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                Cg = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                Cb = (int) Math.Round(Conversion.Val(A));
-                                LSNote02.F1 = Color.FromArgb(Ca, Cr, Cg, Cb);
-                                A = sr.ReadLine();
-                                Ca = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                Cr = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                Cg = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                Cb = (int) Math.Round(Conversion.Val(A));
-                                LSNote02.F2 = Color.FromArgb(Ca, Cr, Cg, Cb);
-                                A = sr.ReadLine();
-                                LSNote02.FDir = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                LSNote02.Height = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                LSNote02.O1 = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                LSNote02.O2 = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                LSNote02.Scaling = Conversion.Val(A).ToString();
-                                A = sr.ReadLine();
-                                LSNote02.OVLScaling = Conversion.Val(A).ToString();
-                                A = sr.ReadLine();
-                                Ca = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                Cr = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                Cg = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                Cb = (int) Math.Round(Conversion.Val(A));
-                                LSNote02.ShadowColor = Color.FromArgb(Ca, Cr, Cg, Cb);
-                                A = sr.ReadLine();
-                                LSNote02.ShadowDepth = A;
-                                A = sr.ReadLine();
-                                LSNote02.ShadowDir = A;
-                                A = sr.ReadLine();
-                                LSNote02.Width = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                PATH_Note02_Bmp = A;
-                                A = sr.ReadLine();
-                                PATH_Note02_BmpPath = A;
-                                A = sr.ReadLine();
-                                PATH_Note02_OVLBmp = A;
-                                A = sr.ReadLine();
-                                PATH_Note02_OVLBmpPath = A;
-                                A = sr.ReadLine();
-                                FONT_Note02_Name = A;
-                                A = sr.ReadLine();
-                                FONT_Note02_Bold = A;
-                                A = sr.ReadLine();
-                                FONT_Note02_Italic = A;
-                                A = sr.ReadLine();
-                                FONT_Note02_Size = A;
-                                for (var t = 1; t <= 10; t++)
-                                {
-                                    A = sr.ReadLine();
-                                    NoteAnim02_Text[t] = A;
-                                }
-
-                                A = sr.ReadLine();
-                                NoteAnim02.Mode = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                NoteAnim02.Speed = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                NoteAnim02.TimeHold = (long) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                NoteAnim02.Align = A;
-                                A = sr.ReadLine();
-                                NoteAnim02.Delim = A;
-                                A = sr.ReadLine();
-                                NoteAnim02.Xoffset = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                NoteAnim02.Yoffset = (int) Math.Round(Conversion.Val(A));
-                                sr.ReadLine(); // NOTE 03 VARS
-                                A = sr.ReadLine();
-                                Ca = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                Cr = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                Cg = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                Cb = (int) Math.Round(Conversion.Val(A));
-                                LSNote03.B1 = Color.FromArgb(Ca, Cr, Cg, Cb);
-                                A = sr.ReadLine();
-                                Ca = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                Cr = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                Cg = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                Cb = (int) Math.Round(Conversion.Val(A));
-                                LSNote03.B2 = Color.FromArgb(Ca, Cr, Cg, Cb);
-                                A = sr.ReadLine();
-                                Ca = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                Cr = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                Cg = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                Cb = (int) Math.Round(Conversion.Val(A));
-                                LSNote03.BackC = Color.FromArgb(Ca, Cr, Cg, Cb);
-                                A = sr.ReadLine();
-                                LSNote03.BDir = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                Ca = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                Cr = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                Cg = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                Cb = (int) Math.Round(Conversion.Val(A));
-                                LSNote03.F1 = Color.FromArgb(Ca, Cr, Cg, Cb);
-                                A = sr.ReadLine();
-                                Ca = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                Cr = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                Cg = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                Cb = (int) Math.Round(Conversion.Val(A));
-                                LSNote03.F2 = Color.FromArgb(Ca, Cr, Cg, Cb);
-                                A = sr.ReadLine();
-                                LSNote03.FDir = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                LSNote03.Height = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                LSNote03.O1 = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                LSNote03.O2 = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                LSNote03.Scaling = Conversion.Val(A).ToString();
-                                A = sr.ReadLine();
-                                LSNote03.OVLScaling = Conversion.Val(A).ToString();
-                                A = sr.ReadLine();
-                                Ca = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                Cr = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                Cg = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                Cb = (int) Math.Round(Conversion.Val(A));
-                                LSNote03.ShadowColor = Color.FromArgb(Ca, Cr, Cg, Cb);
-                                A = sr.ReadLine();
-                                LSNote03.ShadowDepth = A;
-                                A = sr.ReadLine();
-                                LSNote03.ShadowDir = A;
-                                A = sr.ReadLine();
-                                LSNote03.Width = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                PATH_Note03_Bmp = A;
-                                A = sr.ReadLine();
-                                PATH_Note03_BmpPath = A;
-                                A = sr.ReadLine();
-                                PATH_Note03_OVLBmp = A;
-                                A = sr.ReadLine();
-                                PATH_Note03_OVLBmpPath = A;
-                                A = sr.ReadLine();
-                                FONT_Note03_Name = A;
-                                A = sr.ReadLine();
-                                FONT_Note03_Bold = A;
-                                A = sr.ReadLine();
-                                FONT_Note03_Italic = A;
-                                A = sr.ReadLine();
-                                FONT_Note03_Size = A;
-                                for (var t = 1; t <= 10; t++)
-                                {
-                                    A = sr.ReadLine();
-                                    NoteAnim03_Text[t] = A;
-                                }
-
-                                A = sr.ReadLine();
-                                NoteAnim03.Mode = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                NoteAnim03.Speed = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                NoteAnim03.TimeHold = (long) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                NoteAnim03.Align = A;
-                                A = sr.ReadLine();
-                                NoteAnim03.Delim = A;
-                                A = sr.ReadLine();
-                                NoteAnim03.Xoffset = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                NoteAnim03.Yoffset = (int) Math.Round(Conversion.Val(A));
-                                sr.ReadLine(); // NOTE 04 VARS
-                                A = sr.ReadLine();
-                                Ca = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                Cr = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                Cg = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                Cb = (int) Math.Round(Conversion.Val(A));
-                                LSNote04.B1 = Color.FromArgb(Ca, Cr, Cg, Cb);
-                                A = sr.ReadLine();
-                                Ca = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                Cr = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                Cg = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                Cb = (int) Math.Round(Conversion.Val(A));
-                                LSNote04.B2 = Color.FromArgb(Ca, Cr, Cg, Cb);
-                                A = sr.ReadLine();
-                                Ca = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                Cr = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                Cg = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                Cb = (int) Math.Round(Conversion.Val(A));
-                                LSNote04.BackC = Color.FromArgb(Ca, Cr, Cg, Cb);
-                                A = sr.ReadLine();
-                                LSNote04.BDir = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                Ca = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                Cr = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                Cg = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                Cb = (int) Math.Round(Conversion.Val(A));
-                                LSNote04.F1 = Color.FromArgb(Ca, Cr, Cg, Cb);
-                                A = sr.ReadLine();
-                                Ca = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                Cr = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                Cg = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                Cb = (int) Math.Round(Conversion.Val(A));
-                                LSNote04.F2 = Color.FromArgb(Ca, Cr, Cg, Cb);
-                                A = sr.ReadLine();
-                                LSNote04.FDir = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                LSNote04.Height = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                LSNote04.O1 = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                LSNote04.O2 = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                LSNote04.Scaling = Conversion.Val(A).ToString();
-                                A = sr.ReadLine();
-                                LSNote04.OVLScaling = Conversion.Val(A).ToString();
-                                A = sr.ReadLine();
-                                Ca = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                Cr = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                Cg = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                Cb = (int) Math.Round(Conversion.Val(A));
-                                LSNote04.ShadowColor = Color.FromArgb(Ca, Cr, Cg, Cb);
-                                A = sr.ReadLine();
-                                LSNote04.ShadowDepth = A;
-                                A = sr.ReadLine();
-                                LSNote04.ShadowDir = A;
-                                A = sr.ReadLine();
-                                LSNote04.Width = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                PATH_Note04_Bmp = A;
-                                A = sr.ReadLine();
-                                PATH_Note04_BmpPath = A;
-                                A = sr.ReadLine();
-                                PATH_Note04_OVLBmp = A;
-                                A = sr.ReadLine();
-                                PATH_Note04_OVLBmpPath = A;
-                                A = sr.ReadLine();
-                                FONT_Note04_Name = A;
-                                A = sr.ReadLine();
-                                FONT_Note04_Bold = A;
-                                A = sr.ReadLine();
-                                FONT_Note04_Italic = A;
-                                A = sr.ReadLine();
-                                FONT_Note04_Size = A;
-                                for (var t = 1; t <= 10; t++)
-                                {
-                                    A = sr.ReadLine();
-                                    NoteAnim04_Text[t] = A;
-                                }
-
-                                A = sr.ReadLine();
-                                NoteAnim04.Mode = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                NoteAnim04.Speed = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                NoteAnim04.TimeHold = (long) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                NoteAnim04.Align = A;
-                                A = sr.ReadLine();
-                                NoteAnim04.Delim = A;
-                                A = sr.ReadLine();
-                                NoteAnim04.Xoffset = (int) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                NoteAnim04.Yoffset = (int) Math.Round(Conversion.Val(A));
-                                sr.ReadLine(); // NOTE SPACING
-                                A = sr.ReadLine();
-                                NOTE_Spacing = (int) Math.Round(Conversion.Val(A));
-                                sr.ReadLine(); // SOUND SAMPLES
-                                for (var t = 1; t <= 30; t++)
-                                {
-                                    A = sr.ReadLine();
-                                    SOUND_File[t] = Strings.Trim(A);
-                                    sr.ReadLine(); // R4.00 Future Pitch.
-                                    A = sr.ReadLine();
-                                    SOUND_Vol[t] = Conversion.Val(A).ToString(); // R4.10 Added.
-                                    if (Conversions.ToDouble(SOUND_Vol[t]) < 10d)
-                                        SOUND_Vol[t] =
-                                            100.ToString(); // R4.10 Old version 5 has no volume so it will be ZERO.  
-                                }
-
-                                A = sr.ReadLine();
-                                scrVolume.Value = (int) Math.Round(Conversion.Val(A));
-                                sr.ReadLine(); // WINDOW STATE
-                                A = sr.ReadLine();
-                                Celo_Windowstate = Strings.Trim(A);
-                                A = sr.ReadLine();
-                                Celo_Left = (long) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                Celo_Top = (long) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                Celo_Width = (long) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                Celo_Height = (long) Math.Round(Conversion.Val(A));
-                                A = sr.ReadLine();
-                                if (A == "1") chkPosition.Checked = true;
-
-                                A = sr.ReadLine();
-                                if (A == "1")
-                                    chkPopUp.Checked = true;
-                                //Celo_Popup = true; not used anymore
-
-                                A = sr.ReadLine(); // R4.10 XY OFFSET
-                                if (A == "PAGE XY OFFSET")
-                                {
-                                    A = sr.ReadLine();
-                                    tbXoff.Text = Strings.Trim(A);
-                                    A = sr.ReadLine();
-                                    tbYoff.Text = Strings.Trim(A);
-                                }
-                                else
-                                {
-                                    sr.ReadLine();
-                                    sr.ReadLine();
-                                }
-
-                                A = sr.ReadLine(); // R4.10 XY OFFSET
-                                if (A == "PAGE XY SIZE")
-                                {
-                                    A = sr.ReadLine();
-                                    tbXsize.Text = Strings.Trim(A);
-                                    A = sr.ReadLine();
-                                    tbYSize.Text = Strings.Trim(A);
-                                    STATS_ClipXY((float) Conversion.Val(tbXsize.Text),
-                                        (float) Conversion.Val(tbYSize.Text));
-                                }
-                                else
-                                {
-                                    sr.ReadLine();
-                                    sr.ReadLine();
-                                }
-
-                                // **********************************************************
-                                // REV 6 and newer files
-                                // **********************************************************
-                                if (5 < Frev)
-                                {
-                                    A = sr.ReadLine(); // R4.30 HOW OFTEN TO READ THE LOG FILE.
-                                    if (A == "SCAN TIME")
-                                    {
-                                        A = sr.ReadLine();
-                                        Vlong = (long) Math.Round(Conversion.Val(A));
-                                        if (Vlong < 5L) A = "5";
-
-                                        if (60L < Vlong) A = "60";
-
-                                        switch (A ?? "")
-                                        {
-                                            case "5":
-                                            {
-                                                cboDelay.SelectedIndex = 0;
-                                                SCAN_Time = 5L;
-                                                break;
-                                            }
-
-                                            case "10":
-                                            {
-                                                cboDelay.SelectedIndex = 1;
-                                                SCAN_Time = 10L;
-                                                break;
-                                            }
-
-                                            case "20":
-                                            {
-                                                cboDelay.SelectedIndex = 2;
-                                                SCAN_Time = 20L;
-                                                break;
-                                            }
-
-                                            case "30":
-                                            {
-                                                cboDelay.SelectedIndex = 3;
-                                                SCAN_Time = 30L;
-                                                break;
-                                            }
-
-                                            case "45":
-                                            {
-                                                cboDelay.SelectedIndex = 4;
-                                                SCAN_Time = 45L;
-                                                break;
-                                            }
-
-                                            case "60":
-                                            {
-                                                cboDelay.SelectedIndex = 5;
-                                                SCAN_Time = 60L;
-                                                break;
-                                            }
-
-                                            default:
-                                            {
-                                                cboDelay.SelectedIndex = 1;
-                                                SCAN_Time = 10L;
-                                                break;
-                                            }
-                                        }
-                                    }
-                                    else
-                                    {
-                                        sr.ReadLine();
-                                    }
-
-                                    A = sr.ReadLine(); // R4.30 PLAY A SOUND WHEN A MATCH IS FOUND.
-                                    if (A == "MATCH ALARM ON")
-                                    {
-                                        A = sr.ReadLine();
-                                        chkFoundSound.Checked = A == "1";
-                                    }
-                                    else
-                                    {
-                                        sr.ReadLine();
-                                    }
-
-                                    A = sr.ReadLine(); // R4.30 DONT DRAW BOXES FOR EMPTY PLAYER SLOTS.
-                                    if (A == "HIDE MISSING")
-                                    {
-                                        A = sr.ReadLine();
-                                        chkHideMissing.Checked = A == "1";
-                                    }
-                                    else
-                                    {
-                                        sr.ReadLine();
-                                    }
-
-                                    A = sr.ReadLine(); // R4.30 MAX PLAYERS FOR EACH GAME MODE.
-                                    if (A == "LEVEL STORAGE")
-                                        for (var t = 1; t <= 7; t++)
-                                        for (var tt = 1; tt <= 4; tt++)
-                                        {
-                                            A = sr.ReadLine();
-                                            LVLS[t, tt] = A;
-                                        }
-
-                                    A = sr.ReadLine(); // R4.30 SHOW RANKS, ELO %, and LEVEL. 
-                                    if (A == "CYCLE ELO")
-                                    {
-                                        A = sr.ReadLine();
-                                        if (A == "1")
-                                        {
-                                            chkShowELO.Checked = true;
-                                            FLAG_EloUse = true;
-                                            timELOCycle.Enabled = true; // R4.30 Turn on the timer to rotate stats.
-                                        }
-                                        else
-                                        {
-                                            chkShowELO.Checked = false;
-                                            FLAG_EloUse = false;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        sr.ReadLine();
-                                    }
-                                }
-
-                                A = sr.ReadLine(); // R4.34 Use Web Calls and JSON data searches. 
-                                if (A == "USE WEB SEARCH")
-                                {
-                                    A = sr.ReadLine();
-                                    chkSpeech.Checked = A == "1";
-                                }
-
-                                A = sr.ReadLine(); // R4.34 Read Ranks Aloud. 
-                                if (A == "SPEECH RANKS")
-                                {
-                                    A = sr.ReadLine();
-                                    chkSpeech.Checked = A == "1";
-                                }
-
-                                A = sr.ReadLine(); // R4.34 Read Ranks Aloud. 
-                                if (A == "FIND TEAMS")
-                                {
-                                    A = sr.ReadLine();
-                                    chkGetTeams.Checked = A == "1";
-                                }
-
-                                A = sr.ReadLine(); // R4.40 Draw plain player card. 
-                                if (A == "PLAYER CARD BACK")
-                                {
-                                    A = sr.ReadLine();
-                                    if (A == "1")
-                                    {
-                                        LSRank.UseCardBack = true;
-                                        LSName.UseCardBack = true;
-                                    }
-                                    else
-                                    {
-                                        LSRank.UseCardBack = false;
-                                        LSName.UseCardBack = false;
-                                    }
-                                }
-
-                                // R4.40 Get the RANK border options.
-                                A = sr.ReadLine();
-                                if (A == "RANK BORDER")
-                                {
-                                    A = sr.ReadLine();
-                                    LSRank.BorderMode = (int) Math.Round(Conversion.Val(A));
-                                    A = sr.ReadLine();
-                                    Ca = (int) Math.Round(Conversion.Val(A));
-                                    A = sr.ReadLine();
-                                    Cr = (int) Math.Round(Conversion.Val(A));
-                                    A = sr.ReadLine();
-                                    Cg = (int) Math.Round(Conversion.Val(A));
-                                    A = sr.ReadLine();
-                                    Cb = (int) Math.Round(Conversion.Val(A));
-                                    LSRank.BorderColor = Color.FromArgb(Ca, Cr, Cg, Cb);
-                                    A = sr.ReadLine();
-                                    LSRank.BorderWidth = (int) Math.Round(Conversion.Val(A));
-
-                                    // R4.40 Future Use.
-                                    sr.ReadLine();
-                                    sr.ReadLine();
-                                    sr.ReadLine();
-                                    sr.ReadLine();
-                                    sr.ReadLine();
-                                }
-
-                                // R4.40 Get the NAME border options.
-                                A = sr.ReadLine();
-                                if (A == "NAME BORDER")
-                                {
-                                    A = sr.ReadLine();
-                                    LSName.BorderMode = (int) Math.Round(Conversion.Val(A));
-                                    A = sr.ReadLine();
-                                    Ca = (int) Math.Round(Conversion.Val(A));
-                                    A = sr.ReadLine();
-                                    Cr = (int) Math.Round(Conversion.Val(A));
-                                    A = sr.ReadLine();
-                                    Cg = (int) Math.Round(Conversion.Val(A));
-                                    A = sr.ReadLine();
-                                    Cb = (int) Math.Round(Conversion.Val(A));
-                                    LSName.BorderColor = Color.FromArgb(Ca, Cr, Cg, Cb);
-                                    A = sr.ReadLine();
-                                    LSName.BorderWidth = (int) Math.Round(Conversion.Val(A));
-
-                                    // R4.40 Future Use.
-                                    sr.ReadLine();
-                                    sr.ReadLine();
-                                    sr.ReadLine();
-                                    sr.ReadLine();
-                                    sr.ReadLine();
-                                }
-
-                                // R4.40 Get the PANEL border options.
-                                A = sr.ReadLine();
-                                if (A == "PANEL BORDER")
-                                {
-                                    A = sr.ReadLine();
-                                    LSName.BorderPanelMode = (int) Math.Round(Conversion.Val(A));
-                                    A = sr.ReadLine();
-                                    Ca = (int) Math.Round(Conversion.Val(A));
-                                    A = sr.ReadLine();
-                                    Cr = (int) Math.Round(Conversion.Val(A));
-                                    A = sr.ReadLine();
-                                    Cg = (int) Math.Round(Conversion.Val(A));
-                                    A = sr.ReadLine();
-                                    Cb = (int) Math.Round(Conversion.Val(A));
-                                    LSName.BorderPanelColor = Color.FromArgb(Ca, Cr, Cg, Cb);
-                                    A = sr.ReadLine();
-                                    LSName.BorderPanelWidth = (int) Math.Round(Conversion.Val(A));
-
-                                    // R4.40 These must be the same for both RANK and NAME.
-                                    LSRank.BorderPanelWidth = LSName.BorderPanelWidth;
-                                    LSRank.BorderPanelColor = LSName.BorderPanelColor;
-                                    LSRank.BorderPanelMode = LSName.BorderPanelMode;
-
-                                    // R4.40 Future Use.
-                                    sr.ReadLine();
-                                    sr.ReadLine();
-                                    sr.ReadLine();
-                                    sr.ReadLine();
-                                    sr.ReadLine();
-                                }
-
-                                A = sr.ReadLine(); // R4.45 Draw flags. 
-                                if (A == "SHOW COUNTRY")
-                                {
-                                    A = sr.ReadLine();
-                                    chkCountry.Checked = A == "1";
-                                }
-
-                                A = sr.ReadLine(); // R4.45 Draw flags. 
-                                if (A == "SHOW OVERLAY")
-                                {
-                                    A = sr.ReadLine();
-                                    _chkToggleOverlay.Checked = A == "1";
-                                }
-                            } // <-- REV 5 END
-                        } // <-- REV 4 END
-                    } // <-- REV 3 END
-                } // <-- REV 2 END
-            }
-            catch (Exception ex)
-            {
-                Interaction.MsgBox(
-                    "ERROR: " + ex.Message + Constants.vbCr + Constants.vbCr + "Unable to read the saved settings." +
-                    Constants.vbCr + "The last known setup could not be loaded." + Constants.vbCr + Constants.vbCr +
-                    "If running a new version, this error may fix itself when a new setup is saved.",
-                    MsgBoxStyle.Critical, "MakoCelo - Setup Error");
-            }
-            finally
-            {
-                // R4.00 Close / Clean up  streams?
-                if (Information.IsNothing(sr) == false)
-                {
-                    sr.Close();
-                    sr.Dispose();
-                }
-
-                if (Information.IsNothing(fs) == false)
-                {
-                    fs.Close();
-                    fs.Dispose();
-                }
-            }
-
-            FX_SetVarControls();
-            SETTINGS_SetupAfterLoad();
-        }
-
-        private void SETTINGS_GetStatSize(string OldSizeMethod)
+        public void SETTINGS_GetStatSize(string OldSizeMethod)
         {
             int X, Y;
 
@@ -3035,885 +1838,7 @@ namespace MakoCelo
             STATS_SizeY = Y;
         }
 
-        private void SETTINGS_Load_Old(string tFILE)
-        {
-            string tPath;
-            var A = "";
-            int Ca, Cr, Cg, Cb;
-            var Frev = 0;
-
-            // R4.20 Added Load/Save setups options.
-            tPath = string.IsNullOrEmpty(tFILE) ? Application.StartupPath + @"\MakoCelo_settings.dat" : tFILE;
-
-            if (!File.Exists(tPath)) return;
-
-            // R4.00 Open the SETTINGS file.
-            FileSystem.FileOpen(1, tPath, OpenMode.Input);
-            try
-            {
-                FileSystem.Input(1, ref A);
-                switch (A ?? "")
-                {
-                    case "VERSION MC200":
-                    {
-                        Frev = 2;
-                        FileSystem.Input(1, ref A); // R2.00 Read extra header line.
-                        break;
-                    }
-
-                    case "VERSION MC300":
-                    {
-                        Frev = 3;
-                        FileSystem.Input(1, ref A); // R2.00 Read extra header line.
-                        break;
-                    }
-
-                    case "VERSION MC400":
-                    {
-                        Frev = 4;
-                        FileSystem.Input(1, ref A); // R2.00 Read extra header line.
-                        break;
-                    }
-
-                    case "VERSION MC500":
-                    {
-                        Frev = 5;
-                        FileSystem.Input(1, ref A); // R2.00 Read extra header line.
-                        break;
-                    }
-
-                    default:
-                    {
-                        Interaction.MsgBox(
-                            "WARNING: The startup data file appears to be corrupt or incorrect." + Constants.vbCr +
-                            Constants.vbCr + "Path: " + Application.StartupPath + @"\MakoCelo_settings.dat",
-                            Constants.vbCritical, "MakoCELO");
-                        break;
-                    }
-                }
-
-                FileSystem.Input(1, ref A);
-                FileSystem.Input(1, ref A);
-                FileSystem.Input(1, ref A);
-                FileSystem.Input(1, ref A);
-                FileSystem.Input(1, ref A); // R1.00 BACK COLOR
-                FileSystem.Input(1, ref A);
-                FileSystem.Input(1, ref A);
-                FileSystem.Input(1, ref A);
-                FileSystem.Input(1, ref A);
-                FileSystem.Input(1, ref A); // R1.00 ALPHA
-                FileSystem.Input(1, ref A);
-                FileSystem.Input(1, ref A); // R1.00 BACK IMAGE 
-                FileSystem.Input(1, ref A);
-                if (File.Exists(A))
-                {
-                    NAME_bmp = new Bitmap(A); // R4.00 Switched to memory based image management.
-                    PATH_BackgroundImage = A; // R3.00 Removed pnlPlr.BackgroundImage = Image.FromFile(A)
-                }
-                // R3.30 Added notice if image is missing.
-                else if (!string.IsNullOrEmpty(A))
-                {
-                    Interaction.MsgBox("ERROR: The User Settings background image no longer exists." + Constants.vbCr +
-                                       Constants.vbCr + "File:" + A);
-                }
-
-                FileSystem.Input(1, ref A); // R1.00 GAME PATH
-                FileSystem.Input(1, ref A);
-                PATH_Game = Strings.Trim(A);
-                FileSystem.Input(1, ref A); // R1.00 FONT
-                FileSystem.Input(1, ref A);
-                FONT_Rank_Name = Strings.Trim(A);
-                FileSystem.Input(1, ref A);
-                FONT_Rank_Size = Strings.Trim(A);
-                FileSystem.Input(1, ref A);
-                FONT_Rank_Bold = Strings.Trim(A);
-                FileSystem.Input(1, ref A);
-                FONT_Rank_Italic = Strings.Trim(A);
-                if (FONT_Rank_Bold == "True")
-                {
-                }
-
-                if (FONT_Rank_Italic == "True")
-                {
-                }
-
-                FONT_Rank = new Font(FONT_Rank_Name, Conversions.ToSingle(FONT_Rank_Size), FontStyle.Regular);
-                if (FONT_Rank_Bold == "True")
-                    FONT_Rank = new Font(FONT_Rank_Name, Conversions.ToSingle(FONT_Rank_Size), FontStyle.Bold);
-
-                if (FONT_Rank_Italic == "True")
-                    FONT_Rank = new Font(FONT_Rank_Name, Conversions.ToSingle(FONT_Rank_Size), FontStyle.Italic);
-
-                // R3.10 Version 2.0 and above.
-                if (0 < Frev)
-                {
-                    FileSystem.Input(1, ref A); // R1.00 FORE COLOR - DEPRECATED
-                    FileSystem.Input(1, ref A);
-                    FileSystem.Input(1, ref A);
-                    FileSystem.Input(1, ref A);
-                    FileSystem.Input(1, ref A);
-                    FileSystem.Input(1, ref A); // R1.00 BACK COLOR - DEPRECATED
-                    FileSystem.Input(1, ref A);
-                    FileSystem.Input(1, ref A);
-                    FileSystem.Input(1, ref A);
-                    FileSystem.Input(1, ref A);
-                    FileSystem.Input(1, ref A); // R1.00 ALPHA - DEPRECATED
-                    FileSystem.Input(1, ref A);
-                    FileSystem.Input(1, ref A); // R1.00 FONT
-                    FileSystem.Input(1, ref A);
-                    FONT_Name_Name = Strings.Trim(A);
-                    FileSystem.Input(1, ref A);
-                    FONT_Name_Size = Strings.Trim(A);
-                    FileSystem.Input(1, ref A);
-                    FONT_Name_Bold = Strings.Trim(A);
-                    FileSystem.Input(1, ref A);
-                    FONT_Name_Italic = Strings.Trim(A);
-                    if (FONT_Name_Bold == "True")
-                    {
-                    }
-
-                    if (FONT_Name_Italic == "True")
-                    {
-                    }
-
-                    FONT_Name = new Font(FONT_Name_Name, Conversions.ToSingle(FONT_Name_Size), FontStyle.Regular);
-                    if (FONT_Name_Bold == "True")
-                        FONT_Name = new Font(FONT_Name_Name, Conversions.ToSingle(FONT_Name_Size), FontStyle.Bold);
-
-                    if (FONT_Name_Italic == "True")
-                        FONT_Name = new Font(FONT_Name_Name, Conversions.ToSingle(FONT_Name_Size), FontStyle.Italic);
-
-                    FileSystem.Input(1, ref A); // R2.00 SCREEN SIZE
-                    FileSystem.Input(1, ref A); // cboPageSize.Text = Trim(A)
-                    SETTINGS_GetStatSize(A); // R4.10 Changed size.
-                    FileSystem.Input(1, ref A); // R2.00 PAGE LAYOUT Y
-                    FileSystem.Input(1, ref A);
-                    cboLayoutY.Text = Strings.Trim(A);
-                    FileSystem.Input(1, ref A); // R2.00 PAGE LAYOUT X
-                    FileSystem.Input(1, ref A);
-                    cboLayoutX.Text = Strings.Trim(A);
-                    FileSystem.Input(1, ref A); // R2.00 PANEL BACK COLOR
-                    FileSystem.Input(1, ref A);
-                    Ca = (int) Math.Round(Conversion.Val(A));
-                    FileSystem.Input(1, ref A);
-                    Cr = (int) Math.Round(Conversion.Val(A));
-                    FileSystem.Input(1, ref A);
-                    Cg = (int) Math.Round(Conversion.Val(A));
-                    FileSystem.Input(1, ref A);
-                    Cb = (int) Math.Round(Conversion.Val(A));
-                    pbStats.BackColor = Color.FromArgb(Ca, Cr, Cg, Cb);
-                    LSName.BackC = pbStats.BackColor; // R4.00 Added.
-                    FileSystem.Input(1, ref A); // R2.00 IMAGE SCALING
-                    FileSystem.Input(1, ref A);
-                    LSName.Scaling = Strings.Trim(A); // R4.00 Added Scaling var.
-                    if (!FileSystem.EOF(1))
-                    {
-                        FileSystem.Input(1, ref A); // R2.00 GUI COLOR SCHEME
-                        FileSystem.Input(1, ref A);
-                        GUI_ColorMode = (int) Math.Round(Conversion.Val(Strings.Trim(A)));
-                    }
-                    else
-                    {
-                        GUI_ColorMode = 0;
-                    }
-
-                    // **********************************************************
-                    // REV 3 and newer files
-                    // **********************************************************
-                    if (2 < Frev)
-                    {
-                        // R3.00 RANK LABEL VARS
-                        FileSystem.Input(1, ref A); // R3.00 RANK FORE COLOR 1 
-                        FileSystem.Input(1, ref A);
-                        Ca = (int) Math.Round(Conversion.Val(A));
-                        FileSystem.Input(1, ref A);
-                        Cr = (int) Math.Round(Conversion.Val(A));
-                        FileSystem.Input(1, ref A);
-                        Cg = (int) Math.Round(Conversion.Val(A));
-                        FileSystem.Input(1, ref A);
-                        Cb = (int) Math.Round(Conversion.Val(A));
-                        LSRank.F1 = Color.FromArgb(Ca, Cr, Cg, Cb);
-                        FileSystem.Input(1, ref A); // R3.00 RANK FORE COLOR 2 
-                        FileSystem.Input(1, ref A);
-                        Ca = (int) Math.Round(Conversion.Val(A));
-                        FileSystem.Input(1, ref A);
-                        Cr = (int) Math.Round(Conversion.Val(A));
-                        FileSystem.Input(1, ref A);
-                        Cg = (int) Math.Round(Conversion.Val(A));
-                        FileSystem.Input(1, ref A);
-                        Cb = (int) Math.Round(Conversion.Val(A));
-                        LSRank.F2 = Color.FromArgb(Ca, Cr, Cg, Cb);
-                        FileSystem.Input(1, ref A); // R3.00 RANK FORE GRADIENT 
-                        FileSystem.Input(1, ref A);
-                        LSRank.FDir = Conversions.ToInteger(A);
-                        FileSystem.Input(1, ref A); // R3.00 RANK BACK COLOR 1 
-                        FileSystem.Input(1, ref A);
-                        Ca = (int) Math.Round(Conversion.Val(A));
-                        FileSystem.Input(1, ref A);
-                        Cr = (int) Math.Round(Conversion.Val(A));
-                        FileSystem.Input(1, ref A);
-                        Cg = (int) Math.Round(Conversion.Val(A));
-                        FileSystem.Input(1, ref A);
-                        Cb = (int) Math.Round(Conversion.Val(A));
-                        LSRank.B1 = Color.FromArgb(Ca, Cr, Cg, Cb);
-                        FileSystem.Input(1, ref A); // R3.00 RANK BACK COLOR 2 
-                        FileSystem.Input(1, ref A);
-                        Ca = (int) Math.Round(Conversion.Val(A));
-                        FileSystem.Input(1, ref A);
-                        Cr = (int) Math.Round(Conversion.Val(A));
-                        FileSystem.Input(1, ref A);
-                        Cg = (int) Math.Round(Conversion.Val(A));
-                        FileSystem.Input(1, ref A);
-                        Cb = (int) Math.Round(Conversion.Val(A));
-                        LSRank.B2 = Color.FromArgb(Ca, Cr, Cg, Cb);
-                        FileSystem.Input(1, ref A); // R3.00 RANK BACK GRADIENT 
-                        FileSystem.Input(1, ref A);
-                        LSRank.BDir = Conversions.ToInteger(A);
-
-                        // R3.00 NAME LABEL VARS
-                        FileSystem.Input(1, ref A); // R3.00 NAME FORE COLOR 1 
-                        FileSystem.Input(1, ref A);
-                        Ca = (int) Math.Round(Conversion.Val(A));
-                        FileSystem.Input(1, ref A);
-                        Cr = (int) Math.Round(Conversion.Val(A));
-                        FileSystem.Input(1, ref A);
-                        Cg = (int) Math.Round(Conversion.Val(A));
-                        FileSystem.Input(1, ref A);
-                        Cb = (int) Math.Round(Conversion.Val(A));
-                        LSName.F1 = Color.FromArgb(Ca, Cr, Cg, Cb);
-                        FileSystem.Input(1, ref A); // R3.00 NAME FORE COLOR 2 
-                        FileSystem.Input(1, ref A);
-                        Ca = (int) Math.Round(Conversion.Val(A));
-                        FileSystem.Input(1, ref A);
-                        Cr = (int) Math.Round(Conversion.Val(A));
-                        FileSystem.Input(1, ref A);
-                        Cg = (int) Math.Round(Conversion.Val(A));
-                        FileSystem.Input(1, ref A);
-                        Cb = (int) Math.Round(Conversion.Val(A));
-                        LSName.F2 = Color.FromArgb(Ca, Cr, Cg, Cb);
-                        FileSystem.Input(1, ref A); // R3.00 NAME FORE GRADIENT 
-                        FileSystem.Input(1, ref A);
-                        LSName.FDir = Conversions.ToInteger(A);
-                        FileSystem.Input(1, ref A); // R3.00 NAME BACK COLOR 1 
-                        FileSystem.Input(1, ref A);
-                        Ca = (int) Math.Round(Conversion.Val(A));
-                        FileSystem.Input(1, ref A);
-                        Cr = (int) Math.Round(Conversion.Val(A));
-                        FileSystem.Input(1, ref A);
-                        Cg = (int) Math.Round(Conversion.Val(A));
-                        FileSystem.Input(1, ref A);
-                        Cb = (int) Math.Round(Conversion.Val(A));
-                        LSName.B1 = Color.FromArgb(Ca, Cr, Cg, Cb);
-                        FileSystem.Input(1, ref A); // R3.00 NAME BACK COLOR 2 
-                        FileSystem.Input(1, ref A);
-                        Ca = (int) Math.Round(Conversion.Val(A));
-                        FileSystem.Input(1, ref A);
-                        Cr = (int) Math.Round(Conversion.Val(A));
-                        FileSystem.Input(1, ref A);
-                        Cg = (int) Math.Round(Conversion.Val(A));
-                        FileSystem.Input(1, ref A);
-                        Cb = (int) Math.Round(Conversion.Val(A));
-                        LSName.B2 = Color.FromArgb(Ca, Cr, Cg, Cb);
-                        FileSystem.Input(1, ref A); // R3.00 NAME BACK GRADIENT 
-                        FileSystem.Input(1, ref A);
-                        LSName.BDir = Conversions.ToInteger(A);
-                        FileSystem.Input(1, ref A); // R3.00 RANK SHADOW COLOR 
-                        FileSystem.Input(1, ref A);
-                        Ca = (int) Math.Round(Conversion.Val(A));
-                        FileSystem.Input(1, ref A);
-                        Cr = (int) Math.Round(Conversion.Val(A));
-                        FileSystem.Input(1, ref A);
-                        Cg = (int) Math.Round(Conversion.Val(A));
-                        FileSystem.Input(1, ref A);
-                        Cb = (int) Math.Round(Conversion.Val(A));
-                        LSRank.ShadowColor = Color.FromArgb(Ca, Cr, Cg, Cb);
-                        FileSystem.Input(1, ref A); // R3.00 RANK SHADOW DIR
-                        FileSystem.Input(1, ref A);
-                        LSRank.ShadowDir = A;
-                        FileSystem.Input(1, ref A); // R3.00 RANK SHADOW DEPTH - Future
-                        FileSystem.Input(1, ref A);
-                        LSRank.ShadowDepth = A;
-                        FileSystem.Input(1, ref A); // R3.00 NAME SHADOW COLOR 
-                        FileSystem.Input(1, ref A);
-                        Ca = (int) Math.Round(Conversion.Val(A));
-                        FileSystem.Input(1, ref A);
-                        Cr = (int) Math.Round(Conversion.Val(A));
-                        FileSystem.Input(1, ref A);
-                        Cg = (int) Math.Round(Conversion.Val(A));
-                        FileSystem.Input(1, ref A);
-                        Cb = (int) Math.Round(Conversion.Val(A));
-                        LSName.ShadowColor = Color.FromArgb(Ca, Cr, Cg, Cb);
-                        FileSystem.Input(1, ref A); // R3.00 NAME SHADOW DIR
-                        FileSystem.Input(1, ref A);
-                        // CName3D = A
-                        // cboName3D.Text = A
-                        LSName.ShadowDir = A;
-                        FileSystem.Input(1, ref A); // R3.00 NAME SHADOW DEPTH - Future
-                        FileSystem.Input(1, ref A);
-                        // CName3Depth = A
-                        LSName.ShadowDepth = A;
-                        FileSystem.Input(1, ref A); // R3.00 BACK GRADIENT COLOR 1 - Future
-                        FileSystem.Input(1, ref A);
-                        Ca = (int) Math.Round(Conversion.Val(A));
-                        FileSystem.Input(1, ref A);
-                        Cr = (int) Math.Round(Conversion.Val(A));
-                        FileSystem.Input(1, ref A);
-                        Cg = (int) Math.Round(Conversion.Val(A));
-                        FileSystem.Input(1, ref A);
-                        Cb = (int) Math.Round(Conversion.Val(A));
-                        COLOR_Back1 = Color.FromArgb(Ca, Cr, Cg, Cb);
-                        FileSystem.Input(1, ref A); // R3.00 BACK GRADIENT COLOR 2 - Future
-                        FileSystem.Input(1, ref A);
-                        Ca = (int) Math.Round(Conversion.Val(A));
-                        FileSystem.Input(1, ref A);
-                        Cr = (int) Math.Round(Conversion.Val(A));
-                        FileSystem.Input(1, ref A);
-                        Cg = (int) Math.Round(Conversion.Val(A));
-                        FileSystem.Input(1, ref A);
-                        Cb = (int) Math.Round(Conversion.Val(A));
-                        COLOR_Back2 = Color.FromArgb(Ca, Cr, Cg, Cb);
-                        FileSystem.Input(1, ref A); // R3.00 NAME SHADOW DIR - Future
-                        FileSystem.Input(1, ref A);
-                        COLOR_Back_Dir = Conversions.ToInteger(A);
-
-                        // **********************************************************
-                        // REV 4 and newer files
-                        // **********************************************************
-                        if (3 < Frev)
-                        {
-                            FileSystem.Input(1, ref A); // R3.10 FX COLORS
-                            for (var t = 1; t <= 10; t++)
-                            {
-                                FileSystem.Input(1, ref A);
-                                Ca = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                Cr = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                Cg = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                Cb = (int) Math.Round(Conversion.Val(A));
-                                CFX3DC[t] = Color.FromArgb(Ca, Cr, Cg, Cb);
-                            }
-
-                            FileSystem.Input(1, ref A); // R3.10 FX VARS
-                            for (var N = 1; N <= 10; N++)
-                            for (var t = 1; t <= 10; t++)
-                            {
-                                FileSystem.Input(1, ref A);
-                                CFX3DVar[N, t] = Strings.Trim(A);
-                            }
-
-                            FileSystem.Input(1, ref A); // R3.10 FX ACTIVE
-                            for (var N = 1; N <= 10; N++)
-                            {
-                                FileSystem.Input(1, ref A);
-                                if (A == "True")
-                                    CFX3DActive[N] = true;
-                                else
-                                    CFX3DActive[N] = false;
-                            }
-
-                            // ***********************************
-                            // R3.00 Rev 5 and above.
-                            // ***********************************
-                            if (4 < Frev)
-                            {
-                                FileSystem.Input(1, ref A); // NAME OVERLAY IMAGE
-                                FileSystem.Input(1, ref A);
-                                PATH_Name_OVLBmp = A;
-                                FileSystem.Input(1, ref A);
-                                LSName.OVLScaling = Conversion.Val(A).ToString();
-                                FileSystem.Input(1, ref A); // NOTE 01 VARS
-                                FileSystem.Input(1, ref A);
-                                Ca = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                Cr = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                Cg = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                Cb = (int) Math.Round(Conversion.Val(A));
-                                LSNote01.B1 = Color.FromArgb(Ca, Cr, Cg, Cb);
-                                FileSystem.Input(1, ref A);
-                                Ca = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                Cr = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                Cg = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                Cb = (int) Math.Round(Conversion.Val(A));
-                                LSNote01.B2 = Color.FromArgb(Ca, Cr, Cg, Cb);
-                                FileSystem.Input(1, ref A);
-                                Ca = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                Cr = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                Cg = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                Cb = (int) Math.Round(Conversion.Val(A));
-                                LSNote01.BackC = Color.FromArgb(Ca, Cr, Cg, Cb);
-                                FileSystem.Input(1, ref A);
-                                LSNote01.BDir = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                Ca = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                Cr = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                Cg = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                Cb = (int) Math.Round(Conversion.Val(A));
-                                LSNote01.F1 = Color.FromArgb(Ca, Cr, Cg, Cb);
-                                FileSystem.Input(1, ref A);
-                                Ca = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                Cr = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                Cg = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                Cb = (int) Math.Round(Conversion.Val(A));
-                                LSNote01.F2 = Color.FromArgb(Ca, Cr, Cg, Cb);
-                                FileSystem.Input(1, ref A);
-                                LSNote01.FDir = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                LSNote01.Height = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                LSNote01.O1 = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                LSNote01.O2 = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                LSNote01.Scaling = Conversion.Val(A).ToString();
-                                FileSystem.Input(1, ref A);
-                                LSNote01.OVLScaling = Conversion.Val(A).ToString();
-                                FileSystem.Input(1, ref A);
-                                Ca = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                Cr = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                Cg = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                Cb = (int) Math.Round(Conversion.Val(A));
-                                LSNote01.ShadowColor = Color.FromArgb(Ca, Cr, Cg, Cb);
-                                FileSystem.Input(1, ref A);
-                                LSNote01.ShadowDepth = A;
-                                FileSystem.Input(1, ref A);
-                                LSNote01.ShadowDir = A;
-                                FileSystem.Input(1, ref A);
-                                LSNote01.Width = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                PATH_Note01_Bmp = A;
-                                FileSystem.Input(1, ref A);
-                                PATH_Note01_BmpPath = A;
-                                FileSystem.Input(1, ref A);
-                                PATH_Note01_OVLBmp = A;
-                                FileSystem.Input(1, ref A);
-                                PATH_Note01_OVLBmpPath = A;
-                                FileSystem.Input(1, ref A);
-                                FONT_Note01_Name = A;
-                                FileSystem.Input(1, ref A);
-                                FONT_Note01_Bold = A;
-                                FileSystem.Input(1, ref A);
-                                FONT_Note01_Italic = A;
-                                FileSystem.Input(1, ref A);
-                                FONT_Note01_Size = A;
-                                for (var t = 1; t <= 10; t++)
-                                {
-                                    FileSystem.Input(1, ref A);
-                                    NoteAnim01_Text[t] = A;
-                                }
-
-                                FileSystem.Input(1, ref A);
-                                NoteAnim01.Mode = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                NoteAnim01.Speed = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                NoteAnim01.TimeHold = (long) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                NoteAnim01.Align = A;
-                                FileSystem.Input(1, ref A);
-                                NoteAnim01.Delim = A;
-                                FileSystem.Input(1, ref A);
-                                NoteAnim01.Xoffset = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                NoteAnim01.Yoffset = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A); // NOTE 02 VARS
-                                FileSystem.Input(1, ref A);
-                                Ca = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                Cr = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                Cg = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                Cb = (int) Math.Round(Conversion.Val(A));
-                                LSNote02.B1 = Color.FromArgb(Ca, Cr, Cg, Cb);
-                                FileSystem.Input(1, ref A);
-                                Ca = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                Cr = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                Cg = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                Cb = (int) Math.Round(Conversion.Val(A));
-                                LSNote02.B2 = Color.FromArgb(Ca, Cr, Cg, Cb);
-                                FileSystem.Input(1, ref A);
-                                Ca = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                Cr = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                Cg = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                Cb = (int) Math.Round(Conversion.Val(A));
-                                LSNote02.BackC = Color.FromArgb(Ca, Cr, Cg, Cb);
-                                FileSystem.Input(1, ref A);
-                                LSNote02.BDir = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                Ca = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                Cr = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                Cg = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                Cb = (int) Math.Round(Conversion.Val(A));
-                                LSNote02.F1 = Color.FromArgb(Ca, Cr, Cg, Cb);
-                                FileSystem.Input(1, ref A);
-                                Ca = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                Cr = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                Cg = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                Cb = (int) Math.Round(Conversion.Val(A));
-                                LSNote02.F2 = Color.FromArgb(Ca, Cr, Cg, Cb);
-                                FileSystem.Input(1, ref A);
-                                LSNote02.FDir = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                LSNote02.Height = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                LSNote02.O1 = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                LSNote02.O2 = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                LSNote02.Scaling = Conversion.Val(A).ToString();
-                                FileSystem.Input(1, ref A);
-                                LSNote02.OVLScaling = Conversion.Val(A).ToString();
-                                FileSystem.Input(1, ref A);
-                                Ca = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                Cr = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                Cg = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                Cb = (int) Math.Round(Conversion.Val(A));
-                                LSNote02.ShadowColor = Color.FromArgb(Ca, Cr, Cg, Cb);
-                                FileSystem.Input(1, ref A);
-                                LSNote02.ShadowDepth = A;
-                                FileSystem.Input(1, ref A);
-                                LSNote02.ShadowDir = A;
-                                FileSystem.Input(1, ref A);
-                                LSNote02.Width = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                PATH_Note02_Bmp = A;
-                                FileSystem.Input(1, ref A);
-                                PATH_Note02_BmpPath = A;
-                                FileSystem.Input(1, ref A);
-                                PATH_Note02_OVLBmp = A;
-                                FileSystem.Input(1, ref A);
-                                PATH_Note02_OVLBmpPath = A;
-                                FileSystem.Input(1, ref A);
-                                FONT_Note02_Name = A;
-                                FileSystem.Input(1, ref A);
-                                FONT_Note02_Bold = A;
-                                FileSystem.Input(1, ref A);
-                                FONT_Note02_Italic = A;
-                                FileSystem.Input(1, ref A);
-                                FONT_Note02_Size = A;
-                                for (var t = 1; t <= 10; t++)
-                                {
-                                    FileSystem.Input(1, ref A);
-                                    NoteAnim02_Text[t] = A;
-                                }
-
-                                FileSystem.Input(1, ref A);
-                                NoteAnim02.Mode = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                NoteAnim02.Speed = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                NoteAnim02.TimeHold = (long) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                NoteAnim02.Align = A;
-                                FileSystem.Input(1, ref A);
-                                NoteAnim02.Delim = A;
-                                FileSystem.Input(1, ref A);
-                                NoteAnim02.Xoffset = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                NoteAnim02.Yoffset = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A); // NOTE 03 VARS
-                                FileSystem.Input(1, ref A);
-                                Ca = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                Cr = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                Cg = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                Cb = (int) Math.Round(Conversion.Val(A));
-                                LSNote03.B1 = Color.FromArgb(Ca, Cr, Cg, Cb);
-                                FileSystem.Input(1, ref A);
-                                Ca = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                Cr = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                Cg = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                Cb = (int) Math.Round(Conversion.Val(A));
-                                LSNote03.B2 = Color.FromArgb(Ca, Cr, Cg, Cb);
-                                FileSystem.Input(1, ref A);
-                                Ca = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                Cr = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                Cg = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                Cb = (int) Math.Round(Conversion.Val(A));
-                                LSNote03.BackC = Color.FromArgb(Ca, Cr, Cg, Cb);
-                                FileSystem.Input(1, ref A);
-                                LSNote03.BDir = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                Ca = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                Cr = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                Cg = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                Cb = (int) Math.Round(Conversion.Val(A));
-                                LSNote03.F1 = Color.FromArgb(Ca, Cr, Cg, Cb);
-                                FileSystem.Input(1, ref A);
-                                Ca = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                Cr = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                Cg = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                Cb = (int) Math.Round(Conversion.Val(A));
-                                LSNote03.F2 = Color.FromArgb(Ca, Cr, Cg, Cb);
-                                FileSystem.Input(1, ref A);
-                                LSNote03.FDir = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                LSNote03.Height = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                LSNote03.O1 = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                LSNote03.O2 = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                LSNote03.Scaling = Conversion.Val(A).ToString();
-                                FileSystem.Input(1, ref A);
-                                LSNote03.OVLScaling = Conversion.Val(A).ToString();
-                                FileSystem.Input(1, ref A);
-                                Ca = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                Cr = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                Cg = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                Cb = (int) Math.Round(Conversion.Val(A));
-                                LSNote03.ShadowColor = Color.FromArgb(Ca, Cr, Cg, Cb);
-                                FileSystem.Input(1, ref A);
-                                LSNote03.ShadowDepth = A;
-                                FileSystem.Input(1, ref A);
-                                LSNote03.ShadowDir = A;
-                                FileSystem.Input(1, ref A);
-                                LSNote03.Width = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                PATH_Note03_Bmp = A;
-                                FileSystem.Input(1, ref A);
-                                PATH_Note03_BmpPath = A;
-                                FileSystem.Input(1, ref A);
-                                PATH_Note03_OVLBmp = A;
-                                FileSystem.Input(1, ref A);
-                                PATH_Note03_OVLBmpPath = A;
-                                FileSystem.Input(1, ref A);
-                                FONT_Note03_Name = A;
-                                FileSystem.Input(1, ref A);
-                                FONT_Note03_Bold = A;
-                                FileSystem.Input(1, ref A);
-                                FONT_Note03_Italic = A;
-                                FileSystem.Input(1, ref A);
-                                FONT_Note03_Size = A;
-                                for (var t = 1; t <= 10; t++)
-                                {
-                                    FileSystem.Input(1, ref A);
-                                    NoteAnim03_Text[t] = A;
-                                }
-
-                                FileSystem.Input(1, ref A);
-                                NoteAnim03.Mode = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                NoteAnim03.Speed = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                NoteAnim03.TimeHold = (long) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                NoteAnim03.Align = A;
-                                FileSystem.Input(1, ref A);
-                                NoteAnim03.Delim = A;
-                                FileSystem.Input(1, ref A);
-                                NoteAnim03.Xoffset = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                NoteAnim03.Yoffset = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A); // NOTE 04 VARS
-                                FileSystem.Input(1, ref A);
-                                Ca = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                Cr = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                Cg = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                Cb = (int) Math.Round(Conversion.Val(A));
-                                LSNote04.B1 = Color.FromArgb(Ca, Cr, Cg, Cb);
-                                FileSystem.Input(1, ref A);
-                                Ca = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                Cr = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                Cg = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                Cb = (int) Math.Round(Conversion.Val(A));
-                                LSNote04.B2 = Color.FromArgb(Ca, Cr, Cg, Cb);
-                                FileSystem.Input(1, ref A);
-                                Ca = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                Cr = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                Cg = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                Cb = (int) Math.Round(Conversion.Val(A));
-                                LSNote04.BackC = Color.FromArgb(Ca, Cr, Cg, Cb);
-                                FileSystem.Input(1, ref A);
-                                LSNote04.BDir = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                Ca = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                Cr = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                Cg = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                Cb = (int) Math.Round(Conversion.Val(A));
-                                LSNote04.F1 = Color.FromArgb(Ca, Cr, Cg, Cb);
-                                FileSystem.Input(1, ref A);
-                                Ca = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                Cr = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                Cg = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                Cb = (int) Math.Round(Conversion.Val(A));
-                                LSNote04.F2 = Color.FromArgb(Ca, Cr, Cg, Cb);
-                                FileSystem.Input(1, ref A);
-                                LSNote04.FDir = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                LSNote04.Height = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                LSNote04.O1 = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                LSNote04.O2 = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                LSNote04.Scaling = Conversion.Val(A).ToString();
-                                FileSystem.Input(1, ref A);
-                                LSNote04.OVLScaling = Conversion.Val(A).ToString();
-                                FileSystem.Input(1, ref A);
-                                Ca = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                Cr = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                Cg = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                Cb = (int) Math.Round(Conversion.Val(A));
-                                LSNote04.ShadowColor = Color.FromArgb(Ca, Cr, Cg, Cb);
-                                FileSystem.Input(1, ref A);
-                                LSNote04.ShadowDepth = A;
-                                FileSystem.Input(1, ref A);
-                                LSNote04.ShadowDir = A;
-                                FileSystem.Input(1, ref A);
-                                LSNote04.Width = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                PATH_Note04_Bmp = A;
-                                FileSystem.Input(1, ref A);
-                                PATH_Note04_BmpPath = A;
-                                FileSystem.Input(1, ref A);
-                                PATH_Note04_OVLBmp = A;
-                                FileSystem.Input(1, ref A);
-                                PATH_Note04_OVLBmpPath = A;
-                                FileSystem.Input(1, ref A);
-                                FONT_Note04_Name = A;
-                                FileSystem.Input(1, ref A);
-                                FONT_Note04_Bold = A;
-                                FileSystem.Input(1, ref A);
-                                FONT_Note04_Italic = A;
-                                FileSystem.Input(1, ref A);
-                                FONT_Note04_Size = A;
-                                for (var t = 1; t <= 10; t++)
-                                {
-                                    FileSystem.Input(1, ref A);
-                                    NoteAnim04_Text[t] = A;
-                                }
-
-                                FileSystem.Input(1, ref A);
-                                NoteAnim04.Mode = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                NoteAnim04.Speed = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                NoteAnim04.TimeHold = (long) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                NoteAnim04.Align = A;
-                                FileSystem.Input(1, ref A);
-                                NoteAnim04.Delim = A;
-                                FileSystem.Input(1, ref A);
-                                NoteAnim04.Xoffset = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                NoteAnim04.Yoffset = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A); // NOTE SPACING
-                                FileSystem.Input(1, ref A);
-                                NOTE_Spacing = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A); // SOUND SAMPLES
-                                for (var t = 1; t <= 30; t++)
-                                {
-                                    FileSystem.Input(1, ref A);
-                                    SOUND_File[t] = Strings.Trim(A);
-                                    FileSystem.Input(1, ref A); // R4.00 Future Pitch.
-                                    FileSystem.Input(1, ref A); // R4.00 Future Vol.
-                                }
-
-                                FileSystem.Input(1, ref A);
-                                scrVolume.Value = (int) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A); // WINDOW STATE
-                                FileSystem.Input(1, ref A);
-                                Celo_Windowstate = Strings.Trim(A);
-                                FileSystem.Input(1, ref A);
-                                Celo_Left = (long) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                Celo_Top = (long) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                Celo_Width = (long) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                Celo_Height = (long) Math.Round(Conversion.Val(A));
-                                FileSystem.Input(1, ref A);
-                                if (A == "1") chkPosition.Checked = true;
-                            } // <-- REV 5 END
-                        } // <-- REV 4 END
-                    } // <-- REV 3 END
-                } // <-- REV 2 END
-            }
-            catch (Exception ex)
-            {
-                Interaction.MsgBox(
-                    "ERROR: " + ex.Message + Constants.vbCr + Constants.vbCr + "Unable to read the saved settings." +
-                    Constants.vbCr + "The last known setup could not be loaded." + Constants.vbCr + Constants.vbCr +
-                    "If running a new version, this error may fix itself when a new setup is saved.",
-                    MsgBoxStyle.Critical, "MakoCelo - Setup Error");
-            }
-
-            FX_SetVarControls();
-            SETTINGS_SetupAfterLoad();
-            FileSystem.FileClose(1);
-        }
-
-        private void SETTINGS_SetupAfterLoad()
+        public void SETTINGS_SetupAfterLoad()
         {
             // *****************************************************
             // R4.40 Setup the NOTE FONTS. This was BUGGED badly. Fixed.
@@ -4129,555 +2054,6 @@ namespace MakoCelo
             }
         }
 
-        private void SETTINGS_Save(string tFile)
-        {
-            string A;
-            Color C;
-            string tPath;
-            if (FLAG_Loading) return;
-
-            // R4.00 OPEN log file and start parsing.
-            var fs = default(FileStream);
-            var sw = default(StreamWriter);
-            tPath = Application.StartupPath;
-            try
-            {
-                fs = string.IsNullOrEmpty(tFile)
-                    ? new FileStream(tPath + @"\MakoCelo_settings.dat", FileMode.OpenOrCreate)
-                    : new FileStream(tFile, FileMode.OpenOrCreate);
-
-                sw = new StreamWriter(fs, Encoding.UTF8);
-                sw.WriteLine("VERSION MC600");
-                C = LSName.F1; // R3.30 lbRank01.ForeColor
-                sw.WriteLine("RANK FORE COLOR");
-                sw.WriteLine(C.A);
-                sw.WriteLine(C.R);
-                sw.WriteLine(C.G);
-                sw.WriteLine(C.B);
-                C = LSName.B1; // R3.30 lbRank01.BackColor
-                sw.WriteLine("RANK BACK COLOR");
-                sw.WriteLine(C.A);
-                sw.WriteLine(C.R);
-                sw.WriteLine(C.G);
-                sw.WriteLine(C.B);
-                sw.WriteLine("RANK ALPHA %");
-                sw.WriteLine(LSRank.O1);
-                sw.WriteLine("BACK IMAGE");
-                sw.WriteLine(PATH_BackgroundImage);
-                sw.WriteLine("LOG PATH");
-                sw.WriteLine(PATH_Game);
-                sw.WriteLine("RANK FONT");
-                sw.WriteLine(FONT_Rank_Name);
-                sw.WriteLine(FONT_Rank_Size);
-                sw.WriteLine(FONT_Rank_Bold);
-                sw.WriteLine(FONT_Rank_Italic);
-                C = LSName.F1; // R3.30 lbName01.ForeColor
-                sw.WriteLine("NAME FORE COLOR");
-                sw.WriteLine(C.A);
-                sw.WriteLine(C.R);
-                sw.WriteLine(C.G);
-                sw.WriteLine(C.B);
-                C = LSName.B1; // R3.30 lbName01.BackColor
-                sw.WriteLine("NAME BACK COLOR");
-                sw.WriteLine(C.A);
-                sw.WriteLine(C.R);
-                sw.WriteLine(C.G);
-                sw.WriteLine(C.B);
-                sw.WriteLine("NAME ALPHA %");
-                sw.WriteLine(LSName.O1);
-                sw.WriteLine("NAME FONT");
-                sw.WriteLine(FONT_Name_Name);
-                sw.WriteLine(FONT_Name_Size);
-                sw.WriteLine(FONT_Name_Bold);
-                sw.WriteLine(FONT_Name_Italic);
-                sw.WriteLine("SCREEN SIZE");
-                sw.WriteLine(" "); // R4.10 Changed to actual XY size vars at bottom.
-                sw.WriteLine("PAGE LAYOUT Y");
-                sw.WriteLine(cboLayoutY.Text);
-                sw.WriteLine("PAGE LAYOUT X");
-                sw.WriteLine(cboLayoutX.Text);
-                C = pbStats.BackColor; // R3.30 pnlPlrz.BackColor
-                sw.WriteLine("PANEL BACK COLOR");
-                sw.WriteLine(C.A);
-                sw.WriteLine(C.R);
-                sw.WriteLine(C.G);
-                sw.WriteLine(C.B);
-                sw.WriteLine("IMAGE SCALING");
-                sw.WriteLine(LSName.Scaling);
-                sw.WriteLine("GUI COLOR");
-                sw.WriteLine(GUI_ColorMode);
-                C = LSRank.F1;
-                sw.WriteLine("RANK FORE COLOR 1");
-                sw.WriteLine(C.A);
-                sw.WriteLine(C.R);
-                sw.WriteLine(C.G);
-                sw.WriteLine(C.B);
-                C = LSRank.F2;
-                sw.WriteLine("RANK FORE COLOR 2");
-                sw.WriteLine(C.A);
-                sw.WriteLine(C.R);
-                sw.WriteLine(C.G);
-                sw.WriteLine(C.B);
-                sw.WriteLine("RANK FORE GRADIENT DIR");
-                sw.WriteLine(LSRank.FDir);
-                C = LSRank.B1;
-                sw.WriteLine("RANK BACK COLOR 1");
-                sw.WriteLine(C.A);
-                sw.WriteLine(C.R);
-                sw.WriteLine(C.G);
-                sw.WriteLine(C.B);
-                C = LSRank.B2;
-                sw.WriteLine("RANK BACK COLOR 2");
-                sw.WriteLine(C.A);
-                sw.WriteLine(C.R);
-                sw.WriteLine(C.G);
-                sw.WriteLine(C.B);
-                sw.WriteLine("RANK BACK GRADIENT DIR");
-                sw.WriteLine(LSRank.BDir);
-                C = LSName.F1;
-                sw.WriteLine("NAME FORE COLOR 1");
-                sw.WriteLine(C.A);
-                sw.WriteLine(C.R);
-                sw.WriteLine(C.G);
-                sw.WriteLine(C.B);
-                C = LSName.F2;
-                sw.WriteLine("NAME FORE COLOR 2");
-                sw.WriteLine(C.A);
-                sw.WriteLine(C.R);
-                sw.WriteLine(C.G);
-                sw.WriteLine(C.B);
-                sw.WriteLine("NAME FORE GRADIENT DIR");
-                sw.WriteLine(LSName.FDir);
-                C = LSName.B1;
-                sw.WriteLine("NAME BACK COLOR 1");
-                sw.WriteLine(C.A);
-                sw.WriteLine(C.R);
-                sw.WriteLine(C.G);
-                sw.WriteLine(C.B);
-                C = LSName.B2;
-                sw.WriteLine("NAME BACK COLOR 2");
-                sw.WriteLine(C.A);
-                sw.WriteLine(C.R);
-                sw.WriteLine(C.G);
-                sw.WriteLine(C.B);
-                sw.WriteLine("NAME BACK GRADIENT DIR");
-                sw.WriteLine(LSName.BDir);
-                C = LSRank.ShadowColor;
-                sw.WriteLine("RANK SHADOW COLOR");
-                sw.WriteLine(C.A);
-                sw.WriteLine(C.R);
-                sw.WriteLine(C.G);
-                sw.WriteLine(C.B);
-                sw.WriteLine("RANK SHADOW DIR");
-                sw.WriteLine(LSRank.ShadowDir);
-                sw.WriteLine("RANK SHADOW DEPTH");
-                if (string.IsNullOrEmpty(LSRank.ShadowDepth)) LSRank.ShadowDepth = "";
-
-                sw.WriteLine(LSRank.ShadowDepth);
-                C = LSName.ShadowColor;
-                sw.WriteLine("NAME SHADOW COLOR");
-                sw.WriteLine(C.A);
-                sw.WriteLine(C.R);
-                sw.WriteLine(C.G);
-                sw.WriteLine(C.B);
-                sw.WriteLine("NAME SHADOW DIR");
-                sw.WriteLine(LSName.ShadowDir);
-                sw.WriteLine("NAME SHADOW DEPTH - Future");
-                sw.WriteLine(LSName.ShadowDepth);
-                C = COLOR_Back1;
-                sw.WriteLine("BACK GRADIENT COLOR 1 - Future");
-                sw.WriteLine(C.A);
-                sw.WriteLine(C.R);
-                sw.WriteLine(C.G);
-                sw.WriteLine(C.B);
-                C = COLOR_Back2;
-                sw.WriteLine("BACK GRADIENT COLOR 2 - Future");
-                sw.WriteLine(C.A);
-                sw.WriteLine(C.R);
-                sw.WriteLine(C.G);
-                sw.WriteLine(C.B);
-                sw.WriteLine("BACK GRADIENT DIR - Future");
-                sw.WriteLine(COLOR_Back_Dir);
-                sw.WriteLine("FX COLORS");
-                for (var t = 1; t <= 10; t++)
-                {
-                    C = CFX3DC[t];
-                    sw.WriteLine(C.A);
-                    sw.WriteLine(C.R);
-                    sw.WriteLine(C.G);
-                    sw.WriteLine(C.B);
-                }
-
-                sw.WriteLine("FX VARS");
-                for (var N = 1; N <= 10; N++)
-                for (var t = 1; t <= 10; t++)
-                {
-                    if (string.IsNullOrEmpty(CFX3DVar[N, t])) CFX3DVar[N, t] = "";
-
-                    sw.WriteLine(CFX3DVar[N, t]);
-                }
-
-                sw.WriteLine("FX ACTIVE");
-                for (var N = 1; N <= 10; N++) sw.WriteLine(CFX3DActive[N] ? "True" : "False");
-
-                // *********************************
-                // R4.00 ADDED!
-                // *********************************
-                sw.WriteLine("NAME OVERLAY IMAGE");
-                sw.WriteLine(PATH_Name_OVLBmp);
-                sw.WriteLine(LSName.OVLScaling);
-                sw.WriteLine("NOTE 01 VARS");
-                sw.WriteLine(LSNote01.B1.A);
-                sw.WriteLine(LSNote01.B1.R);
-                sw.WriteLine(LSNote01.B1.G);
-                sw.WriteLine(LSNote01.B1.B);
-                sw.WriteLine(LSNote01.B2.A);
-                sw.WriteLine(LSNote01.B2.R);
-                sw.WriteLine(LSNote01.B2.G);
-                sw.WriteLine(LSNote01.B2.B);
-                sw.WriteLine(LSNote01.BackC.A);
-                sw.WriteLine(LSNote01.BackC.R);
-                sw.WriteLine(LSNote01.BackC.G);
-                sw.WriteLine(LSNote01.BackC.B);
-                sw.WriteLine(LSNote01.BDir);
-                sw.WriteLine(LSNote01.F1.A);
-                sw.WriteLine(LSNote01.F1.R);
-                sw.WriteLine(LSNote01.F1.G);
-                sw.WriteLine(LSNote01.F1.B);
-                sw.WriteLine(LSNote01.F2.A);
-                sw.WriteLine(LSNote01.F2.R);
-                sw.WriteLine(LSNote01.F2.G);
-                sw.WriteLine(LSNote01.F2.B);
-                sw.WriteLine(LSNote01.FDir);
-                sw.WriteLine(LSNote01.Height);
-                sw.WriteLine(LSNote01.O1);
-                sw.WriteLine(LSNote01.O2);
-                sw.WriteLine(LSNote01.Scaling);
-                sw.WriteLine(LSNote01.OVLScaling);
-                sw.WriteLine(LSNote01.ShadowColor.A);
-                sw.WriteLine(LSNote01.ShadowColor.R);
-                sw.WriteLine(LSNote01.ShadowColor.G);
-                sw.WriteLine(LSNote01.ShadowColor.B);
-                sw.WriteLine(LSNote01.ShadowDepth);
-                sw.WriteLine(LSNote01.ShadowDir);
-                sw.WriteLine(LSNote01.Width);
-                sw.WriteLine(PATH_Note01_Bmp);
-                sw.WriteLine(PATH_Note01_BmpPath);
-                sw.WriteLine(PATH_Note01_OVLBmp);
-                sw.WriteLine(PATH_Note01_OVLBmpPath);
-                sw.WriteLine(FONT_Note01_Name);
-                sw.WriteLine(FONT_Note01_Bold);
-                sw.WriteLine(FONT_Note01_Italic);
-                sw.WriteLine(FONT_Note01_Size);
-                for (var t = 1; t <= 10; t++) sw.WriteLine(NoteAnim01_Text[t]);
-
-                sw.WriteLine(NoteAnim01.Mode);
-                sw.WriteLine(NoteAnim01.Speed);
-                sw.WriteLine(NoteAnim01.TimeHold);
-                sw.WriteLine(NoteAnim01.Align);
-                sw.WriteLine(NoteAnim01.Delim);
-                sw.WriteLine(NoteAnim01.Xoffset);
-                sw.WriteLine(NoteAnim01.Yoffset);
-                sw.WriteLine("NOTE 02 VARS");
-                sw.WriteLine(LSNote02.B1.A);
-                sw.WriteLine(LSNote02.B1.R);
-                sw.WriteLine(LSNote02.B1.G);
-                sw.WriteLine(LSNote02.B1.B);
-                sw.WriteLine(LSNote02.B2.A);
-                sw.WriteLine(LSNote02.B2.R);
-                sw.WriteLine(LSNote02.B2.G);
-                sw.WriteLine(LSNote02.B2.B);
-                sw.WriteLine(LSNote02.BackC.A);
-                sw.WriteLine(LSNote02.BackC.R);
-                sw.WriteLine(LSNote02.BackC.G);
-                sw.WriteLine(LSNote02.BackC.B);
-                sw.WriteLine(LSNote02.BDir);
-                sw.WriteLine(LSNote02.F1.A);
-                sw.WriteLine(LSNote02.F1.R);
-                sw.WriteLine(LSNote02.F1.G);
-                sw.WriteLine(LSNote02.F1.B);
-                sw.WriteLine(LSNote02.F2.A);
-                sw.WriteLine(LSNote02.F2.R);
-                sw.WriteLine(LSNote02.F2.G);
-                sw.WriteLine(LSNote02.F2.B);
-                sw.WriteLine(LSNote02.FDir);
-                sw.WriteLine(LSNote02.Height);
-                sw.WriteLine(LSNote02.O1);
-                sw.WriteLine(LSNote02.O2);
-                sw.WriteLine(LSNote02.Scaling);
-                sw.WriteLine(LSNote02.OVLScaling);
-                sw.WriteLine(LSNote02.ShadowColor.A);
-                sw.WriteLine(LSNote02.ShadowColor.R);
-                sw.WriteLine(LSNote02.ShadowColor.G);
-                sw.WriteLine(LSNote02.ShadowColor.B);
-                sw.WriteLine(LSNote02.ShadowDepth);
-                sw.WriteLine(LSNote02.ShadowDir);
-                sw.WriteLine(LSNote02.Width);
-                sw.WriteLine(PATH_Note02_Bmp);
-                sw.WriteLine(PATH_Note02_BmpPath);
-                sw.WriteLine(PATH_Note02_OVLBmp);
-                sw.WriteLine(PATH_Note02_OVLBmpPath);
-                sw.WriteLine(FONT_Note02_Name);
-                sw.WriteLine(FONT_Note02_Bold);
-                sw.WriteLine(FONT_Note02_Italic);
-                sw.WriteLine(FONT_Note02_Size);
-                for (var t = 1; t <= 10; t++) sw.WriteLine(NoteAnim02_Text[t]);
-
-                sw.WriteLine(NoteAnim02.Mode);
-                sw.WriteLine(NoteAnim02.Speed);
-                sw.WriteLine(NoteAnim02.TimeHold);
-                sw.WriteLine(NoteAnim02.Align);
-                sw.WriteLine(NoteAnim02.Delim);
-                sw.WriteLine(NoteAnim02.Xoffset);
-                sw.WriteLine(NoteAnim02.Yoffset);
-                sw.WriteLine("NOTE 03 VARS");
-                sw.WriteLine(LSNote03.B1.A);
-                sw.WriteLine(LSNote03.B1.R);
-                sw.WriteLine(LSNote03.B1.G);
-                sw.WriteLine(LSNote03.B1.B);
-                sw.WriteLine(LSNote03.B2.A);
-                sw.WriteLine(LSNote03.B2.R);
-                sw.WriteLine(LSNote03.B2.G);
-                sw.WriteLine(LSNote03.B2.B);
-                sw.WriteLine(LSNote03.BackC.A);
-                sw.WriteLine(LSNote03.BackC.R);
-                sw.WriteLine(LSNote03.BackC.G);
-                sw.WriteLine(LSNote03.BackC.B);
-                sw.WriteLine(LSNote03.BDir);
-                sw.WriteLine(LSNote03.F1.A);
-                sw.WriteLine(LSNote03.F1.R);
-                sw.WriteLine(LSNote03.F1.G);
-                sw.WriteLine(LSNote03.F1.B);
-                sw.WriteLine(LSNote03.F2.A);
-                sw.WriteLine(LSNote03.F2.R);
-                sw.WriteLine(LSNote03.F2.G);
-                sw.WriteLine(LSNote03.F2.B);
-                sw.WriteLine(LSNote03.FDir);
-                sw.WriteLine(LSNote03.Height);
-                sw.WriteLine(LSNote03.O1);
-                sw.WriteLine(LSNote03.O2);
-                sw.WriteLine(LSNote03.Scaling);
-                sw.WriteLine(LSNote03.OVLScaling);
-                sw.WriteLine(LSNote03.ShadowColor.A);
-                sw.WriteLine(LSNote03.ShadowColor.R);
-                sw.WriteLine(LSNote03.ShadowColor.G);
-                sw.WriteLine(LSNote03.ShadowColor.B);
-                sw.WriteLine(LSNote03.ShadowDepth);
-                sw.WriteLine(LSNote03.ShadowDir);
-                sw.WriteLine(LSNote03.Width);
-                sw.WriteLine(PATH_Note03_Bmp);
-                sw.WriteLine(PATH_Note03_BmpPath);
-                sw.WriteLine(PATH_Note03_OVLBmp);
-                sw.WriteLine(PATH_Note03_OVLBmpPath);
-                sw.WriteLine(FONT_Note03_Name);
-                sw.WriteLine(FONT_Note03_Bold);
-                sw.WriteLine(FONT_Note03_Italic);
-                sw.WriteLine(FONT_Note03_Size);
-                for (var t = 1; t <= 10; t++) sw.WriteLine(NoteAnim03_Text[t]);
-
-                sw.WriteLine(NoteAnim03.Mode);
-                sw.WriteLine(NoteAnim03.Speed);
-                sw.WriteLine(NoteAnim03.TimeHold);
-                sw.WriteLine(NoteAnim03.Align);
-                sw.WriteLine(NoteAnim03.Delim);
-                sw.WriteLine(NoteAnim03.Xoffset);
-                sw.WriteLine(NoteAnim03.Yoffset);
-                sw.WriteLine("NOTE 04 VARS");
-                sw.WriteLine(LSNote04.B1.A);
-                sw.WriteLine(LSNote04.B1.R);
-                sw.WriteLine(LSNote04.B1.G);
-                sw.WriteLine(LSNote04.B1.B);
-                sw.WriteLine(LSNote04.B2.A);
-                sw.WriteLine(LSNote04.B2.R);
-                sw.WriteLine(LSNote04.B2.G);
-                sw.WriteLine(LSNote04.B2.B);
-                sw.WriteLine(LSNote04.BackC.A);
-                sw.WriteLine(LSNote04.BackC.R);
-                sw.WriteLine(LSNote04.BackC.G);
-                sw.WriteLine(LSNote04.BackC.B);
-                sw.WriteLine(LSNote04.BDir);
-                sw.WriteLine(LSNote04.F1.A);
-                sw.WriteLine(LSNote04.F1.R);
-                sw.WriteLine(LSNote04.F1.G);
-                sw.WriteLine(LSNote04.F1.B);
-                sw.WriteLine(LSNote04.F2.A);
-                sw.WriteLine(LSNote04.F2.R);
-                sw.WriteLine(LSNote04.F2.G);
-                sw.WriteLine(LSNote04.F2.B);
-                sw.WriteLine(LSNote04.FDir);
-                sw.WriteLine(LSNote04.Height);
-                sw.WriteLine(LSNote04.O1);
-                sw.WriteLine(LSNote04.O2);
-                sw.WriteLine(LSNote04.Scaling);
-                sw.WriteLine(LSNote04.OVLScaling);
-                sw.WriteLine(LSNote04.ShadowColor.A);
-                sw.WriteLine(LSNote04.ShadowColor.R);
-                sw.WriteLine(LSNote04.ShadowColor.G);
-                sw.WriteLine(LSNote04.ShadowColor.B);
-                sw.WriteLine(LSNote04.ShadowDepth);
-                sw.WriteLine(LSNote04.ShadowDir);
-                sw.WriteLine(LSNote04.Width);
-                sw.WriteLine(PATH_Note04_Bmp);
-                sw.WriteLine(PATH_Note04_BmpPath);
-                sw.WriteLine(PATH_Note04_OVLBmp);
-                sw.WriteLine(PATH_Note04_OVLBmpPath);
-                sw.WriteLine(FONT_Note04_Name);
-                sw.WriteLine(FONT_Note04_Bold);
-                sw.WriteLine(FONT_Note04_Italic);
-                sw.WriteLine(FONT_Note04_Size);
-                for (var t = 1; t <= 10; t++) sw.WriteLine(NoteAnim04_Text[t]);
-
-                sw.WriteLine(NoteAnim04.Mode);
-                sw.WriteLine(NoteAnim04.Speed);
-                sw.WriteLine(NoteAnim04.TimeHold);
-                sw.WriteLine(NoteAnim04.Align);
-                sw.WriteLine(NoteAnim04.Delim);
-                sw.WriteLine(NoteAnim04.Xoffset);
-                sw.WriteLine(NoteAnim04.Yoffset);
-                sw.WriteLine("NOTE SPACING");
-                sw.WriteLine(NOTE_Spacing);
-                sw.WriteLine("SOUND SAMPLES");
-                for (var t = 1; t <= 30; t++)
-                {
-                    sw.WriteLine(SOUND_File[t]); // R4.00 WAV file path.
-                    sw.WriteLine(" "); // R4.00 Future Pitch/Speed.
-                    sw.WriteLine(SOUND_Vol[t]); // R4.10 Volume.
-                }
-
-                sw.WriteLine(scrVolume.Value);
-                sw.WriteLine("WINDOW STATE");
-                A = "Normal";
-                if ((int) WindowState == 1) A = "Minimized";
-
-                if ((int) WindowState == 2) A = "Maximized";
-
-                sw.WriteLine(A);
-                sw.WriteLine(Location.X);
-                sw.WriteLine(Location.Y);
-                sw.WriteLine(Size.Width);
-                sw.WriteLine(Size.Height);
-                sw.WriteLine(chkPosition.Checked ? "1" : "0");
-
-                sw.WriteLine(chkPopUp.Checked ? "1" : "0");
-
-                sw.WriteLine("PAGE XY OFFSET");
-                sw.WriteLine(tbXoff.Text);
-                sw.WriteLine(tbYoff.Text);
-                sw.WriteLine("PAGE XY SIZE");
-                sw.WriteLine(STATS_SizeX);
-                sw.WriteLine(STATS_SizeY);
-
-                // R4.30 Added.
-                sw.WriteLine("SCAN TIME");
-                sw.WriteLine(Conversion.Val(cboDelay.Items[cboDelay.SelectedIndex]));
-
-                // R4.30 Added.
-                sw.WriteLine("MATCH ALARM ON");
-                sw.WriteLine(chkFoundSound.Checked ? "1" : "0");
-
-                // R4.30 Added.
-                sw.WriteLine("HIDE MISSING");
-                sw.WriteLine(chkHideMissing.Checked ? "1" : "0");
-
-                sw.WriteLine("LEVEL STORAGE");
-                for (var t = 1; t <= 7; t++)
-                for (var tt = 1; tt <= 4; tt++)
-                    sw.WriteLine(LVLS[t, tt]);
-
-                // R4.30 Added.
-                sw.WriteLine("CYCLE ELO");
-                sw.WriteLine(chkShowELO.Checked ? "1" : "0");
-
-                // R4.34 Added until Relic fixes the Warngins.Log file.
-                sw.WriteLine("USE WEB SEARCH");
-                sw.WriteLine("1");
-
-                // R4.34 Added.
-                sw.WriteLine("SPEECH RANKS");
-                sw.WriteLine(chkSpeech.Checked ? "1" : "0");
-
-                // R4.34 Added.
-                sw.WriteLine("FIND TEAMS");
-                sw.WriteLine(chkGetTeams.Checked ? "1" : "0");
-
-                // R4.40 Added. LSname and LSrank must be the same.
-                sw.WriteLine("PLAYER CARD BACK");
-                sw.WriteLine(LSName.UseCardBack ? "1" : "0");
-
-                // R4.40 Added. LSname and LSrank must be the same.
-                sw.WriteLine("RANK BORDER");
-                sw.WriteLine(LSRank.BorderMode);
-                sw.WriteLine(LSRank.BorderColor.A);
-                sw.WriteLine(LSRank.BorderColor.R);
-                sw.WriteLine(LSRank.BorderColor.G);
-                sw.WriteLine(LSRank.BorderColor.B);
-                sw.WriteLine(LSRank.BorderWidth);
-                sw.WriteLine("0");
-                sw.WriteLine("0");
-                sw.WriteLine("0");
-                sw.WriteLine("0");
-                sw.WriteLine("0");
-
-                // R4.40 Added. LSname and LSrank must be the same.
-                sw.WriteLine("NAME BORDER");
-                sw.WriteLine(LSName.BorderMode);
-                sw.WriteLine(LSName.BorderColor.A);
-                sw.WriteLine(LSName.BorderColor.R);
-                sw.WriteLine(LSName.BorderColor.G);
-                sw.WriteLine(LSName.BorderColor.B);
-                sw.WriteLine(LSName.BorderWidth);
-                sw.WriteLine("0");
-                sw.WriteLine("0");
-                sw.WriteLine("0");
-                sw.WriteLine("0");
-                sw.WriteLine("0");
-
-                // R4.40 Added. LSname and LSrank must be the same.
-                sw.WriteLine("PANEL BORDER");
-                sw.WriteLine(LSRank.BorderPanelMode);
-                sw.WriteLine(LSRank.BorderPanelColor.A);
-                sw.WriteLine(LSRank.BorderPanelColor.R);
-                sw.WriteLine(LSRank.BorderPanelColor.G);
-                sw.WriteLine(LSRank.BorderPanelColor.B);
-                sw.WriteLine(LSRank.BorderPanelWidth);
-                sw.WriteLine("0");
-                sw.WriteLine("0");
-                sw.WriteLine("0");
-                sw.WriteLine("0");
-                sw.WriteLine("0");
-
-                // R4.45 Added.
-                sw.WriteLine("SHOW COUNTRY");
-                sw.WriteLine(chkCountry.Checked ? "1" : "0");
-
-                // R5.00 Added.
-                sw.WriteLine("SHOW OVERLAY");
-                sw.WriteLine(_chkToggleOverlay.Checked ? "1" : "0");
-
-                // R3.10 Write some extra lines to stop file open fails on future revs.
-                for (var t = 1; t <= 100; t++) sw.WriteLine(" ");
-            }
-            catch (Exception ex)
-            {
-                Interaction.MsgBox(
-                    "ERROR: " + ex.Message + Constants.vbCr + Constants.vbCr + "Unable to save the last known setup.",
-                    MsgBoxStyle.Critical, "MakoCelo - Setup Error");
-            }
-
-            // R4.00 Close / Clean up  streams?
-            if (Information.IsNothing(sw) == false)
-            {
-                sw.Close();
-                sw.Dispose();
-            }
-
-            if (Information.IsNothing(fs) == false)
-            {
-                fs.Close();
-                fs.Dispose();
-            }
-        }
-
         private void frmMain_Load(object sender, EventArgs e)
         {
             FLAG_Loading = true; // R2.00 Tell Controls not to update. Most save settings as they update,
@@ -4827,9 +2203,9 @@ namespace MakoCelo
             if (SETTINGS_Load_CheckVersion("", ref IsOldStyle))
             {
                 if (IsOldStyle)
-                    SETTINGS_Load_Old("");
+                    Settings.SETTINGS_Load_Old("");
                 else
-                    SETTINGS_Load("");
+                    Settings.SETTINGS_Load("");
             }
 
             SETUP_Apply();
@@ -5079,7 +2455,7 @@ namespace MakoCelo
             if (fd.ShowDialog() == DialogResult.OK)
             {
                 PATH_Game = fd.FileName;
-                SETTINGS_Save("");
+                Settings.SETTINGS_Save("");
 
                 // R3.40 Strip off filename so we can use it for init dir later.
                 N = Conversions.ToInteger(Utilities.STRING_FindLastSlash(PATH_Game));
@@ -5663,7 +3039,7 @@ namespace MakoCelo
             }
         }
 
-        private void STATS_ClipXY(float tX, float tY)
+        public void STATS_ClipXY(float tX, float tY)
         {
             // R4.10 Verify and store valid sizes for STATS image.
 
@@ -5702,7 +3078,7 @@ namespace MakoCelo
 
             // R4.50 Force STATS redraw.
             MainBuffer_Valid = false;
-            SETTINGS_Save("");
+            Settings.SETTINGS_Save("");
             GFX_DrawStats();
             FLAG_Drawing = false;
         }
@@ -5718,7 +3094,7 @@ namespace MakoCelo
 
             // R4.50 Force STATS redraw.
             MainBuffer_Valid = false;
-            SETTINGS_Save("");
+            Settings.SETTINGS_Save("");
             GFX_DrawStats();
             FLAG_Drawing = false;
         }
@@ -5743,7 +3119,7 @@ namespace MakoCelo
             STATS_AdjustSize();
             STATS_DefineY();
             STATS_DefineX(); // R2.00 X gets adjusted to Y size for faction images.
-            SETTINGS_Save("");
+            Settings.SETTINGS_Save("");
             SCREEN_Organize();
             GFX_DrawStats();
         }
@@ -5892,7 +3268,7 @@ namespace MakoCelo
                 }
         }
 
-        private void FX_SetVarControls()
+        public void FX_SetVarControls()
         {
             int N;
             N = cboFXVar1.SelectedIndex;
@@ -8342,7 +5718,7 @@ namespace MakoCelo
             if (0 < N) CFX3DC[N] = ColorDialog1.Color;
 
             GFX_DrawStats();
-            SETTINGS_Save("");
+            Settings.SETTINGS_Save("");
         }
 
         private void cboFX3D_SelectedIndexChanged(object sender, EventArgs e)
@@ -8362,7 +5738,7 @@ namespace MakoCelo
             // R4.50 Force a clean STATS redraw.
             MainBuffer_Valid = false;
             GFX_DrawStats();
-            SETTINGS_Save("");
+            Settings.SETTINGS_Save("");
             FLAG_Drawing = false;
         }
 
@@ -8383,7 +5759,7 @@ namespace MakoCelo
             // R4.50 Force a clean STATS redraw.
             MainBuffer_Valid = false;
             GFX_DrawStats();
-            SETTINGS_Save("");
+            Settings.SETTINGS_Save("");
             FLAG_Drawing = false;
         }
 
@@ -8404,7 +5780,7 @@ namespace MakoCelo
             // R4.50 Force a clean STATS redraw.
             MainBuffer_Valid = false;
             GFX_DrawStats();
-            SETTINGS_Save("");
+            Settings.SETTINGS_Save("");
             FLAG_Drawing = false;
         }
 
@@ -8600,7 +5976,7 @@ namespace MakoCelo
             // R4.50 Force a clean STATS redraw.
             MainBuffer_Valid = false;
             GFX_DrawStats();
-            SETTINGS_Save("");
+            Settings.SETTINGS_Save("");
         }
 
         private void cmSave_Click(object sender, EventArgs e)
@@ -9756,7 +7132,7 @@ namespace MakoCelo
             }
 
             LBDialog.Dispose();
-            SETTINGS_Save("");
+            Settings.SETTINGS_Save("");
             SCREEN_Organize();
             GFX_DrawStats();
         }
@@ -9814,7 +7190,7 @@ namespace MakoCelo
             }
 
             LBDialog.Dispose();
-            SETTINGS_Save("");
+            Settings.SETTINGS_Save("");
             SCREEN_Organize();
             GFX_DrawStats();
         }
@@ -10015,7 +7391,7 @@ namespace MakoCelo
                 LSNote01.B2 = Color.FromArgb((int) Math.Round(255d * (Conversion.Val(LSNote01.O2) * 0.01d)),
                     LSNote01.B2.R, LSNote01.B2.G, LSNote01.B2.B);
                 NOTE_CheckNoteSizes();
-                SETTINGS_Save("");
+                Settings.SETTINGS_Save("");
             }
 
             LBDialog.Dispose();
@@ -10057,7 +7433,7 @@ namespace MakoCelo
                 LSNote02.B2 = Color.FromArgb((int) Math.Round(255d * (Conversion.Val(LSNote02.O2) * 0.01d)),
                     LSNote02.B2.R, LSNote02.B2.G, LSNote02.B2.B);
                 NOTE_CheckNoteSizes();
-                SETTINGS_Save("");
+                Settings.SETTINGS_Save("");
             }
 
             LBDialog.Dispose();
@@ -10099,7 +7475,7 @@ namespace MakoCelo
                 LSNote03.B2 = Color.FromArgb((int) Math.Round(255d * (Conversion.Val(LSNote03.O2) * 0.01d)),
                     LSNote03.B2.R, LSNote03.B2.G, LSNote03.B2.B);
                 NOTE_CheckNoteSizes();
-                SETTINGS_Save("");
+                Settings.SETTINGS_Save("");
             }
 
             LBDialog.Dispose();
@@ -10141,7 +7517,7 @@ namespace MakoCelo
                 LSNote04.B2 = Color.FromArgb((int) Math.Round(255d * (Conversion.Val(LSNote04.O2) * 0.01d)),
                     LSNote04.B2.R, LSNote04.B2.G, LSNote04.B2.B);
                 NOTE_CheckNoteSizes();
-                SETTINGS_Save("");
+                Settings.SETTINGS_Save("");
             }
 
             LBDialog.Dispose();
@@ -10163,7 +7539,7 @@ namespace MakoCelo
                 for (var t = 1; t <= 10; t++) NoteAnim01_Text[t] = DlgNotes.NoteText[t];
 
                 NoteAnim01 = DlgNotes.NoteAnim;
-                SETTINGS_Save("");
+                Settings.SETTINGS_Save("");
             }
 
             DlgNotes.Dispose();
@@ -10181,7 +7557,7 @@ namespace MakoCelo
                 for (var t = 1; t <= 10; t++) NoteAnim02_Text[t] = DlgNotes.NoteText[t];
 
                 NoteAnim02 = DlgNotes.NoteAnim;
-                SETTINGS_Save("");
+                Settings.SETTINGS_Save("");
             }
 
             DlgNotes.Dispose();
@@ -10199,7 +7575,7 @@ namespace MakoCelo
                 for (var t = 1; t <= 10; t++) NoteAnim03_Text[t] = DlgNotes.NoteText[t];
 
                 NoteAnim03 = DlgNotes.NoteAnim;
-                SETTINGS_Save("");
+                Settings.SETTINGS_Save("");
             }
 
             DlgNotes.Dispose();
@@ -10217,7 +7593,7 @@ namespace MakoCelo
                 for (var t = 1; t <= 10; t++) NoteAnim04_Text[t] = DlgNotes.NoteText[t];
 
                 NoteAnim04 = DlgNotes.NoteAnim;
-                SETTINGS_Save("");
+                Settings.SETTINGS_Save("");
             }
 
             DlgNotes.Dispose();
@@ -10276,12 +7652,12 @@ namespace MakoCelo
 
             NOTE_Spacing = cboNoteSpace.SelectedIndex;
             SCREEN_Organize();
-            SETTINGS_Save("");
+            Settings.SETTINGS_Save("");
         }
 
         private void frmMain_Closing(object sender, CancelEventArgs e)
         {
-            SETTINGS_Save("");
+            Settings.SETTINGS_Save("");
         }
 
         // ****************************************************************************
@@ -10452,7 +7828,7 @@ namespace MakoCelo
 
             // R4.50 Force STATS redraw.
             MainBuffer_Valid = false;
-            SETTINGS_Save("");
+            Settings.SETTINGS_Save("");
             GFX_DrawStats();
             FLAG_Drawing = false;
         }
@@ -10468,7 +7844,7 @@ namespace MakoCelo
 
             // R4.50 Force STATS redraw.
             MainBuffer_Valid = false;
-            SETTINGS_Save("");
+            Settings.SETTINGS_Save("");
             GFX_DrawStats();
             FLAG_Drawing = false;
         }
@@ -10489,7 +7865,7 @@ namespace MakoCelo
             STATS_AdjustSize();
             STATS_DefineY();
             STATS_DefineX(); // R2.00 X gets adjusted to Y size for faction images.
-            SETTINGS_Save("");
+            Settings.SETTINGS_Save("");
             SCREEN_Organize();
             GFX_DrawStats();
             FLAG_Drawing = false;
@@ -10511,7 +7887,7 @@ namespace MakoCelo
             STATS_AdjustSize();
             STATS_DefineY();
             STATS_DefineX(); // R2.00 X gets adjusted to Y size for faction images.
-            SETTINGS_Save("");
+            Settings.SETTINGS_Save("");
             SCREEN_Organize();
             GFX_DrawStats();
             FLAG_Drawing = false;
@@ -10626,9 +8002,9 @@ namespace MakoCelo
                 if (SETTINGS_Load_CheckVersion(PATH_SetupPath, ref IsOldStyle))
                 {
                     if (IsOldStyle)
-                        SETTINGS_Load_Old(PATH_SetupPath);
+                        Settings.SETTINGS_Load_Old(PATH_SetupPath);
                     else
-                        SETTINGS_Load(PATH_SetupPath);
+                        Settings.SETTINGS_Load(PATH_SetupPath);
                 }
 
                 // R3.40 Strip off filename so we can use it for init dir later.
@@ -10665,7 +8041,7 @@ namespace MakoCelo
             if (fd.ShowDialog() == DialogResult.OK)
             {
                 PATH_SetupPath = fd.FileName;
-                SETTINGS_Save(PATH_SetupPath);
+                Settings.SETTINGS_Save(PATH_SetupPath);
 
                 // R3.40 Strip off filename so we can use it for init dir later.
                 N = Conversions.ToInteger(Utilities.STRING_FindLastSlash(PATH_SetupPath));
@@ -10680,13 +8056,13 @@ namespace MakoCelo
             {
                 GUI_SetDark();
                 GUI_ColorMode = 1;
-                SETTINGS_Save("");
+                Settings.SETTINGS_Save("");
             }
             else
             {
                 GUI_SetLite();
                 GUI_ColorMode = 0;
-                SETTINGS_Save("");
+                Settings.SETTINGS_Save("");
             }
         }
 
@@ -10700,13 +8076,13 @@ namespace MakoCelo
             // R4.30 Added code to hide not used players slots.
             FLAG_HideMissing = chkHideMissing.Checked;
 
-            SETTINGS_Save("");
+            Settings.SETTINGS_Save("");
         }
 
         private void chkFoundSound_CheckedChanged(object sender, EventArgs e)
         {
             // R4.30 Added to play a sound when a match is found.
-            SETTINGS_Save("");
+            Settings.SETTINGS_Save("");
         }
 
         private void cmTest_Click(object sender, EventArgs e)
@@ -10731,7 +8107,7 @@ namespace MakoCelo
                 for (var tt = 1; tt <= 4; tt++)
                     LVLS[t, tt] = PSDialog.LVLs[t, tt];
 
-                SETTINGS_Save("");
+                Settings.SETTINGS_Save("");
             }
         }
 
@@ -10802,7 +8178,7 @@ namespace MakoCelo
                 }
             }
 
-            SETTINGS_Save("");
+            Settings.SETTINGS_Save("");
             STATS_Refresh();
         }
 
@@ -11179,13 +8555,13 @@ namespace MakoCelo
         private void chkSpeech_CheckedChanged(object sender, EventArgs e)
         {
             // R4.34 Added.
-            SETTINGS_Save("");
+            Settings.SETTINGS_Save("");
         }
 
         private void chkGetTeams_CheckedChanged(object sender, EventArgs e)
         {
             // R4.34 Added.
-            SETTINGS_Save("");
+            Settings.SETTINGS_Save("");
         }
 
         private void FillRoundedRectangle(Graphics Graphics, Rectangle Rectangle, Brush Brush, int radius)
@@ -11260,7 +8636,7 @@ namespace MakoCelo
         private void chkCountry_CheckedChanged(object sender, EventArgs e)
         {
             // R4.45 Added to Country Flags.
-            SETTINGS_Save("");
+            Settings.SETTINGS_Save("");
         }
 
         private void RES_GetCountryData()

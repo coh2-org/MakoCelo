@@ -181,6 +181,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Settings.cs" />
     <Compile Include="Unused\Unused.cs" />
     <Compile Include="Utilities.cs" />
   </ItemGroup>
