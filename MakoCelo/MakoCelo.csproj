@@ -172,6 +172,7 @@
       <DependentUpon>frmMain.cs</DependentUpon>
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Gfx.cs" />
     <Compile Include="LogScanner.cs" />
     <Compile Include="Native.cs" />
     <Compile Include="Overlay\Coh2Overlay.cs" />
