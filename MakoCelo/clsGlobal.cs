@@ -22,10 +22,10 @@ namespace MakoCelo
             public string PLR2;
             public string PLR3;
             public string PLR4;
-            public int RID1;
-            public int RID2;
-            public int RID3;
-            public int RID4;
+            public string RID1;
+            public string RID2;
+            public string RID3;
+            public string RID4;
             public int PlrCnt;
             public int Gmode;
             public int RankID;

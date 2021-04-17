@@ -151,9 +151,9 @@ namespace MakoCelo
         public readonly int[,,] PlrRankWin = new int[9, 8, 5]; // R4.30 Rank from RID for all game modes.
         public readonly int[,,] PlrRankWin_Buffer = new int[9, 8, 5]; // R4.30 Rank from RID for all game modes.
         private readonly int[,,] PlrRankWin_Last = new int[9, 8, 5]; // R4.30 Rank from RID for all game modes.
-        public readonly int[] PlrRID = new int[9];
-        public readonly int[] PlrRID_Buffer = new int[9];
-        private readonly int[] PlrRID_Last = new int[9];
+        public readonly string[] PlrRID = new string[9];
+        public readonly string[] PlrRID_Buffer = new string[9];
+        private readonly string[] PlrRID_Last = new string[9];
         public readonly string[] PlrSteam = new string[9];
         public readonly string[] PlrSteam_Buffer = new string[9];
         private readonly string[] PlrSteam_Last = new string[9];
@@ -213,7 +213,6 @@ namespace MakoCelo
         public bool FLAG_EloUse; // R4.30 Try to draw the ELO values on screen?
         private bool FLAG_EloValid; // R4.30 Are the current ELO values valid?
         public bool FLAG_HideMissing; // R4.30 Added to hide blanks on Overlays/Green Screens.
-        public bool FLAG_InitialScanning; // R4.30 Added a flag to clear player data. 
         public bool FLAG_Loading; // R2.00 Flag that we are loading, so do not update.
         private int FLAG_ShowPlayerCard; // R4.30 Toggle STATS and PLAYERCARD display.
         private int FLAG_ShowPlayerCardNum; // R4.30 Toggle STATS and PLAYERCARD display.
@@ -552,7 +551,7 @@ namespace MakoCelo
             get { return PlrSteam_Last; }
         }
 
-        public int[] PlrRidLast
+        public string[] PlrRidLast
         {
             get { return PlrRID_Last; }
         }

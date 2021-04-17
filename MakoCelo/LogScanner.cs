@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Net;
 using System.Text;
 using System.Windows.Forms;
+using MakoCelo.Model;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 
@@ -29,7 +31,7 @@ namespace MakoCelo
             var tPlrRank = new string[10]; // R3.10 Added Storage to place old vals on screen if no new onesa are found.
             var tPlrName = new string[10];
             var tPlrSteam = new string[10];
-            var tPlrRid = new int[10];
+            var tPlrRid = new string[10];
             var tPlrFact = new string[10];
             var tPlrTWin = new int[10];
             var tPlrTLoss = new int[10];
@@ -47,7 +49,7 @@ namespace MakoCelo
             var tPlrLvl = new string[10];
             var tPlrGlvl = new int[10];
             var matchRid = new long[10];
-            var gameRid = new long[10];
+            var gameRid = new string[10];
 
             // R3.40 Reset the on screen ERROR labels.
             _frmMain.lbError1.Text = "";
@@ -71,42 +73,8 @@ namespace MakoCelo
                 return;
             }
 
-            // R4.30 Delete the initial pretend setup player information.
-            if (!_frmMain.FLAG_InitialScanning)
-            {
-                _frmMain.FLAG_InitialScanning = true;
-                for (var t = 1; t <= 8; t++)
-                {
-                    _frmMain.PlrRank[t] = "---";
-                    _frmMain.PlrName[t] = "";
-                    _frmMain.PlrSteam[t] = "";
-                    _frmMain.PlrFact[t] = "";
-                    _frmMain.PlrTWin[t] = 0;
-                    _frmMain.PlrTLoss[t] = 0;
-                    _frmMain.PlrTeam[t] = 0;
-                    _frmMain.PlrCountry[t] = "";
-                    _frmMain.PlrCountryName[t] = "";
-                    for (var t2 = 1; t2 <= 5; t2++)
-                    for (var t3 = 1; t3 <= 4; t3++)
-                    {
-                        _frmMain.PlrRankALL[t, t2, t3] = 0;
-                        _frmMain.PlrRankWin[t, t2, t3] = 0;
-                        _frmMain.PlrRankLoss[t, t2, t3] = 0;
-                        _frmMain.PlrRankPerc[t, t2, t3] = "";
-                    }
-
-                    _frmMain.TeamListCnt[t] = 0;
-                    for (int t2 = 1, loopTo = _frmMain.TeamList.GetUpperBound(1); t2 <= loopTo; t2++) _frmMain.TeamList[t, t2] = tempTl;
-
-                    _frmMain.PlrELO[t] = "";
-                    _frmMain.PlrLVL[t] = "";
-                    _frmMain.PlrGLVL[t] = 0;
-                }
-            }
-
-            // R3.00 Clear the Last Valid Match stats if necessary.
-            // Call STATS_StoreLast()
-
+            // This will be replaced with object returned to form so there will be no need to buffer previous data at this point (it will be done after search)
+            #region ToRemoveAfterMigration
             // R3.10 Clear the current match and find new data below. 
             for (var t = 1; t <= 8; t++)
             {
@@ -117,7 +85,7 @@ namespace MakoCelo
                 tPlrSteam[t] = _frmMain.PlrSteam[t];
                 _frmMain.PlrSteam[t] = "";
                 tPlrRid[t] = _frmMain.PlrRID[t];
-                _frmMain.PlrRID[t] = 0;
+                _frmMain.PlrRID[t] = "";
                 tPlrFact[t] = _frmMain.PlrFact[t];
                 _frmMain.PlrFact[t] = "";
                 tPlrTeam[t] = _frmMain.PlrTeam[t];
@@ -186,6 +154,7 @@ namespace MakoCelo
                 _frmMain.PlrGLVL_Buffer[t] = tPlrGlvl[t];
             }
 
+            #endregion
             _frmMain.lbStatus.Text = "Open file...";
             Application.DoEvents();
             _frmMain.Cursor = Cursors.WaitCursor;
@@ -193,145 +162,7 @@ namespace MakoCelo
             // R2.01 OPEN log file and start parsing.
 
 
-            using (var fs = new FileStream(_frmMain.PATH_Game, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-            using (var sr = new StreamReader(fs, Encoding.UTF8))
-            {
-                plrCnt = 0;
-
-                // R2.01 Loop thru the file looking for the match stats.
-                while (!sr.EndOfStream)
-                {
-                    var a = sr.ReadLine();
-
-                    // **********************************************************************************
-                    // R3.20 If Match Started string is found, find all of the other match stats lines.
-                    // **********************************************************************************
-                    if (Conversions.ToBoolean(Strings.InStr(a, "Match Started")))
-                    {
-                        var findMatch = true;
-
-                        // R3.20 We have found a new section so clear the previous data.
-                        for (var t = 1; t <= 8; t++)
-                        {
-                            _frmMain.PlrRank[t] = "---";
-                            _frmMain.PlrSteam[t] = "";
-                            matchRid[t] = 0L;
-                        }
-
-                        plrCnt = 0;
-                        while (!sr.EndOfStream & findMatch)
-                        {
-                            plrCnt += 1;
-                            var b = Strings.Trim(Strings.Mid(a, 98, 20));
-                            if ((b == "-1") | string.IsNullOrEmpty(b)) // R2.01 Added +1 to rank code. 
-                            {
-                                b = ""; // R1.00 Show unranked as --       
-                            }
-                            else
-                            {
-                                var tRank = (long) Math.Round(Conversion.Val(b));
-                                b = (tRank + 1L).ToString();
-                            }
-
-                            _frmMain.PlrRank[plrCnt] = b;
-
-                            // R3.20 Get SteamID. If valid, get RelicID also.
-                            _frmMain.PlrSteam[plrCnt] = Strings.Mid(a, 57, 17);
-                            if (Strings.Mid(_frmMain.PlrSteam[plrCnt], 1, 4) != "7656")
-                            {
-                                _frmMain.PlrSteam[plrCnt] = "";
-                                matchRid[plrCnt] = 0L;
-                            }
-                            else
-                            {
-                                matchRid[plrCnt] = LOG_HexToLong(Strings.Mid(a, 41,
-                                    8)); // R3.20 <-- Convert.ToInt64(Mid(A, 41, 8), 16)
-                                if (matchRid[plrCnt] == -1) matchRid[plrCnt] = 0L;
-                            }
-
-                            // R3.20 Read the next line of the file and exit if all of the match lines have been found.
-                            a = sr.ReadLine();
-                            if (Strings.InStr(a, "Match Started") == 0) findMatch = false;
-                        }
-                    }
-
-
-                    // **********************************************************************************
-                    // 3.20 If we find a GAME Human Player string, find all of the other player stats.
-                    // **********************************************************************************
-                    if (Conversions.ToBoolean(Strings.InStr(a, "GAME ")))
-                        if (Conversions.ToBoolean(Strings.InStr(a, "Human Player") | Strings.InStr(a, "AI Player")))
-                        {
-                            // R3.20 We have found a new section so clear the previous data.
-                            for (var t = 1; t <= 8; t++)
-                            {
-                                _frmMain.PlrName[t] = "";
-                                _frmMain.PlrFact[t] = "";
-                                _frmMain.PlrRID[t] = 0;
-                                _frmMain.PlrTeam[t] = 0;
-                                _frmMain.PlrTWin[t] = 0;
-                                _frmMain.PlrTLoss[t] = 0;
-                                _frmMain.PlrCountry[t] = ""; // R4.45 Added.
-                                _frmMain.PlrCountryName[t] = ""; // R4.46 Added.
-                                for (var t2 = 1; t2 <= 5; t2++)
-                                for (var t3 = 1; t3 <= 4; t3++)
-                                {
-                                    _frmMain.PlrRankALL[t, t2, t3] = 0;
-                                    _frmMain.PlrRankWin[t, t2, t3] = 0;
-                                    _frmMain.PlrRankLoss[t, t2, t3] = 0;
-                                    _frmMain.PlrRankPerc[t, t2, t3] = "";
-                                }
-
-                                _frmMain.TeamListCnt[t] = 0;
-                                for (int t2 = 1, loopTo3 = _frmMain.TeamList.GetUpperBound(1); t2 <= loopTo3; t2++) _frmMain.TeamList[t, t2] = tempTl;
-
-                                gameRid[t] = 0L;
-                            }
-
-                            plrCnt = 0;
-                            var findPlayers = true;
-                            while (!sr.EndOfStream & findPlayers)
-                            {
-                                plrCnt += 1;
-                                long test1 = Strings.InStr(a, "Human Player");
-                                if (Conversions.ToBoolean(test1))
-                                {
-                                    _frmMain.PlrName[plrCnt] = LOG_FindPlayer(a, 39); // R2.01 Names are not Delimited, need to search for end of name from the end of line.
-                                    gameRid[plrCnt] = LOG_Find_RelicID(a); // R3.20 Get the RelicID for this player.  
-                                    _frmMain.PlrRID[plrCnt] = (int) gameRid[plrCnt]; // R4.30 Added.
-                                }
-                                else
-                                {
-                                    _frmMain.PlrName[plrCnt] = LOG_FindPlayer(a, 36); // R2.01 AI player. 
-                                    // PlrRank(PlrCnt) = ""                     'R4.30 Added for match tracking.
-                                    gameRid[plrCnt] = 0L; // R3.20 AI has no RelicID.
-                                    _frmMain.PlrRID[plrCnt] = 0;
-                                } // R4.30 Added.
-
-                                // R3.40 The last part of the string will have faction.
-                                var tLen = Strings.Len(a);
-                                if (20 < tLen) // R3.40 This should never happen, but just in case.
-                                {
-                                    if (Strings.Mid(a, tLen - 5, 6) == "german") _frmMain.PlrFact[plrCnt] = "01";
-
-                                    if (Strings.Mid(a, tLen - 5, 6) == "soviet") _frmMain.PlrFact[plrCnt] = "02";
-
-                                    if (Strings.Mid(a, tLen - 10, 11) == "west_german") _frmMain.PlrFact[plrCnt] = "03";
-
-                                    if (Strings.Mid(a, tLen - 2, 3) == "aef") _frmMain.PlrFact[plrCnt] = "04";
-
-                                    if (Strings.Mid(a, tLen - 6, 7) == "british") _frmMain.PlrFact[plrCnt] = "05";
-                                }
-
-                                // R3.20 Read the next line of the file.
-                                a = sr.ReadLine();
-                                test1 = Strings.InStr(a, "Human Player");
-                                long test2 = Strings.InStr(a, "AI Player");
-                                if ((test1 == 0L) & (test2 == 0L)) findPlayers = false;
-                            }
-                        }
-                }
-            }
+            plrCnt = ParsePlayersFromGameLog(tempTl, gameRid);
 
             // R4.30 Play the MATCH FOUND ALERT if this a NEW match and are we in AUTO mode.
             var fNewData = false;
@@ -541,6 +372,158 @@ namespace MakoCelo
             Application.DoEvents();
         }
 
+        private int ParsePlayersFromGameLog(clsGlobal.t_TeamList tempTl, string[] gameRid)
+        {
+            int plrCnt;
+            using (var fs = new FileStream(_frmMain.PATH_Game, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            using (var sr = new StreamReader(fs, Encoding.UTF8))
+            {
+                plrCnt = 0;
+
+                // R2.01 Loop thru the file looking for the match stats.
+                while (!sr.EndOfStream)
+                {
+                    var a = sr.ReadLine();
+
+
+                    //Unused probably after 64 bit patch
+                    //// **********************************************************************************
+                    //// R3.20 If Match Started string is found, find all of the other match stats lines.
+                    //// **********************************************************************************
+                    //if (Conversions.ToBoolean(Strings.InStr(a, "Match Started")))
+                    //{
+                    //    var findMatch = true;
+
+                    //    // R3.20 We have found a new section so clear the previous data.
+                    //    for (var t = 1; t <= 8; t++)
+                    //    {
+                    //        _frmMain.PlrRank[t] = "---";
+                    //        _frmMain.PlrSteam[t] = "";
+                    //        matchRid[t] = 0L;
+                    //    }
+
+                    //    plrCnt = 0;
+                    //    while (!sr.EndOfStream & findMatch)
+                    //    {
+                    //        plrCnt += 1;
+                    //        var b = Strings.Trim(Strings.Mid(a, 98, 20));
+                    //        if ((b == "-1") | string.IsNullOrEmpty(b)) // R2.01 Added +1 to rank code. 
+                    //        {
+                    //            b = ""; // R1.00 Show unranked as --       
+                    //        }
+                    //        else
+                    //        {
+                    //            var tRank = (long) Math.Round(Conversion.Val(b));
+                    //            b = (tRank + 1L).ToString();
+                    //        }
+
+                    //        _frmMain.PlrRank[plrCnt] = b;
+
+                    //        // R3.20 Get SteamID. If valid, get RelicID also.
+                    //        _frmMain.PlrSteam[plrCnt] = Strings.Mid(a, 57, 17);
+                    //        if (Strings.Mid(_frmMain.PlrSteam[plrCnt], 1, 4) != "7656")
+                    //        {
+                    //            _frmMain.PlrSteam[plrCnt] = "";
+                    //            matchRid[plrCnt] = 0L;
+                    //        }
+                    //        else
+                    //        {
+                    //            matchRid[plrCnt] = LOG_HexToLong(Strings.Mid(a, 41,
+                    //                8)); // R3.20 <-- Convert.ToInt64(Mid(A, 41, 8), 16)
+                    //            if (matchRid[plrCnt] == -1) matchRid[plrCnt] = 0L;
+                    //        }
+
+                    //        // R3.20 Read the next line of the file and exit if all of the match lines have been found.
+                    //        a = sr.ReadLine();
+                    //        if (Strings.InStr(a, "Match Started") == 0) findMatch = false;
+                    //    }
+                    //}
+                    var players = new List<Player>(8);
+
+                    // **********************************************************************************
+                    // 3.20 If we find a GAME Human Player string, find all of the other player stats.
+                    // **********************************************************************************
+                    if (Conversions.ToBoolean(Strings.InStr(a, "GAME ")))
+                        if (Conversions.ToBoolean(Strings.InStr(a, "Human Player") | Strings.InStr(a, "AI Player")))
+                        {
+                            // R3.20 We have found a new section so clear the previous data.
+                            for (var t = 1; t <= 8; t++)
+                            {
+                                _frmMain.PlrName[t] = "";
+                                _frmMain.PlrFact[t] = "";
+                                _frmMain.PlrRID[t] = "";
+                                _frmMain.PlrTeam[t] = 0;
+                                _frmMain.PlrTWin[t] = 0;
+                                _frmMain.PlrTLoss[t] = 0;
+                                _frmMain.PlrCountry[t] = ""; // R4.45 Added.
+                                _frmMain.PlrCountryName[t] = ""; // R4.46 Added.
+                                for (var t2 = 1; t2 <= 5; t2++)
+                                for (var t3 = 1; t3 <= 4; t3++)
+                                {
+                                    _frmMain.PlrRankALL[t, t2, t3] = 0;
+                                    _frmMain.PlrRankWin[t, t2, t3] = 0;
+                                    _frmMain.PlrRankLoss[t, t2, t3] = 0;
+                                    _frmMain.PlrRankPerc[t, t2, t3] = "";
+                                }
+
+                                _frmMain.TeamListCnt[t] = 0;
+                                for (int t2 = 1, loopTo3 = _frmMain.TeamList.GetUpperBound(1); t2 <= loopTo3; t2++)
+                                    _frmMain.TeamList[t, t2] = tempTl;
+
+                                gameRid[t] = "";
+                            }
+
+                            plrCnt = 0;
+                            var findPlayers = true;
+                            while (!sr.EndOfStream & findPlayers)
+                            {
+                                plrCnt += 1;
+                                var newPlayer = new Player();
+                                long test1 = Strings.InStr(a, "Human Player");
+                                if (Conversions.ToBoolean(test1))
+                                {
+                                    newPlayer.Name = LOG_FindPlayer(a, 39);
+                                    _frmMain.PlrName[plrCnt] = newPlayer.Name; //backward compatibility
+                                    newPlayer.RelicId = LOG_Find_RelicID(a);
+                                    gameRid[plrCnt] = newPlayer.RelicId; //backward compatibility
+                                    _frmMain.PlrRID[plrCnt] = gameRid[plrCnt]; // R4.30 Added.
+                                }
+                                else
+                                {
+                                    _frmMain.PlrName[plrCnt] = LOG_FindPlayer(a, 36); // R2.01 AI player. 
+                                    // PlrRank(PlrCnt) = ""                     'R4.30 Added for match tracking.
+                                    gameRid[plrCnt] = ""; // R3.20 AI has no RelicID.
+                                    _frmMain.PlrRID[plrCnt] = "";
+                                } // R4.30 Added.
+
+                                // R3.40 The last part of the string will have faction.
+                                var tLen = Strings.Len(a);
+                                if (20 < tLen) // R3.40 This should never happen, but just in case.
+                                {
+                                    if (Strings.Mid(a, tLen - 5, 6) == "german") _frmMain.PlrFact[plrCnt] = "01";
+
+                                    if (Strings.Mid(a, tLen - 5, 6) == "soviet") _frmMain.PlrFact[plrCnt] = "02";
+
+                                    if (Strings.Mid(a, tLen - 10, 11) == "west_german") _frmMain.PlrFact[plrCnt] = "03";
+
+                                    if (Strings.Mid(a, tLen - 2, 3) == "aef") _frmMain.PlrFact[plrCnt] = "04";
+
+                                    if (Strings.Mid(a, tLen - 6, 7) == "british") _frmMain.PlrFact[plrCnt] = "05";
+                                }
+
+                                // R3.20 Read the next line of the file.
+                                a = sr.ReadLine();
+                                test1 = Strings.InStr(a, "Human Player");
+                                long test2 = Strings.InStr(a, "AI Player");
+                                if ((test1 == 0L) & (test2 == 0L)) findPlayers = false;
+                            }
+                        }
+                }
+            }
+
+            return plrCnt;
+        }
+
         private void STAT_GetFromRID(string rid, int plrSlot)
         {
             var rawResp = "";
@@ -710,19 +693,19 @@ namespace MakoCelo
                     p1 = Strings.InStr(p1 + 5, rawResp, "profile_id");
                     s = rawResp.Substring(p1 + 11, 32);
                     var p2 = Strings.InStr(p1 + 10, rawResp, Conversions.ToString('"'));
-                    var rid1 = (int) Math.Round(Conversion.Val(s.Substring(0, p2 - (p1 + 0))));
+                    var rid1 = Math.Round(Conversion.Val(s.Substring(0, p2 - (p1 + 0)))).ToString();
                     p1 = Strings.InStr(p1 + 5, rawResp, "alias");
                     s = rawResp.Substring(p1 + 7, 64); // R4.44 Was 32 chars long.
                     p2 = Strings.InStr(p1 + 8, rawResp, Conversions.ToString('"'));
                     var plr1 = s.Substring(0, p2 - (p1 + 8));
                     string plr2;
-                    int rid2;
+                    string rid2;
                     if (1 < plrCnt)
                     {
                         p1 = Strings.InStr(p1 + 5, rawResp, "profile_id");
                         s = rawResp.Substring(p1 + 11, 32);
                         p2 = Strings.InStr(p1 + 10, rawResp, Conversions.ToString('"'));
-                        rid2 = (int) Math.Round(Conversion.Val(s.Substring(0, p2 - (p1 + 0))));
+                        rid2 = Math.Round(Conversion.Val(s.Substring(0, p2 - (p1 + 0)))).ToString();
                         p1 = Strings.InStr(p1 + 5, rawResp, "alias");
                         s = rawResp.Substring(p1 + 7, 64); // R4.44 Was 32 chars long.
                         p2 = Strings.InStr(p1 + 8, rawResp, Conversions.ToString('"'));
@@ -730,18 +713,18 @@ namespace MakoCelo
                     }
                     else
                     {
-                        rid2 = 0;
+                        rid2 = "";
                         plr2 = "";
                     }
 
                     string plr3;
-                    int rid3;
+                    string rid3;
                     if (2 < plrCnt)
                     {
                         p1 = Strings.InStr(p1 + 5, rawResp, "profile_id");
                         s = rawResp.Substring(p1 + 11, 32);
                         p2 = Strings.InStr(p1 + 10, rawResp, Conversions.ToString('"'));
-                        rid3 = (int) Math.Round(Conversion.Val(s.Substring(0, p2 - (p1 + 0))));
+                        rid3 = Math.Round(Conversion.Val(s.Substring(0, p2 - (p1 + 0)))).ToString();
                         p1 = Strings.InStr(p1 + 5, rawResp, "alias");
                         s = rawResp.Substring(p1 + 7, 64); // R4.44 Was 32 chars long.
                         p2 = Strings.InStr(p1 + 8, rawResp, Conversions.ToString('"'));
@@ -749,18 +732,18 @@ namespace MakoCelo
                     }
                     else
                     {
-                        rid3 = 0;
+                        rid3 = "";
                         plr3 = "";
                     }
 
                     string plr4;
-                    int rid4;
+                    string rid4;
                     if (3 < plrCnt)
                     {
                         p1 = Strings.InStr(p1 + 5, rawResp, "profile_id");
                         s = rawResp.Substring(p1 + 11, 32);
                         p2 = Strings.InStr(p1 + 10, rawResp, Conversions.ToString('"'));
-                        rid4 = (int) Math.Round(Conversion.Val(s.Substring(0, p2 - (p1 + 0))));
+                        rid4 = Math.Round(Conversion.Val(s.Substring(0, p2 - (p1 + 0)))).ToString();
                         p1 = Strings.InStr(p1 + 5, rawResp, "alias");
                         s = rawResp.Substring(p1 + 7, 64); // R4.44 Was 32 chars long.
                         p2 = Strings.InStr(p1 + 8, rawResp, Conversions.ToString('"'));
@@ -768,7 +751,7 @@ namespace MakoCelo
                     }
                     else
                     {
-                        rid4 = 0;
+                        rid4 = "";
                         plr4 = "";
                     }
 
@@ -880,7 +863,7 @@ namespace MakoCelo
                 for (int t2 = 1, loopTo = _frmMain.TeamListCnt[t]; t2 <= loopTo; t2++)
                 {
                     cnt = 0;
-                    if (0 < _frmMain.TeamList[t, t2].RID1)
+                    if ( "" != _frmMain.TeamList[t, t2].RID1)
                     {
                         if (_frmMain.PlrRID[1] == _frmMain.TeamList[t, t2].RID1) cnt += 1;
 
@@ -891,7 +874,7 @@ namespace MakoCelo
                         if (_frmMain.PlrRID[7] == _frmMain.TeamList[t, t2].RID1) cnt += 1;
                     }
 
-                    if (0 < _frmMain.TeamList[t, t2].RID2)
+                    if ("" != _frmMain.TeamList[t, t2].RID2)
                     {
                         if (_frmMain.PlrRID[1] == _frmMain.TeamList[t, t2].RID2) cnt += 1;
 
@@ -902,7 +885,7 @@ namespace MakoCelo
                         if (_frmMain.PlrRID[7] == _frmMain.TeamList[t, t2].RID2) cnt += 1;
                     }
 
-                    if (0 < _frmMain.TeamList[t, t2].RID3)
+                    if ("" != _frmMain.TeamList[t, t2].RID3)
                     {
                         if (_frmMain.PlrRID[1] == _frmMain.TeamList[t, t2].RID3) cnt += 1;
 
@@ -913,7 +896,7 @@ namespace MakoCelo
                         if (_frmMain.PlrRID[7] == _frmMain.TeamList[t, t2].RID3) cnt += 1;
                     }
 
-                    if (0 < _frmMain.TeamList[t, t2].RID4)
+                    if ("" != _frmMain.TeamList[t, t2].RID4)
                     {
                         if (_frmMain.PlrRID[1] == _frmMain.TeamList[t, t2].RID4) cnt += 1;
 
@@ -1021,7 +1004,7 @@ namespace MakoCelo
                 for (int t2 = 1, loopTo1 = _frmMain.TeamListCnt[t]; t2 <= loopTo1; t2++)
                 {
                     cnt = 0;
-                    if (0 < _frmMain.TeamList[t, t2].RID1)
+                    if ("" != _frmMain.TeamList[t, t2].RID1)
                     {
                         if (_frmMain.PlrRID[2] == _frmMain.TeamList[t, t2].RID1) cnt += 1;
 
@@ -1032,7 +1015,7 @@ namespace MakoCelo
                         if (_frmMain.PlrRID[8] == _frmMain.TeamList[t, t2].RID1) cnt += 1;
                     }
 
-                    if (0 < _frmMain.TeamList[t, t2].RID2)
+                    if ("" != _frmMain.TeamList[t, t2].RID2)
                     {
                         if (_frmMain.PlrRID[2] == _frmMain.TeamList[t, t2].RID2) cnt += 1;
 
@@ -1043,7 +1026,7 @@ namespace MakoCelo
                         if (_frmMain.PlrRID[8] == _frmMain.TeamList[t, t2].RID2) cnt += 1;
                     }
 
-                    if (0 < _frmMain.TeamList[t, t2].RID3)
+                    if ("" != _frmMain.TeamList[t, t2].RID3)
                     {
                         if (_frmMain.PlrRID[2] == _frmMain.TeamList[t, t2].RID3) cnt += 1;
 
@@ -1054,7 +1037,7 @@ namespace MakoCelo
                         if (_frmMain.PlrRID[8] == _frmMain.TeamList[t, t2].RID3) cnt += 1;
                     }
 
-                    if (0 < _frmMain.TeamList[t, t2].RID4)
+                    if ("" != _frmMain.TeamList[t, t2].RID4)
                     {
                         if (_frmMain.PlrRID[2] == _frmMain.TeamList[t, t2].RID4) cnt += 1;
 
@@ -1326,7 +1309,7 @@ namespace MakoCelo
 
             // R4.30 See if we have new valid data.
             for (t = 1; t <= 8; t++)
-                if (0 < _frmMain.PlrRID[t])
+                if ("" != _frmMain.PlrRID[t])
                 {
                     hit = t;
                     break;
@@ -1388,7 +1371,7 @@ namespace MakoCelo
             return tl;
         }
 
-        private long LOG_Find_RelicID(string a)
+        private string LOG_Find_RelicID(string a)
         {
             var rid = 0L;
             int T;
@@ -1416,9 +1399,15 @@ namespace MakoCelo
             if (Conversions.ToBoolean(charEnd))
                 rid = (long) Math.Round(Conversion.Val(Strings.Mid(a, charStart, charEnd - charStart)));
 
-            return rid;
+            return rid.ToString();
         }
 
+        /// <summary>
+        /// Names are not Delimited, need to search for end of name from the end of line.
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="charStart"></param>
+        /// <returns></returns>
         private string LOG_FindPlayer(string a, int charStart)
         {
             string c;
