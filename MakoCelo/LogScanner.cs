@@ -13,11 +13,14 @@ namespace MakoCelo
 {
     public class LogScanner
     {
-        private readonly frmMain _frmMain;
+        public readonly frmMain _frmMain;
+        private readonly LogFileParser _logFileParser;
+        private Match _previousMatch;
 
-        public LogScanner(frmMain frmMain1)
+        public LogScanner(frmMain frmMain)
         {
-            _frmMain = frmMain1;
+            _frmMain = frmMain;
+            _logFileParser = new LogFileParser(frmMain);
         }
 
         public void LOG_Scan()
@@ -26,7 +29,6 @@ namespace MakoCelo
             // R4.00 Stats come in two sections. Each has a Relic ID #.
             // R4.00 Match the two sections using the Relic ID #.
             // R4.50 Relic broke the file so now there is only one section.
-            int plrCnt;
             var matchMode = default(int); // R4.30 1-1v1.2-2v2,etc
             var tPlrRank = new string[10]; // R3.10 Added Storage to place old vals on screen if no new onesa are found.
             var tPlrName = new string[10];
@@ -48,8 +50,6 @@ namespace MakoCelo
             var tPlrElo = new string[10];
             var tPlrLvl = new string[10];
             var tPlrGlvl = new int[10];
-            var matchRid = new long[10];
-            var gameRid = new string[10];
 
             // R3.40 Reset the on screen ERROR labels.
             _frmMain.lbError1.Text = "";
@@ -158,55 +158,46 @@ namespace MakoCelo
             _frmMain.lbStatus.Text = "Open file...";
             Application.DoEvents();
             _frmMain.Cursor = Cursors.WaitCursor;
+            
 
-            // R2.01 OPEN log file and start parsing.
 
-
-            plrCnt = ParsePlayersFromGameLog(tempTl, gameRid);
+            var matchFound = _logFileParser.ParsePlayersFromGameLog(tempTl);
 
             // R4.30 Play the MATCH FOUND ALERT if this a NEW match and are we in AUTO mode.
-            var fNewData = false;
-            for (var t = 1; t <= 8; t++)
+            ////DOES NOT DETECT TWO MATCHES IN SUCCESsION WITH SAME PLAYERS AND SAME POSITIONS
+            //for (var t = 1; t <= 8; t++)
+            //{
+            //    if ((_frmMain.PlrName[t] ?? "") != (tPlrName[t] ?? ""))
+            //    {
+            //        fNewData = true;
+            //        break;
+            //    }
+
+            //    if (_frmMain.PlrRID[t] != tPlrRid[t])
+            //    {
+            //        fNewData = true;
+            //        break;
+            //    }
+
+            //    if ((_frmMain.PlrFact[t] ?? "") != (tPlrFact[t] ?? ""))
+            //    {
+            //        fNewData = true;
+            //        break;
+            //    }
+            //}
+
+            if (_previousMatch == null && matchFound.IsMatchFound()
+                ||
+                _previousMatch != null && matchFound.IsMatchFound() && matchFound.Id != _previousMatch.Id)
             {
-                if ((_frmMain.PlrName[t] ?? "") != (tPlrName[t] ?? ""))
-                {
-                    fNewData = true;
-                    break;
-                }
-
-                if (_frmMain.PlrRID[t] != tPlrRid[t])
-                {
-                    fNewData = true;
-                    break;
-                }
-
-                if ((_frmMain.PlrFact[t] ?? "") != (tPlrFact[t] ?? ""))
-                {
-                    fNewData = true;
-                    break;
-                }
-                // If PlrSteam(t) <> tPlrSteam(t) Then F_NewData = True : Exit For  'R4.30 Not in file anymore.
-                // If PlrRank(t) <> tPlrRank(t) Then F_NewData = True : Exit For    'R4.30 Not in file anymore.
+                _previousMatch = matchFound;
             }
 
-            // R4.30 Clear the Last Valid Match stats if necessary.
-            if (fNewData)
-            {
-                // R4.30 Reset the ELO cycle mode.
-                _frmMain.FLAG_EloMode = 0;
-                STATS_StoreLast();
-                if (_frmMain.SCAN_Enabled && _frmMain.chkFoundSound.Checked && !string.IsNullOrEmpty(_frmMain.SOUND_File[15]) && plrCnt > 0)
-                {
-                    _frmMain.AUDIO_SetVolume(100, Conversions.ToInteger(_frmMain.SOUND_Vol[15]));
-                    _frmMain.SOUND_Play(_frmMain.SOUND_File[15]);
-                }
+            
 
-                // R4.50 Show time on status bar.
-                _frmMain.SS1_Time.Text = "Match found: " + DateTime.Now.ToString("HH:mm"); // TimeString.ToString("HH:mm")
-            }
-
+            //backward compatibility - won't be needed
             // R3.10 If no new data was found, show the old data.
-            if (fNewData == false)
+            if (!matchFound.IsMatchFound())
                 for (var t = 1; t <= 8; t++)
                 {
                     _frmMain.PlrRank[t] = tPlrRank[t];
@@ -235,29 +226,54 @@ namespace MakoCelo
                     _frmMain.PlrLVL[t] = tPlrLvl[t];
                 }
 
+            // R4.30 Clear the Last Valid Match stats if necessary.
+            if (matchFound.IsMatchFound())
+            {
+                // R4.30 Reset the ELO cycle mode.
+                _frmMain.FLAG_EloMode = 0;
+                STATS_StoreLast(); //backward compatibility - won't be needed if we use _previousMatch
+
+                #region Refactor
+
+                // move to fire specific UI event
+
+
+                if (_frmMain.AutoScanEnabled && _frmMain.chkFoundSound.Checked && !string.IsNullOrEmpty(_frmMain.SOUND_File[15]))
+                {
+                    _frmMain.AUDIO_SetVolume(100, Conversions.ToInteger(_frmMain.SOUND_Vol[15]));
+                    _frmMain.SOUND_Play(_frmMain.SOUND_File[15]);
+                }
+
+                // R4.50 Show time on status bar.
+                _frmMain.SS1_Time.Text = "Match found: " + DateTime.Now.ToString("HH:mm"); // TimeString.ToString("HH:mm")
+                #endregion
+            }
+
             _frmMain.lbStatus.Text = "Render...";
             Application.DoEvents();
-            if (0 < plrCnt) matchMode = 1;
+            if (0 < matchFound.Players.Count) matchMode = 1;
 
-            if (2 < plrCnt) matchMode = 2;
+            if (2 < matchFound.Players.Count) matchMode = 2;
 
-            if (4 < plrCnt) matchMode = 3;
+            if (4 < matchFound.Players.Count) matchMode = 3;
 
-            if (6 < plrCnt) matchMode = 4;
+            if (6 < matchFound.Players.Count) matchMode = 4;
 
             // R4.30 Adjust NAME and RANKS before drawing.
-            if ((0 < plrCnt) & (fNewData | !_frmMain.SCAN_Enabled))
+            if (/*0 < matchFound.Players.Count && this should not happen*/ (matchFound.IsMatchFound() || !_frmMain.AutoScanEnabled))
             {
                 _frmMain.lstLog.Items.Clear(); // R4.42 Clear error log.
 
                 // R4.30 Get player ranks from the RELIC API.
                 for (var t = 1; t <= 8; t++)
-                    if (!string.IsNullOrEmpty(_frmMain.PlrName[t]) & !string.IsNullOrEmpty(_frmMain.PlrFact[t]) &
-                        (0d < Conversion.Val(gameRid[t])))
+                    if (!string.IsNullOrEmpty(_frmMain.PlrName[t]) 
+                        && !string.IsNullOrEmpty(_frmMain.PlrFact[t]) 
+                        && matchFound.Players.Count >= t
+                        && 0d < Conversion.Val(matchFound.Players[t-1].RelicId))
                     {
                         _frmMain.lbStatus.Text = "Web Player: " + t;
                         Application.DoEvents();
-                        STAT_GetFromRID(gameRid[t].ToString(), t);
+                        STAT_GetFromRID(matchFound.Players[t-1].RelicId, t);
                         _frmMain.lbStatus.Text = "";
                         Application.DoEvents();
                         _frmMain.PlrRank[t] = _frmMain.PlrRankALL[t, Conversions.ToInteger(_frmMain.PlrFact[t]), matchMode].ToString();
@@ -344,7 +360,7 @@ namespace MakoCelo
             }
 
             // R4.34 Don't write over the ELO cycle unless we have new data.
-            if (fNewData | !_frmMain.SCAN_Enabled)
+            if (matchFound.IsMatchFound() || !_frmMain.AutoScanEnabled)
             {
                 // R4.34 See if we should search the net for team ranks.
                 if (_frmMain.chkGetTeams.Checked)
@@ -365,163 +381,11 @@ namespace MakoCelo
             }
 
             // R5.00 Overlay
-            if (_frmMain.SCAN_Enabled && fNewData && _frmMain._chkToggleOverlay.Checked) _frmMain._overlay.Run(_frmMain.PlrName, _frmMain.PlrRank);
+            if (_frmMain.AutoScanEnabled && matchFound.IsMatchFound() && _frmMain._chkToggleOverlay.Checked) _frmMain._overlay.Run(_frmMain.PlrName, _frmMain.PlrRank);
             // R4.30 Clean up our GUI user indicators.
             _frmMain.Cursor = Cursors.Default;
             _frmMain.lbStatus.Text = "Ready";
             Application.DoEvents();
-        }
-
-        private int ParsePlayersFromGameLog(clsGlobal.t_TeamList tempTl, string[] gameRid)
-        {
-            int plrCnt;
-            using (var fs = new FileStream(_frmMain.PATH_Game, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-            using (var sr = new StreamReader(fs, Encoding.UTF8))
-            {
-                plrCnt = 0;
-
-                // R2.01 Loop thru the file looking for the match stats.
-                while (!sr.EndOfStream)
-                {
-                    var a = sr.ReadLine();
-
-
-                    //Unused probably after 64 bit patch
-                    //// **********************************************************************************
-                    //// R3.20 If Match Started string is found, find all of the other match stats lines.
-                    //// **********************************************************************************
-                    //if (Conversions.ToBoolean(Strings.InStr(a, "Match Started")))
-                    //{
-                    //    var findMatch = true;
-
-                    //    // R3.20 We have found a new section so clear the previous data.
-                    //    for (var t = 1; t <= 8; t++)
-                    //    {
-                    //        _frmMain.PlrRank[t] = "---";
-                    //        _frmMain.PlrSteam[t] = "";
-                    //        matchRid[t] = 0L;
-                    //    }
-
-                    //    plrCnt = 0;
-                    //    while (!sr.EndOfStream & findMatch)
-                    //    {
-                    //        plrCnt += 1;
-                    //        var b = Strings.Trim(Strings.Mid(a, 98, 20));
-                    //        if ((b == "-1") | string.IsNullOrEmpty(b)) // R2.01 Added +1 to rank code. 
-                    //        {
-                    //            b = ""; // R1.00 Show unranked as --       
-                    //        }
-                    //        else
-                    //        {
-                    //            var tRank = (long) Math.Round(Conversion.Val(b));
-                    //            b = (tRank + 1L).ToString();
-                    //        }
-
-                    //        _frmMain.PlrRank[plrCnt] = b;
-
-                    //        // R3.20 Get SteamID. If valid, get RelicID also.
-                    //        _frmMain.PlrSteam[plrCnt] = Strings.Mid(a, 57, 17);
-                    //        if (Strings.Mid(_frmMain.PlrSteam[plrCnt], 1, 4) != "7656")
-                    //        {
-                    //            _frmMain.PlrSteam[plrCnt] = "";
-                    //            matchRid[plrCnt] = 0L;
-                    //        }
-                    //        else
-                    //        {
-                    //            matchRid[plrCnt] = LOG_HexToLong(Strings.Mid(a, 41,
-                    //                8)); // R3.20 <-- Convert.ToInt64(Mid(A, 41, 8), 16)
-                    //            if (matchRid[plrCnt] == -1) matchRid[plrCnt] = 0L;
-                    //        }
-
-                    //        // R3.20 Read the next line of the file and exit if all of the match lines have been found.
-                    //        a = sr.ReadLine();
-                    //        if (Strings.InStr(a, "Match Started") == 0) findMatch = false;
-                    //    }
-                    //}
-                    var players = new List<Player>(8);
-
-                    // **********************************************************************************
-                    // 3.20 If we find a GAME Human Player string, find all of the other player stats.
-                    // **********************************************************************************
-                    if (Conversions.ToBoolean(Strings.InStr(a, "GAME ")))
-                        if (Conversions.ToBoolean(Strings.InStr(a, "Human Player") | Strings.InStr(a, "AI Player")))
-                        {
-                            // R3.20 We have found a new section so clear the previous data.
-                            for (var t = 1; t <= 8; t++)
-                            {
-                                _frmMain.PlrName[t] = "";
-                                _frmMain.PlrFact[t] = "";
-                                _frmMain.PlrRID[t] = "";
-                                _frmMain.PlrTeam[t] = 0;
-                                _frmMain.PlrTWin[t] = 0;
-                                _frmMain.PlrTLoss[t] = 0;
-                                _frmMain.PlrCountry[t] = ""; // R4.45 Added.
-                                _frmMain.PlrCountryName[t] = ""; // R4.46 Added.
-                                for (var t2 = 1; t2 <= 5; t2++)
-                                for (var t3 = 1; t3 <= 4; t3++)
-                                {
-                                    _frmMain.PlrRankALL[t, t2, t3] = 0;
-                                    _frmMain.PlrRankWin[t, t2, t3] = 0;
-                                    _frmMain.PlrRankLoss[t, t2, t3] = 0;
-                                    _frmMain.PlrRankPerc[t, t2, t3] = "";
-                                }
-
-                                _frmMain.TeamListCnt[t] = 0;
-                                for (int t2 = 1, loopTo3 = _frmMain.TeamList.GetUpperBound(1); t2 <= loopTo3; t2++)
-                                    _frmMain.TeamList[t, t2] = tempTl;
-
-                                gameRid[t] = "";
-                            }
-
-                            plrCnt = 0;
-                            var findPlayers = true;
-                            while (!sr.EndOfStream & findPlayers)
-                            {
-                                plrCnt += 1;
-                                var newPlayer = new Player();
-                                long test1 = Strings.InStr(a, "Human Player");
-                                if (Conversions.ToBoolean(test1))
-                                {
-                                    newPlayer.Name = LOG_FindPlayer(a, 39);
-                                    _frmMain.PlrName[plrCnt] = newPlayer.Name; //backward compatibility
-                                    newPlayer.RelicId = LOG_Find_RelicID(a);
-                                    gameRid[plrCnt] = newPlayer.RelicId; //backward compatibility
-                                    _frmMain.PlrRID[plrCnt] = gameRid[plrCnt]; // R4.30 Added.
-                                }
-                                else
-                                {
-                                    _frmMain.PlrName[plrCnt] = LOG_FindPlayer(a, 36); // R2.01 AI player. 
-                                    // PlrRank(PlrCnt) = ""                     'R4.30 Added for match tracking.
-                                    gameRid[plrCnt] = ""; // R3.20 AI has no RelicID.
-                                    _frmMain.PlrRID[plrCnt] = "";
-                                } // R4.30 Added.
-
-                                // R3.40 The last part of the string will have faction.
-                                var tLen = Strings.Len(a);
-                                if (20 < tLen) // R3.40 This should never happen, but just in case.
-                                {
-                                    if (Strings.Mid(a, tLen - 5, 6) == "german") _frmMain.PlrFact[plrCnt] = "01";
-
-                                    if (Strings.Mid(a, tLen - 5, 6) == "soviet") _frmMain.PlrFact[plrCnt] = "02";
-
-                                    if (Strings.Mid(a, tLen - 10, 11) == "west_german") _frmMain.PlrFact[plrCnt] = "03";
-
-                                    if (Strings.Mid(a, tLen - 2, 3) == "aef") _frmMain.PlrFact[plrCnt] = "04";
-
-                                    if (Strings.Mid(a, tLen - 6, 7) == "british") _frmMain.PlrFact[plrCnt] = "05";
-                                }
-
-                                // R3.20 Read the next line of the file.
-                                a = sr.ReadLine();
-                                test1 = Strings.InStr(a, "Human Player");
-                                long test2 = Strings.InStr(a, "AI Player");
-                                if ((test1 == 0L) & (test2 == 0L)) findPlayers = false;
-                            }
-                        }
-                }
-            }
-
-            return plrCnt;
         }
 
         private void STAT_GetFromRID(string rid, int plrSlot)
@@ -1369,67 +1233,6 @@ namespace MakoCelo
             if (plrRank == 0) tl = 0;
 
             return tl;
-        }
-
-        private string LOG_Find_RelicID(string a)
-        {
-            var rid = 0L;
-            int T;
-            var cnt = default(int);
-            var charStart = default(int);
-            var charEnd = default(int);
-
-            // R3.20 Get the RelicID number from the Player stats line.
-            for (T = Strings.Len(a); T >= 1; T -= 1)
-            {
-                var c = Strings.Mid(a, T, 1);
-                if (c == " ")
-                {
-                    cnt += 1;
-                    if (cnt == 2) charEnd = T;
-
-                    if (cnt == 3)
-                    {
-                        charStart = T;
-                        break;
-                    }
-                }
-            }
-
-            if (Conversions.ToBoolean(charEnd))
-                rid = (long) Math.Round(Conversion.Val(Strings.Mid(a, charStart, charEnd - charStart)));
-
-            return rid.ToString();
-        }
-
-        /// <summary>
-        /// Names are not Delimited, need to search for end of name from the end of line.
-        /// </summary>
-        /// <param name="a"></param>
-        /// <param name="charStart"></param>
-        /// <returns></returns>
-        private string LOG_FindPlayer(string a, int charStart)
-        {
-            string c;
-            int T;
-            var cnt = default(int);
-            var charEnd = default(int);
-            for (T = Strings.Len(a); T >= 1; T -= 1)
-            {
-                c = Strings.Mid(a, T, 1);
-                if (c == " ") cnt += 1;
-
-                if (cnt == 3)
-                {
-                    charEnd = T;
-                    break;
-                }
-            }
-
-            c = "None";
-            if (Conversions.ToBoolean(charEnd)) c = Strings.Mid(a, charStart, charEnd - charStart);
-
-            return c;
         }
     }
 }

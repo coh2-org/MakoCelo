@@ -173,6 +173,7 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Gfx.cs" />
+    <Compile Include="LogFileParser.cs" />
     <Compile Include="LogScanner.cs" />
     <Compile Include="Model\Player.cs" />
     <Compile Include="Native.cs" />
