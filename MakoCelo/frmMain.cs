@@ -209,7 +209,7 @@ namespace MakoCelo
         private int CountryCount;
         private bool FLAG_CheckingLog;
         private bool FLAG_Drawing; // R3.40 Dont let combo boxes call when we are drawing.
-        public int FLAG_EloMode; // R4.30 Which value are we showing right now. Cycles with Scans.
+        public RankDisplayMode RankDisplayMode; // R4.30 Which value are we showing right now. Cycles with Scans.
         public bool FLAG_EloUse; // R4.30 Try to draw the ELO values on screen?
         private bool FLAG_EloValid; // R4.30 Are the current ELO values valid?
         public bool FLAG_HideMissing; // R4.30 Added to hide blanks on Overlays/Green Screens.
@@ -285,7 +285,7 @@ namespace MakoCelo
         private string PATH_SaveStatsImage = "";
         private string PATH_SetupPath = ""; // R4.20 Raw path for dialogs.
         private string PATH_SoundFiles = ""; // R4.00 Added sound playing.
-        public bool SCAN_Enabled;
+        public bool AutoScanEnabled;
         private long SCAN_SecCnt; // R4.30 Counter for how many secs before Auto Scan.
         public long SCAN_Time; // R4.30 Added variable scan delays.
         public int STATS_SizeX = 900;
@@ -393,6 +393,7 @@ namespace MakoCelo
             _chkCountry.Name = "chkCountry";
             Settings = new Settings(this);
             LogScanner = new LogScanner(this);
+
             Gfx = new Gfx(this);
         }
 
@@ -648,13 +649,41 @@ namespace MakoCelo
             MainBuffer_Valid = false;
 
             // R4.30 Removed extra GFX draw here.
-            LogScanner.LOG_Scan();
+            StartLogScan();
 
             // R4.41 Added.
             lbStatus.BackColor = Color.FromArgb(255, 192, 192, 192);
             lbStatus.Refresh();
             CONTROLS_Enabled(true);
             cmScanLog.Enabled = true;
+        }
+
+        private void StartLogScan()
+        {
+            lbError1.Text = "";
+            lbError1.BackColor = Color.FromArgb(255, 192, 192, 192);
+            lbError2.Text = "";
+            lbError2.BackColor = Color.FromArgb(255, 192, 192, 192);
+            if (!File.Exists(PATH_Game))
+            {
+                if (string.IsNullOrEmpty(PATH_Game))
+                    Interaction.MsgBox(
+                        "Please locate the warnings.log file in your COH2 My Games directory." + Constants.vbCr +
+                        Constants.vbCr + "Click on FIND LOG FILE to search and select.", MsgBoxStyle.Information);
+                else
+                    Interaction.MsgBox(
+                        "ERROR: The LOG file location does not appear to be valid." + Constants.vbCr + Constants.vbCr +
+                        "Unable to open the LOG file to get stats." + Constants.vbCr + "Verify this file/path exists." +
+                        Constants.vbCr + Constants.vbCr + PATH_Game, MsgBoxStyle.Critical);
+
+                return;
+            }
+
+            lbStatus.Text = "Open file...";
+            Cursor = Cursors.WaitCursor;
+
+            Application.DoEvents();
+            LogScanner.StartScanningLogFile();
         }
 
         private void LOG_InitCalcArrays()
@@ -754,6 +783,7 @@ namespace MakoCelo
 
         private void frmMain_Load(object sender, EventArgs e)
         {
+            LogScanner.MatchFound += MatchFoundEvent;
             FLAG_Loading = true; // R2.00 Tell Controls not to update. Most save settings as they update,
             GUI_Active = false; // R3.10 Default to NO active GUI elements.
             PATH_Game = ""; // R2.00 Initialize the var or we get error 448 in file.
@@ -1172,8 +1202,8 @@ namespace MakoCelo
                 return;
             }
 
-            SCAN_Enabled = !SCAN_Enabled;
-            if (SCAN_Enabled)
+            AutoScanEnabled = !AutoScanEnabled;
+            if (AutoScanEnabled)
             {
                 SCAN_SecCnt = 0L; // R4.30 Reset our wait counter.
                 cmScanLog.Text = "Scanning...";
@@ -1228,7 +1258,7 @@ namespace MakoCelo
         // Static SecCnt As Long
         private void Timer1_Tick(object sender, EventArgs e) // R4.10 Added.
         {
-            // R4.10 MSGBOX in LOG_Scan holds code there, but animation timer keeps going which triggers this timer and you get a loop.
+            // R4.10 MSGBOX in StartScanningLogFile holds code there, but animation timer keeps going which triggers this timer and you get a loop.
             if (FLAG_CheckingLog) return;
 
             SCAN_SecCnt += 1L;
@@ -1236,7 +1266,7 @@ namespace MakoCelo
             {
                 SCAN_SecCnt = 0L;
                 FLAG_CheckingLog = true;
-                LogScanner.LOG_Scan();
+                StartLogScan();
                 FLAG_CheckingLog = false;
             }
             else
@@ -1802,8 +1832,8 @@ namespace MakoCelo
             // *****************************************************************
             // R4.30 If doing ELO cycles, calc the current Cycle to show.
             // *****************************************************************
-            FLAG_EloMode += 1;
-            if (2 < FLAG_EloMode) FLAG_EloMode = 0;
+            RankDisplayMode += 1;
+            if (2 < (int)RankDisplayMode) RankDisplayMode = 0;
 
             // R4.20 Moved sub for outside calls.
             STATS_Refresh();
@@ -2621,8 +2651,23 @@ namespace MakoCelo
                 }
             }
         }
+        private void MatchFoundEvent(object sender, EventArgs e)
+        {
+            lstLog.Items.Clear();
 
-        public void SOUND_Play(string tFile)
+            if (AutoScanEnabled && chkFoundSound.Checked && !string.IsNullOrEmpty(SOUND_File[15]))
+            {
+                AUDIO_SetVolume(100, Conversions.ToInteger(SOUND_Vol[15]));
+                SOUND_Play(SOUND_File[15]);
+            }
+
+            SS1_Time.Text = "Match found: " + DateTime.Now.ToString("HH:mm"); // TimeString.ToString("HH:mm")
+            lbStatus.Text = "Render...";
+            Application.DoEvents();
+
+        }
+
+        private void SOUND_Play(string tFile)
         {
             try
             {
@@ -3555,7 +3600,7 @@ namespace MakoCelo
             // R4.34 This needs restored when Relic fixes the LOG file issues.
             // If chkPopUp.Checked Then
             // Celo_Popup = True
-            // ToolTip1.SetToolTip(pbStats, "Click a player name to see web pages for:" & vbCr & "Left: Relic Stats" & vbCr & "Ctrl-Left: Google Translate" & vbCr & "Shift-Left: Coh2.org player page" & vbCr & "Right: Popup menu")
+            // ToolTip1.SetToolTip(pbStats, "Click a player name to see web pages for:" & vbCr & "Left: Relic PersonalStats" & vbCr & "Ctrl-Left: Google Translate" & vbCr & "Shift-Left: Coh2.org player page" & vbCr & "Right: Popup menu")
             // Else
             // Celo_Popup = False
             // ToolTip1.SetToolTip(pbStats, "Click a player name to see web pages for:" & vbCr & "Left: Relic Stats" & vbCr & "Ctrl-Left: Google Translate" & vbCr & "Shift-Left: Coh2.org player page" & vbCr & "Right: Coh2.org AT stats" & vbCr & "Ctrl-Right: Coh2.org faction page")
@@ -3963,7 +4008,7 @@ namespace MakoCelo
             // R4.30 Dont do validity checks on load or ELO not used.
             if (FLAG_Loading | (FLAG_EloUse == false))
             {
-                FLAG_EloMode = 0;
+                RankDisplayMode = 0;
                 // GFX_DrawStats()
                 STATS_Refresh();
                 return;
@@ -4014,8 +4059,8 @@ namespace MakoCelo
                 // *****************************************************************
                 // R4.30 If doing ELO cycles, calc the current Cycle to show.
                 // *****************************************************************
-                FLAG_EloMode += 1;
-                if (2 < FLAG_EloMode) FLAG_EloMode = 0;
+                RankDisplayMode += 1;
+                if (2 < (int)RankDisplayMode) RankDisplayMode = 0;
 
                 // R4.20 Moved sub for outside calls.
                 Gfx.GFX_DrawStats();
@@ -4025,7 +4070,7 @@ namespace MakoCelo
             }
             else
             {
-                FLAG_EloMode = 0;
+                RankDisplayMode = 0;
             }
         }
 

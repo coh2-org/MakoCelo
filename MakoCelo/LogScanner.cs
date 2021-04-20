@@ -2,20 +2,27 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Net;
-using System.Text;
+using System.Net.Http;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using MakoCelo.Model;
+using MakoCelo.Model.RelicApi;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
+using Newtonsoft.Json;
 
 namespace MakoCelo
 {
     public class LogScanner
     {
-        public readonly frmMain _frmMain;
+        private readonly frmMain _frmMain;
         private readonly LogFileParser _logFileParser;
         private Match _previousMatch;
+        public event EventHandler MatchFound;
+        private readonly HttpClient _httpClient = new();
+        private readonly JsonSerializer _jsonSerializer = new();
 
         public LogScanner(frmMain frmMain)
         {
@@ -23,13 +30,21 @@ namespace MakoCelo
             _logFileParser = new LogFileParser(frmMain);
         }
 
-        public void LOG_Scan()
+        protected virtual void OnMatchFound(EventArgs e)
+        {
+            EventHandler handler = MatchFound;
+            if (handler != null)
+            {
+                handler(this, e);
+            }
+        }
+
+        public void StartScanningLogFile()
         {
             // R4.00 Read the RELIC log file and get the match stats.
             // R4.00 Stats come in two sections. Each has a Relic ID #.
             // R4.00 Match the two sections using the Relic ID #.
             // R4.50 Relic broke the file so now there is only one section.
-            var matchMode = default(int); // R4.30 1-1v1.2-2v2,etc
             var tPlrRank = new string[10]; // R3.10 Added Storage to place old vals on screen if no new onesa are found.
             var tPlrName = new string[10];
             var tPlrSteam = new string[10];
@@ -51,27 +66,6 @@ namespace MakoCelo
             var tPlrLvl = new string[10];
             var tPlrGlvl = new int[10];
 
-            // R3.40 Reset the on screen ERROR labels.
-            _frmMain.lbError1.Text = "";
-            _frmMain.lbError1.BackColor = Color.FromArgb(255, 192, 192, 192);
-            _frmMain.lbError2.Text = "";
-            _frmMain.lbError2.BackColor = Color.FromArgb(255, 192, 192, 192);
-
-            // R1.00 If we dont have a valid log file path, exit with help notice.
-            if (!File.Exists(_frmMain.PATH_Game))
-            {
-                if (string.IsNullOrEmpty(_frmMain.PATH_Game))
-                    Interaction.MsgBox(
-                        "Please locate the warnings.log file in your COH2 My Games directory." + Constants.vbCr +
-                        Constants.vbCr + "Click on FIND LOG FILE to search and select.", MsgBoxStyle.Information);
-                else
-                    Interaction.MsgBox(
-                        "ERROR: The LOG file location does not appear to be valid." + Constants.vbCr + Constants.vbCr +
-                        "Unable to open the LOG file to get stats." + Constants.vbCr + "Verify this file/path exists." +
-                        Constants.vbCr + Constants.vbCr + _frmMain.PATH_Game, MsgBoxStyle.Critical);
-
-                return;
-            }
 
             // This will be replaced with object returned to form so there will be no need to buffer previous data at this point (it will be done after search)
             #region ToRemoveAfterMigration
@@ -99,17 +93,17 @@ namespace MakoCelo
                 tPlrCountryName[t] = _frmMain.PlrCountryName[t];
                 _frmMain.PlrCountryName[t] = "";
                 for (var t2 = 1; t2 <= 5; t2++)
-                for (var t3 = 1; t3 <= 4; t3++)
-                {
-                    tPlrRankAll[t, t2, t3] = _frmMain.PlrRankALL[t, t2, t3];
-                    _frmMain.PlrRankALL[t, t2, t3] = 0;
-                    tPlrRankWin[t, t2, t3] = _frmMain.PlrRankWin[t, t2, t3];
-                    _frmMain.PlrRankWin[t, t2, t3] = 0;
-                    tPlrRankLoss[t, t2, t3] = _frmMain.PlrRankLoss[t, t2, t3];
-                    _frmMain.PlrRankLoss[t, t2, t3] = 0;
-                    tPlrRankPerc[t, t2, t3] = _frmMain.PlrRankPerc[t, t2, t3];
-                    _frmMain.PlrRankPerc[t, t2, t3] = "";
-                }
+                    for (var t3 = 1; t3 <= 4; t3++)
+                    {
+                        tPlrRankAll[t, t2, t3] = _frmMain.PlrRankALL[t, t2, t3];
+                        _frmMain.PlrRankALL[t, t2, t3] = 0;
+                        tPlrRankWin[t, t2, t3] = _frmMain.PlrRankWin[t, t2, t3];
+                        _frmMain.PlrRankWin[t, t2, t3] = 0;
+                        tPlrRankLoss[t, t2, t3] = _frmMain.PlrRankLoss[t, t2, t3];
+                        _frmMain.PlrRankLoss[t, t2, t3] = 0;
+                        tPlrRankPerc[t, t2, t3] = _frmMain.PlrRankPerc[t, t2, t3];
+                        _frmMain.PlrRankPerc[t, t2, t3] = "";
+                    }
 
                 tTeamListCnt[t] = _frmMain.TeamListCnt[t];
                 _frmMain.TeamListCnt[t] = 0;
@@ -138,13 +132,13 @@ namespace MakoCelo
                 _frmMain.PlrCountry_Buffer[t] = tPlrCountry[t]; // R4.45 Added.
                 _frmMain.PlrCountryName_Buffer[t] = tPlrCountryName[t]; // R4.45 Added.
                 for (var t2 = 1; t2 <= 5; t2++)
-                for (var t3 = 1; t3 <= 4; t3++)
-                {
-                    _frmMain.PlrRankALL_Buffer[t, t2, t3] = tPlrRankAll[t, t2, t3];
-                    _frmMain.PlrRankWin_Buffer[t, t2, t3] = tPlrRankWin[t, t2, t3];
-                    _frmMain.PlrRankLoss_Buffer[t, t2, t3] = tPlrRankLoss[t, t2, t3];
-                    _frmMain.PlrRankPerc_Buffer[t, t2, t3] = tPlrRankPerc[t, t2, t3];
-                }
+                    for (var t3 = 1; t3 <= 4; t3++)
+                    {
+                        _frmMain.PlrRankALL_Buffer[t, t2, t3] = tPlrRankAll[t, t2, t3];
+                        _frmMain.PlrRankWin_Buffer[t, t2, t3] = tPlrRankWin[t, t2, t3];
+                        _frmMain.PlrRankLoss_Buffer[t, t2, t3] = tPlrRankLoss[t, t2, t3];
+                        _frmMain.PlrRankPerc_Buffer[t, t2, t3] = tPlrRankPerc[t, t2, t3];
+                    }
 
                 _frmMain.TeamListCnt_Buffer[t] = tTeamListCnt[t];
                 for (int t2 = 1, loopTo2 = _frmMain.TeamList_Buffer.GetUpperBound(1); t2 <= loopTo2; t2++) _frmMain.TeamList_Buffer[t, t2] = tTeamList[t, t2];
@@ -155,49 +149,9 @@ namespace MakoCelo
             }
 
             #endregion
-            _frmMain.lbStatus.Text = "Open file...";
-            Application.DoEvents();
-            _frmMain.Cursor = Cursors.WaitCursor;
-            
-
-
             var matchFound = _logFileParser.ParsePlayersFromGameLog(tempTl);
-
-            // R4.30 Play the MATCH FOUND ALERT if this a NEW match and are we in AUTO mode.
-            ////DOES NOT DETECT TWO MATCHES IN SUCCESsION WITH SAME PLAYERS AND SAME POSITIONS
-            //for (var t = 1; t <= 8; t++)
-            //{
-            //    if ((_frmMain.PlrName[t] ?? "") != (tPlrName[t] ?? ""))
-            //    {
-            //        fNewData = true;
-            //        break;
-            //    }
-
-            //    if (_frmMain.PlrRID[t] != tPlrRid[t])
-            //    {
-            //        fNewData = true;
-            //        break;
-            //    }
-
-            //    if ((_frmMain.PlrFact[t] ?? "") != (tPlrFact[t] ?? ""))
-            //    {
-            //        fNewData = true;
-            //        break;
-            //    }
-            //}
-
-            if (_previousMatch == null && matchFound.IsMatchFound()
-                ||
-                _previousMatch != null && matchFound.IsMatchFound() && matchFound.Id != _previousMatch.Id)
-            {
-                _previousMatch = matchFound;
-            }
-
-            
-
-            //backward compatibility - won't be needed
-            // R3.10 If no new data was found, show the old data.
-            if (!matchFound.IsMatchFound())
+            #region ToRemoveAfterMigration
+            if (!matchFound.IsMatchFound()) //backward compatibility - won't be needed if we use _previousMatch
                 for (var t = 1; t <= 8; t++)
                 {
                     _frmMain.PlrRank[t] = tPlrRank[t];
@@ -211,13 +165,13 @@ namespace MakoCelo
                     _frmMain.PlrCountry[t] = tPlrCountry[t]; // R4.45 Added.
                     _frmMain.PlrCountryName[t] = tPlrCountryName[t]; // R4.46 Added.
                     for (var t2 = 1; t2 <= 5; t2++)
-                    for (var t3 = 1; t3 <= 4; t3++)
-                    {
-                        _frmMain.PlrRankALL[t, t2, t3] = tPlrRankAll[t, t2, t3];
-                        _frmMain.PlrRankWin[t, t2, t3] = tPlrRankWin[t, t2, t3];
-                        _frmMain.PlrRankLoss[t, t2, t3] = tPlrRankLoss[t, t2, t3];
-                        _frmMain.PlrRankPerc[t, t2, t3] = tPlrRankPerc[t, t2, t3];
-                    }
+                        for (var t3 = 1; t3 <= 4; t3++)
+                        {
+                            _frmMain.PlrRankALL[t, t2, t3] = tPlrRankAll[t, t2, t3];
+                            _frmMain.PlrRankWin[t, t2, t3] = tPlrRankWin[t, t2, t3];
+                            _frmMain.PlrRankLoss[t, t2, t3] = tPlrRankLoss[t, t2, t3];
+                            _frmMain.PlrRankPerc[t, t2, t3] = tPlrRankPerc[t, t2, t3];
+                        }
 
                     _frmMain.TeamListCnt[t] = tTeamListCnt[t];
                     for (int t2 = 1, loopTo4 = _frmMain.TeamList.GetUpperBound(1); t2 <= loopTo4; t2++) _frmMain.TeamList[t, t2] = tTeamList[t, t2];
@@ -225,67 +179,39 @@ namespace MakoCelo
                     _frmMain.PlrELO[t] = tPlrElo[t];
                     _frmMain.PlrLVL[t] = tPlrLvl[t];
                 }
+            #endregion ToRemoveAfterMigration
 
-            // R4.30 Clear the Last Valid Match stats if necessary.
-            if (matchFound.IsMatchFound())
+            if (matchFound.IsMatchFound() && (_previousMatch == null || matchFound.Id != _previousMatch.Id))
             {
+                _previousMatch = matchFound;
+
                 // R4.30 Reset the ELO cycle mode.
-                _frmMain.FLAG_EloMode = 0;
+                _frmMain.RankDisplayMode = 0;
                 STATS_StoreLast(); //backward compatibility - won't be needed if we use _previousMatch
 
-                #region Refactor
+                OnMatchFound(EventArgs.Empty);
 
-                // move to fire specific UI event
-
-
-                if (_frmMain.AutoScanEnabled && _frmMain.chkFoundSound.Checked && !string.IsNullOrEmpty(_frmMain.SOUND_File[15]))
-                {
-                    _frmMain.AUDIO_SetVolume(100, Conversions.ToInteger(_frmMain.SOUND_Vol[15]));
-                    _frmMain.SOUND_Play(_frmMain.SOUND_File[15]);
-                }
-
-                // R4.50 Show time on status bar.
-                _frmMain.SS1_Time.Text = "Match found: " + DateTime.Now.ToString("HH:mm"); // TimeString.ToString("HH:mm")
-                #endregion
-            }
-
-            _frmMain.lbStatus.Text = "Render...";
-            Application.DoEvents();
-            if (0 < matchFound.Players.Count) matchMode = 1;
-
-            if (2 < matchFound.Players.Count) matchMode = 2;
-
-            if (4 < matchFound.Players.Count) matchMode = 3;
-
-            if (6 < matchFound.Players.Count) matchMode = 4;
-
-            // R4.30 Adjust NAME and RANKS before drawing.
-            if (/*0 < matchFound.Players.Count && this should not happen*/ (matchFound.IsMatchFound() || !_frmMain.AutoScanEnabled))
-            {
-                _frmMain.lstLog.Items.Clear(); // R4.42 Clear error log.
+                GetGroupedStatsFromRelicApi(matchFound);
 
                 // R4.30 Get player ranks from the RELIC API.
-                for (var t = 1; t <= 8; t++)
-                    if (!string.IsNullOrEmpty(_frmMain.PlrName[t]) 
-                        && !string.IsNullOrEmpty(_frmMain.PlrFact[t]) 
-                        && matchFound.Players.Count >= t
-                        && 0d < Conversion.Val(matchFound.Players[t-1].RelicId))
-                    {
-                        _frmMain.lbStatus.Text = "Web Player: " + t;
-                        Application.DoEvents();
-                        STAT_GetFromRID(matchFound.Players[t-1].RelicId, t);
-                        _frmMain.lbStatus.Text = "";
-                        Application.DoEvents();
-                        _frmMain.PlrRank[t] = _frmMain.PlrRankALL[t, Conversions.ToInteger(_frmMain.PlrFact[t]), matchMode].ToString();
-                        if (_frmMain.PlrRank[t] == "0") _frmMain.PlrRank[t] = "---";
+                //for (var t = 1; t <= matchFound.Players.Count; t++)
+                //{
+                //    _frmMain.lbStatus.Text = "Web Player: " + t; //do we really need this status update ?
+                //    Application.DoEvents();
+                //    GetStatsFromRelicApi(matchFound.Players[t - 1], t);
+                //    _frmMain.PlrRank[t] = _frmMain.PlrRankALL[t, Conversions.ToInteger(_frmMain.PlrFact[t]), (int)matchFound.MatchMode].ToString();
+                //    if (_frmMain.PlrRank[t] == "0") _frmMain.PlrRank[t] = "---";
 
-                        _frmMain.PlrWin[t] = _frmMain.PlrRankWin[t, Conversions.ToInteger(_frmMain.PlrFact[t]), matchMode];
-                        _frmMain.PlrLoss[t] = _frmMain.PlrRankLoss[t, Conversions.ToInteger(_frmMain.PlrFact[t]), matchMode];
-                    }
+                //    _frmMain.PlrWin[t] = _frmMain.PlrRankWin[t, Conversions.ToInteger(_frmMain.PlrFact[t]), (int)matchFound.MatchMode];
+                //    _frmMain.PlrLoss[t] = _frmMain.PlrRankLoss[t, Conversions.ToInteger(_frmMain.PlrFact[t]), (int)matchFound.MatchMode];
+                //}
 
                 _frmMain.lstLog.Items.Add(DateAndTime.Now.ToLongTimeString() + " - Get RID - Complete.");
                 for (var t = 1; t <= 8; t++)
                 {
+                    #region Inaccurrate
+                    //Probably there is no better way to detect premade teams 
+
                     // R4.30 See if any players are a premade team.
                     var tCnt = 0;
                     if (t % 2 == 1)
@@ -301,31 +227,33 @@ namespace MakoCelo
                                 tCnt += 1;
                     }
 
+
+                    #endregion
                     // R4.30 Update the MAX player counts if on a premade team.
                     _frmMain.PlrGLVL[t] =
-                        (int) Math.Round(Conversion.Val(_frmMain.LVLS[(int) Math.Round(Conversion.Val(_frmMain.PlrFact[t])), matchMode]));
+                        (int)Math.Round(Conversion.Val(_frmMain.LVLS[(int)Math.Round(Conversion.Val(_frmMain.PlrFact[t])), (int)matchFound.MatchMode]));
                     if (tCnt == 2) // R4.30 AT 2v2
                     {
                         if ((_frmMain.PlrFact[t] == "01") | (_frmMain.PlrFact[t] == "03"))
-                            _frmMain.PlrGLVL[t] = (int) Math.Round(Conversion.Val(_frmMain.LVLS[7, 2]));
+                            _frmMain.PlrGLVL[t] = (int)Math.Round(Conversion.Val(_frmMain.LVLS[7, 2]));
                         else
-                            _frmMain.PlrGLVL[t] = (int) Math.Round(Conversion.Val(_frmMain.LVLS[6, 2]));
+                            _frmMain.PlrGLVL[t] = (int)Math.Round(Conversion.Val(_frmMain.LVLS[6, 2]));
                     }
 
                     if (tCnt == 3) // R4.30 AT 3v3
                     {
                         if ((_frmMain.PlrFact[t] == "01") | (_frmMain.PlrFact[t] == "03"))
-                            _frmMain.PlrGLVL[t] = (int) Math.Round(Conversion.Val(_frmMain.LVLS[7, 3]));
+                            _frmMain.PlrGLVL[t] = (int)Math.Round(Conversion.Val(_frmMain.LVLS[7, 3]));
                         else
-                            _frmMain.PlrGLVL[t] = (int) Math.Round(Conversion.Val(_frmMain.LVLS[6, 3]));
+                            _frmMain.PlrGLVL[t] = (int)Math.Round(Conversion.Val(_frmMain.LVLS[6, 3]));
                     }
 
                     if (tCnt == 4) // R4.30 AT 4v4
                     {
                         if ((_frmMain.PlrFact[t] == "01") | (_frmMain.PlrFact[t] == "03"))
-                            _frmMain.PlrGLVL[t] = (int) Math.Round(Conversion.Val(_frmMain.LVLS[7, 4]));
+                            _frmMain.PlrGLVL[t] = (int)Math.Round(Conversion.Val(_frmMain.LVLS[7, 4]));
                         else
-                            _frmMain.PlrGLVL[t] = (int) Math.Round(Conversion.Val(_frmMain.LVLS[6, 4]));
+                            _frmMain.PlrGLVL[t] = (int)Math.Round(Conversion.Val(_frmMain.LVLS[6, 4]));
                     }
 
                     // R4.30 Calc ELO % and LEVEL values.
@@ -338,7 +266,7 @@ namespace MakoCelo
                         _frmMain.PlrLVL[t] = "";
                     }
                     // R4.30 We have a valid player so calc ELO % and approximate LEVEL value.
-                    else if (0d < Conversion.Val(_frmMain.LVLS[Conversions.ToInteger(_frmMain.PlrFact[t]), matchMode]))
+                    else if (0d < Conversion.Val(_frmMain.LVLS[Conversions.ToInteger(_frmMain.PlrFact[t]), (int)matchFound.MatchMode]))
                     {
                         if (_frmMain.PlrRank[t] == "---")
                         {
@@ -348,7 +276,7 @@ namespace MakoCelo
                         else
                         {
                             _frmMain.PlrELO[t] = (100d * (Conversion.Val(_frmMain.PlrRank[t]) / _frmMain.PlrGLVL[t])).ToString("##.0") + "%";
-                            _frmMain.PlrLVL[t] = "L-" + LOG_CalcLevel((int) Math.Round(Conversion.Val(_frmMain.PlrRank[t])), _frmMain.PlrGLVL[t]);
+                            _frmMain.PlrLVL[t] = "L-" + LOG_CalcLevel((int)Math.Round(Conversion.Val(_frmMain.PlrRank[t])), _frmMain.PlrGLVL[t]);
                         }
                     }
                     else
@@ -357,11 +285,7 @@ namespace MakoCelo
                         _frmMain.PlrLVL[t] = "";
                     }
                 }
-            }
 
-            // R4.34 Don't write over the ELO cycle unless we have new data.
-            if (matchFound.IsMatchFound() || !_frmMain.AutoScanEnabled)
-            {
                 // R4.34 See if we should search the net for team ranks.
                 if (_frmMain.chkGetTeams.Checked)
                 {
@@ -388,7 +312,142 @@ namespace MakoCelo
             Application.DoEvents();
         }
 
-        private void STAT_GetFromRID(string rid, int plrSlot)
+        private void GetGroupedStatsFromRelicApi(Match matchFound)
+        {
+            var rawResp = "";
+            try
+            {
+                // R4.30 Request leaderboard data from Relic Web API. Put result JSON data in string for parsing.
+                _frmMain.LstLog.Items.Add(DateAndTime.Now.ToLongTimeString() +
+                                          " Web Request sending...");
+
+                var response = DownloadRawStats(matchFound.Players);
+
+                for (var t = 1; t <= matchFound.Players.Count; t++)
+                {
+                    var currentPlayer = matchFound.Players[t - 1];
+
+                    var currentPlayerData = response.StatGroups.First(x => x.Type == 1 && x.Members.Any(x => x.ProfileId == currentPlayer.RelicId)).Members.First();
+                    currentPlayer.StatGroupId = currentPlayerData.PersonalStatGroupId;
+                    currentPlayer.Country = new Country
+                    {
+                        Code = currentPlayerData.Country,
+                        Name = Country_GetName(currentPlayerData.Country)
+                    };
+                    _frmMain.PlrCountry[t] = currentPlayer.Country.Code; //backward compatibility
+                    _frmMain.PlrCountryName[t] = currentPlayer.Country.Name; //backward compatibility
+
+                    for (int i = 0; i < _frmMain.RelDataLeaderId.GetUpperBound(0); i++) //backward compatibility
+                    {
+                        for (int j = 0; j < _frmMain.RelDataLeaderId.GetUpperBound(1); j++) //backward compatibility
+                        {
+                            var leaderBoardPlayerData = response.LeaderBoardStats.FirstOrDefault(x => currentPlayerData.PersonalStatGroupId == x.StatGroupId && x.LeaderBoardId == _frmMain.RelDataLeaderId[i, j]);
+                            if (leaderBoardPlayerData != null)
+                            {
+                                var rank = Convert.ToInt32(leaderBoardPlayerData.Rank) == -1 ? 0 : Convert.ToInt32(leaderBoardPlayerData.Rank); //backward compatibility
+                                var percent = ((double)leaderBoardPlayerData.Wins /
+                                              (leaderBoardPlayerData.Losses + leaderBoardPlayerData.Wins)).ToString("P");
+                                currentPlayer.PersonalStats.Add(new PersonalStats
+                                {
+                                    Faction = (Faction)i,
+                                    GameMode = (GameMode)j,
+                                    Losses = leaderBoardPlayerData.Losses,
+                                    Wins = leaderBoardPlayerData.Wins,
+                                    Rank = rank.ToString(),
+                                    RankLevel = leaderBoardPlayerData.RankLevel,
+                                    TotalPlayers = leaderBoardPlayerData.RankTotal,
+                                    WinLossPercentRatio = percent
+                                });
+
+                                _frmMain.PlrRankWin[t, i, j] = leaderBoardPlayerData.Wins; //backward compatibility
+                                _frmMain.PlrRankLoss[t, i, j] = leaderBoardPlayerData.Losses; //backward compatibility
+                                _frmMain.PlrRankALL[t, i, j] = rank; //backward compatibility
+                                _frmMain.PlrRankPerc[t, i, j] = percent; //backward compatibility
+
+
+                            }
+                        }
+                    }
+
+                    currentPlayer.Teams = response.StatGroups.Where(statGroup =>
+                            statGroup.Type != 1 && statGroup.Members.Any(member => member.ProfileId == currentPlayer.RelicId))
+                        .Select((statGroup, i) =>
+                        {
+                            _frmMain.TeamList[t, i].PLR1 = statGroup.Members[0].Alias; //backward compatibility
+                            _frmMain.TeamList[t, i].PLR2 = statGroup.Members.ElementAtOrDefault(1)?.Alias ?? ""; //backward compatibility
+                            _frmMain.TeamList[t, i].PLR3 = statGroup.Members.ElementAtOrDefault(2)?.Alias ?? ""; //backward compatibility
+                            _frmMain.TeamList[t, i].PLR4 = statGroup.Members.ElementAtOrDefault(3)?.Alias ?? ""; //backward compatibility
+                            _frmMain.TeamList[t, i].RID1 = statGroup.Members[0].ProfileId; //backward compatibility
+                            _frmMain.TeamList[t, i].RID2 = statGroup.Members.ElementAtOrDefault(1)?.ProfileId ?? ""; //backward compatibility
+                            _frmMain.TeamList[t, i].RID3 = statGroup.Members.ElementAtOrDefault(2)?.ProfileId ?? ""; //backward compatibility
+                            _frmMain.TeamList[t, i].RID4 = statGroup.Members.ElementAtOrDefault(3)?.ProfileId ?? ""; //backward compatibility
+                            _frmMain.TeamList[t, i].RankID = Convert.ToInt32(statGroup.Id); //backward compatibility
+                            _frmMain.TeamList[t, i].PlrCnt = statGroup.Type; //backward compatibility
+
+                            return new Team
+                            {
+                                Players = statGroup.Members.Select(y => y.Alias).ToList(),
+                                TeamStats = response.LeaderBoardStats
+                                    .Where(leaderBoard => leaderBoard.StatGroupId == statGroup.Id).Take(2)
+                                    .Select(leaderBoard =>
+                                    {
+                                        var teamStats = new TeamStats
+                                        {
+                                            Side = leaderBoard.LeaderBoardId is "20" or "22" or "24"
+                                                           ? Side.Axis
+                                                           : Side.Allies,
+                                            Rank = leaderBoard.Rank,
+                                            RankLevel = leaderBoard.RankLevel,
+                                            Wins = leaderBoard.Wins,
+                                            Losses = leaderBoard.Losses,
+                                            WinLossPercentRatio = ((double)leaderBoard.Wins /
+                                                                              (leaderBoard.Losses + leaderBoard.Wins))
+                                                           .ToString("P")
+                                        };
+
+                                        if (teamStats.Side == Side.Allies)
+                                        {
+                                            _frmMain.TeamList[t, i].RankAllies = Convert.ToInt32(leaderBoard.Rank); //backward compatibility
+                                            _frmMain.TeamList[t, i].WinAllies = leaderBoard.Wins; //backward compatibility
+                                            _frmMain.TeamList[t, i].LossAllies = leaderBoard.Losses; //backward compatibility
+                                        }
+                                        else
+                                        {
+                                            _frmMain.TeamList[t, i].RankAxis = Convert.ToInt32(leaderBoard.Rank); //backward compatibility
+                                            _frmMain.TeamList[t, i].WinAxis = leaderBoard.Wins; //backward compatibility
+                                            _frmMain.TeamList[t, i].LossAxis = leaderBoard.Losses; //backward compatibility
+                                        }
+                                        return teamStats;
+                                    }).ToList()
+                            };
+                        }).ToList();
+                    _frmMain.TeamListCnt[t] = currentPlayer.Teams.Count; //backward compatibility
+
+                    _frmMain.PlrRank[t] = _frmMain.PlrRankALL[t, Conversions.ToInteger(_frmMain.PlrFact[t]), (int)matchFound.MatchMode].ToString(); //backward compatibility
+                    if (_frmMain.PlrRank[t] == "0") _frmMain.PlrRank[t] = "---";
+
+                    _frmMain.PlrWin[t] = _frmMain.PlrRankWin[t, Conversions.ToInteger(_frmMain.PlrFact[t]), (int)matchFound.MatchMode]; //backward compatibility
+                    _frmMain.PlrLoss[t] = _frmMain.PlrRankLoss[t, Conversions.ToInteger(_frmMain.PlrFact[t]), (int)matchFound.MatchMode]; //backward compatibility
+
+
+                }
+
+
+            }
+            catch (Exception)
+            {
+                // R4.41 Added logging and color change.
+                _frmMain.LbError1.Text = "RID error";
+                _frmMain.LbError1.BackColor = Color.FromArgb(255, 255, 0, 0);
+                _frmMain.LstLog.Items.Add(DateAndTime.Now.ToLongTimeString() + " - ERROR RID " +
+                                          Information.Err().Description);
+            }
+
+
+        }
+
+
+        private void GetStatsFromRelicApi(Player player, int plrSlot)
         {
             var rawResp = "";
             try
@@ -398,101 +457,47 @@ namespace MakoCelo
                                           " Web Request sending...");
                 // ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls Or SecurityProtocolType.Tls11 Or SecurityProtocolType.Tls12 'R4.43 Added for Connection issues.
 
-                var a =
-                    "https://coh2-api.reliclink.com/community/leaderboard/GetPersonalStat?title=coh2&profile_ids=[" +
-                    rid + "]";
-                _frmMain.WBrequest1 = (HttpWebRequest) WebRequest.Create(a);
-                _frmMain.LstLog.Items.Add(DateAndTime.Now.ToLongTimeString() + " - Get RID - PLR:" + plrSlot +
-                                          " Getting response...");
-                _frmMain.WBresponse1 = (HttpWebResponse)_frmMain.WBrequest1.GetResponse();
-                _frmMain.LstLog.Items.Add(DateAndTime.Now.ToLongTimeString() + " - Get RID - PLR:" + plrSlot +
-                                          " Getting stream...");
-                _frmMain.WBreader1 = new StreamReader(_frmMain.WBresponse1.GetResponseStream());
-                _frmMain.LstLog.Items.Add(DateAndTime.Now.ToLongTimeString() + " - Get RID - PLR:" + plrSlot +
-                                          " Reading stream...");
-                rawResp = _frmMain.WBreader1.ReadToEnd();
-                _frmMain.WBresponse1.Close();
-                _frmMain.LstLog.Items.Add(DateAndTime.Now.ToLongTimeString() + " - Get RID - PLR:" + plrSlot +
-                                          " Parsing data..." + Strings.Len(rawResp) + " bytes");
+                var response = DownloadRawStats(new List<Player> { player });
 
-                // R4.41 Added to catch bad data.
-                if (Strings.Len(rawResp) < 10)
+                //get Country
+                var currentPlayerData = response.StatGroups.First().Members.First(x => x.ProfileId == player.RelicId);
+                player.StatGroupId = currentPlayerData.PersonalStatGroupId;
+                player.Country = new Country
                 {
-                    _frmMain.LstLog.Items.Add(DateAndTime.Now.ToLongTimeString() + " - ERROR RID - PLR:" + plrSlot +
-                                              " No data returned.");
-                    _frmMain.LbError1.Text = "RID error:" + plrSlot;
-                    _frmMain.LbError1.BackColor = Color.FromArgb(255, 255, 0, 0);
-                    return;
-                }
+                    Code = currentPlayerData.Country,
+                    Name = Country_GetName(currentPlayerData.Country)
+                };
+                _frmMain.PlrCountry[plrSlot] = player.Country.Code; //backward compatibility
+                _frmMain.PlrCountryName[plrSlot] = player.Country.Name; //backward compatibility
 
-                // R4.41 Added to catch bad data.
-                a = "message" + '"' + ":" + '"' + "SUCCESS";
-                var p1 = Strings.InStr(rawResp, a);
-                if (p1 < 1)
+                for (int i = 0; i < _frmMain.RelDataLeaderId.GetUpperBound(0); i++) //backward compatibility
                 {
-                    _frmMain.LstLog.Items.Add(DateAndTime.Now.ToLongTimeString() + " - ERROR RID - PLR:" + plrSlot +
-                                              " Server returned error.");
-                    _frmMain.LbError1.Text = "RID error:" + plrSlot;
-                    _frmMain.LbError1.BackColor = Color.FromArgb(255, 255, 0, 0);
-                    return;
-                }
-
-                // R4.41 Start to PARSE the JSON data in a crude and broken manner.
-                p1 = Strings.InStr(rawResp, "statGroups");
-
-                // R4.45 Get the players COUNTRY.
-                int p2;
-                if (0 < p1)
-                {
-                    a = "profile_id" + '"' + ":" + rid;
-                    p2 = Strings.InStr(p1, rawResp, a);
-                    if (0 < p2)
+                    for (int j = 0; j < _frmMain.RelDataLeaderId.GetUpperBound(1); j++) //backward compatibility
                     {
-                        p2 = Strings.InStr(p2, rawResp, "country");
-                        if (0 < p2)
+                        var leaderBoardPlayerData = response.LeaderBoardStats.FirstOrDefault(x => currentPlayerData.PersonalStatGroupId == x.StatGroupId && x.LeaderBoardId == _frmMain.RelDataLeaderId[i, j]);
+                        if (leaderBoardPlayerData != null)
                         {
-                            _frmMain.PlrCountry[plrSlot] = rawResp.Substring(p2 + 9, 2);
-                            _frmMain.PlrCountryName[plrSlot] = Country_GetName(_frmMain.PlrCountry[plrSlot]);
-                        }
-                        else
-                        {
-                            _frmMain.PlrCountry[plrSlot] = "";
-                            _frmMain.PlrCountryName[plrSlot] = "";
+                            var rank = Convert.ToInt32(leaderBoardPlayerData.Rank) == -1 ? 0 : Convert.ToInt32(leaderBoardPlayerData.Rank); //backward compatibility
+                            var percent = ((double)leaderBoardPlayerData.Wins /
+                                          (leaderBoardPlayerData.Losses + leaderBoardPlayerData.Wins)).ToString("P");
+                            player.PersonalStats.Add(new PersonalStats
+                            {
+                                Faction = (Faction)i,
+                                GameMode = (GameMode)j,
+                                Losses = leaderBoardPlayerData.Losses,
+                                Wins = leaderBoardPlayerData.Wins,
+                                Rank = rank.ToString(),
+                                RankLevel = leaderBoardPlayerData.RankLevel,
+                                TotalPlayers = leaderBoardPlayerData.RankTotal,
+                                WinLossPercentRatio = percent
+                            });
+
+                            _frmMain.PlrRankWin[plrSlot, i, j] = leaderBoardPlayerData.Wins; //backward compatibility
+                            _frmMain.PlrRankLoss[plrSlot, i, j] = leaderBoardPlayerData.Losses; //backward compatibility
+                            _frmMain.PlrRankALL[plrSlot, i, j] = rank; //backward compatibility
+                            _frmMain.PlrRankPerc[plrSlot, i, j] = percent; //backward compatibility
                         }
                     }
-                }
-
-                // R4.45 Get the Leadboard ranks (player card).
-                p2 = Strings.InStr(p1, rawResp, "leaderboard_id");
-                while (0 < p2)
-                {
-                    var s = rawResp.Substring(p2 + 15, 6);
-                    var gMode = (int) Math.Round(Conversion.Val(s));
-                    for (var t1 = 1; t1 <= 5; t1++)
-                    for (var t2 = 1; t2 <= 4; t2++)
-                        if (gMode == Conversions.ToDouble(_frmMain.RelDataLeaderId[t1, t2]))
-                        {
-                            var p3 = Strings.InStr(p2, rawResp, "wins");
-                            _frmMain.PlrRankWin[plrSlot, t1, t2] =
-                                (int) Math.Round(Conversion.Val(rawResp.Substring(p3 + 5, 10)));
-                            p3 = Strings.InStr(p2, rawResp, "losses");
-                            _frmMain.PlrRankLoss[plrSlot, t1, t2] =
-                                (int) Math.Round(Conversion.Val(rawResp.Substring(p3 + 7, 10)));
-                            p3 = Strings.InStr(p2, rawResp, "rank");
-                            _frmMain.PlrRankALL[plrSlot, t1, t2] =
-                                (int) Math.Round(Conversion.Val(rawResp.Substring(p3 + 5, 10)));
-                            if (_frmMain.PlrRankALL[plrSlot, t1, t2] == -1) _frmMain.PlrRankALL[plrSlot, t1, t2] = 0;
-
-                            if (0 < _frmMain.PlrRankWin[plrSlot, t1, t2])
-                                _frmMain.PlrRankPerc[plrSlot, t1, t2] =
-                                    (100 * _frmMain.PlrRankWin[plrSlot, t1, t2] /
-                                     (double) (_frmMain.PlrRankWin[plrSlot, t1, t2] + _frmMain.PlrRankLoss[plrSlot, t1, t2]))
-                                    .ToString("#0");
-                            else
-                                _frmMain.PlrRankPerc[plrSlot, t1, t2] = "";
-                        }
-
-                    p2 = Strings.InStr(p2 + 15, rawResp, "leaderboard_id");
                 }
             }
             catch (Exception)
@@ -505,6 +510,56 @@ namespace MakoCelo
             }
 
             if (!string.IsNullOrEmpty(rawResp)) STAT_GetTeamsFromRID(rawResp, plrSlot);
+        }
+
+        private Response DownloadRawStats(List<Player> players)
+        {
+            using var responseMessage = Task.Run(() => _httpClient.GetAsync(
+                "https://coh2-api.reliclink.com/community/leaderboard/GetPersonalStat?title=coh2&profile_ids=[" +
+                 string.Join(",", players.Select(x => x.RelicId).ToArray()) + "]")).Result; // TODO: make whole app Async :)
+
+            if (responseMessage.IsSuccessStatusCode)
+            {
+                var content = Task.Run(() => responseMessage.Content.ReadAsStreamAsync()).Result;
+
+                _frmMain.LstLog.Items.Add(
+                    $"{DateAndTime.Now.ToLongTimeString()} - Get RID Parsing data...{content.Length} bytes");
+
+                if (content.Length < 10) //not sure if needed after refactor
+                {
+                    _frmMain.LstLog.Items.Add(DateAndTime.Now.ToLongTimeString() + " - ERROR RID No data returned.");
+                }
+                else
+                {
+                    using StreamReader sr = new StreamReader(content);
+                    using JsonReader reader = new JsonTextReader(sr);
+
+                    var deserializeObject = _jsonSerializer.Deserialize<Response>(reader);
+
+                    if (deserializeObject != null && deserializeObject.Result.Message == "SUCCESS")
+                    {
+                        return deserializeObject;
+                    }
+
+                    if (deserializeObject != null)
+                    {
+                        _frmMain.LstLog.Items.Add(
+                            $"{DateAndTime.Now.ToLongTimeString()} - Get RID - Error in Relic API, status code: {deserializeObject.Result.Code}, Message: {deserializeObject.Result.Message} ");
+
+                    }
+                }
+            }
+            else
+            {
+                _frmMain.LstLog.Items.Add(
+                    $"{DateAndTime.Now.ToLongTimeString()} - Get RID -  Error getting response, status code: {responseMessage.StatusCode}, Reason: {responseMessage.ReasonPhrase} ");
+
+            }
+
+            _frmMain.LbError1.Text = "RID error";
+            _frmMain.LbError1.BackColor = Color.FromArgb(255, 255, 0, 0);
+
+            return null;
         }
 
         private void STAT_GetTeamsFromRID(string rawResp, int plRslot) // R4.45 Was  RID As Integer, PLRSlot As Integer)
@@ -548,10 +603,10 @@ namespace MakoCelo
                     _frmMain.LbStatus.Text = "Team: " + cnt;
                     _frmMain.LbStatus.Refresh();
                     s = rawResp.Substring(p1 + 5, 9);
-                    var rankId = (int) Math.Round(Conversion.Val(s));
+                    var rankId = (int)Math.Round(Conversion.Val(s));
                     p1 = Strings.InStr(p1 + 5, rawResp, "type");
                     s = rawResp.Substring(p1 + 5, 9);
-                    var plrCnt = (int) Math.Round(Conversion.Val(s));
+                    var plrCnt = (int)Math.Round(Conversion.Val(s));
 
                     // R4.34 Get the relicID and Name of each player in this team. Team can be 1-4 players.
                     p1 = Strings.InStr(p1 + 5, rawResp, "profile_id");
@@ -645,19 +700,19 @@ namespace MakoCelo
                 {
                     cnt += 1;
                     s = rawResp.Substring(p1 + 13, 12);
-                    var rankId2 = (int) Math.Round(Conversion.Val(s));
+                    var rankId2 = (int)Math.Round(Conversion.Val(s));
                     p1 = Strings.InStr(p1 + 13, rawResp, "leaderboard_id");
                     s = rawResp.Substring(p1 + 15, 12);
-                    var lid = (int) Math.Round(Conversion.Val(s));
+                    var lid = (int)Math.Round(Conversion.Val(s));
                     p1 = Strings.InStr(p1 + 13, rawResp, "wins");
                     s = rawResp.Substring(p1 + 5, 12);
-                    var win = (int) Math.Round(Conversion.Val(s));
+                    var win = (int)Math.Round(Conversion.Val(s));
                     p1 = Strings.InStr(p1 + 5, rawResp, "losses");
                     s = rawResp.Substring(p1 + 7, 12);
-                    var loss = (int) Math.Round(Conversion.Val(s));
+                    var loss = (int)Math.Round(Conversion.Val(s));
                     p1 = Strings.InStr(p1 + 7, rawResp, "rank");
                     s = rawResp.Substring(p1 + 5, 12);
-                    var rank = (int) Math.Round(Conversion.Val(s));
+                    var rank = (int)Math.Round(Conversion.Val(s));
 
                     // R4.33 Try to find a rank for this team. 
                     for (int t = 1, loopTo = _frmMain.TeamListCnt[plRslot]; t <= loopTo; t++)
@@ -724,61 +779,61 @@ namespace MakoCelo
                 // *********************************************************
                 int cnt;
                 for (var t = 1; t <= 8; t += 2)
-                for (int t2 = 1, loopTo = _frmMain.TeamListCnt[t]; t2 <= loopTo; t2++)
-                {
-                    cnt = 0;
-                    if ( "" != _frmMain.TeamList[t, t2].RID1)
+                    for (int t2 = 1, loopTo = _frmMain.TeamListCnt[t]; t2 <= loopTo; t2++)
                     {
-                        if (_frmMain.PlrRID[1] == _frmMain.TeamList[t, t2].RID1) cnt += 1;
-
-                        if (_frmMain.PlrRID[3] == _frmMain.TeamList[t, t2].RID1) cnt += 1;
-
-                        if (_frmMain.PlrRID[5] == _frmMain.TeamList[t, t2].RID1) cnt += 1;
-
-                        if (_frmMain.PlrRID[7] == _frmMain.TeamList[t, t2].RID1) cnt += 1;
-                    }
-
-                    if ("" != _frmMain.TeamList[t, t2].RID2)
-                    {
-                        if (_frmMain.PlrRID[1] == _frmMain.TeamList[t, t2].RID2) cnt += 1;
-
-                        if (_frmMain.PlrRID[3] == _frmMain.TeamList[t, t2].RID2) cnt += 1;
-
-                        if (_frmMain.PlrRID[5] == _frmMain.TeamList[t, t2].RID2) cnt += 1;
-
-                        if (_frmMain.PlrRID[7] == _frmMain.TeamList[t, t2].RID2) cnt += 1;
-                    }
-
-                    if ("" != _frmMain.TeamList[t, t2].RID3)
-                    {
-                        if (_frmMain.PlrRID[1] == _frmMain.TeamList[t, t2].RID3) cnt += 1;
-
-                        if (_frmMain.PlrRID[3] == _frmMain.TeamList[t, t2].RID3) cnt += 1;
-
-                        if (_frmMain.PlrRID[5] == _frmMain.TeamList[t, t2].RID3) cnt += 1;
-
-                        if (_frmMain.PlrRID[7] == _frmMain.TeamList[t, t2].RID3) cnt += 1;
-                    }
-
-                    if ("" != _frmMain.TeamList[t, t2].RID4)
-                    {
-                        if (_frmMain.PlrRID[1] == _frmMain.TeamList[t, t2].RID4) cnt += 1;
-
-                        if (_frmMain.PlrRID[3] == _frmMain.TeamList[t, t2].RID4) cnt += 1;
-
-                        if (_frmMain.PlrRID[5] == _frmMain.TeamList[t, t2].RID4) cnt += 1;
-
-                        if (_frmMain.PlrRID[7] == _frmMain.TeamList[t, t2].RID4) cnt += 1;
-                    }
-
-                    if (1 < cnt)
-                        // we found a team.
-                        if ((mCnt[t] <= cnt) & (_frmMain.TeamList[t, t2].PlrCnt <= cnt))
+                        cnt = 0;
+                        if ("" != _frmMain.TeamList[t, t2].RID1)
                         {
-                            mCnt[t] = cnt;
-                            mTeam[t] = t2;
+                            if (_frmMain.PlrRID[1] == _frmMain.TeamList[t, t2].RID1) cnt += 1;
+
+                            if (_frmMain.PlrRID[3] == _frmMain.TeamList[t, t2].RID1) cnt += 1;
+
+                            if (_frmMain.PlrRID[5] == _frmMain.TeamList[t, t2].RID1) cnt += 1;
+
+                            if (_frmMain.PlrRID[7] == _frmMain.TeamList[t, t2].RID1) cnt += 1;
                         }
-                }
+
+                        if ("" != _frmMain.TeamList[t, t2].RID2)
+                        {
+                            if (_frmMain.PlrRID[1] == _frmMain.TeamList[t, t2].RID2) cnt += 1;
+
+                            if (_frmMain.PlrRID[3] == _frmMain.TeamList[t, t2].RID2) cnt += 1;
+
+                            if (_frmMain.PlrRID[5] == _frmMain.TeamList[t, t2].RID2) cnt += 1;
+
+                            if (_frmMain.PlrRID[7] == _frmMain.TeamList[t, t2].RID2) cnt += 1;
+                        }
+
+                        if ("" != _frmMain.TeamList[t, t2].RID3)
+                        {
+                            if (_frmMain.PlrRID[1] == _frmMain.TeamList[t, t2].RID3) cnt += 1;
+
+                            if (_frmMain.PlrRID[3] == _frmMain.TeamList[t, t2].RID3) cnt += 1;
+
+                            if (_frmMain.PlrRID[5] == _frmMain.TeamList[t, t2].RID3) cnt += 1;
+
+                            if (_frmMain.PlrRID[7] == _frmMain.TeamList[t, t2].RID3) cnt += 1;
+                        }
+
+                        if ("" != _frmMain.TeamList[t, t2].RID4)
+                        {
+                            if (_frmMain.PlrRID[1] == _frmMain.TeamList[t, t2].RID4) cnt += 1;
+
+                            if (_frmMain.PlrRID[3] == _frmMain.TeamList[t, t2].RID4) cnt += 1;
+
+                            if (_frmMain.PlrRID[5] == _frmMain.TeamList[t, t2].RID4) cnt += 1;
+
+                            if (_frmMain.PlrRID[7] == _frmMain.TeamList[t, t2].RID4) cnt += 1;
+                        }
+
+                        if (1 < cnt)
+                            // we found a team.
+                            if ((mCnt[t] <= cnt) & (_frmMain.TeamList[t, t2].PlrCnt <= cnt))
+                            {
+                                mCnt[t] = cnt;
+                                mTeam[t] = t2;
+                            }
+                    }
 
                 // R4.34 Decide if the team is Axis(20,22,24) or Allies(21,23,25) by faction.
                 long tempRank;
@@ -796,22 +851,22 @@ namespace MakoCelo
                             switch (_frmMain.TeamList[t, mTeam[t]].PlrCnt)
                             {
                                 case 2:
-                                {
-                                    tempMax = (long) Math.Round(Conversion.Val(_frmMain.LVLS[7, 2])); // R4.41 Bug fix.
-                                    break;
-                                }
+                                    {
+                                        tempMax = (long)Math.Round(Conversion.Val(_frmMain.LVLS[7, 2])); // R4.41 Bug fix.
+                                        break;
+                                    }
 
                                 case 3:
-                                {
-                                    tempMax = (long) Math.Round(Conversion.Val(_frmMain.LVLS[7, 3])); // R4.41 Bug fix.
-                                    break;
-                                }
+                                    {
+                                        tempMax = (long)Math.Round(Conversion.Val(_frmMain.LVLS[7, 3])); // R4.41 Bug fix.
+                                        break;
+                                    }
 
                                 case 4:
-                                {
-                                    tempMax = (long) Math.Round(Conversion.Val(_frmMain.LVLS[7, 4])); // R4.41 Bug fix.
-                                    break;
-                                }
+                                    {
+                                        tempMax = (long)Math.Round(Conversion.Val(_frmMain.LVLS[7, 4])); // R4.41 Bug fix.
+                                        break;
+                                    }
                             }
                         }
                         else
@@ -823,28 +878,28 @@ namespace MakoCelo
                             switch (_frmMain.TeamList[t, mTeam[t]].PlrCnt)
                             {
                                 case 2:
-                                {
-                                    tempMax = (long) Math.Round(Conversion.Val(_frmMain.LVLS[6, 2])); // R4.41 Bug fix.
-                                    break;
-                                }
+                                    {
+                                        tempMax = (long)Math.Round(Conversion.Val(_frmMain.LVLS[6, 2])); // R4.41 Bug fix.
+                                        break;
+                                    }
 
                                 case 3:
-                                {
-                                    tempMax = (long) Math.Round(Conversion.Val(_frmMain.LVLS[6, 3])); // R4.41 Bug fix.
-                                    break;
-                                }
+                                    {
+                                        tempMax = (long)Math.Round(Conversion.Val(_frmMain.LVLS[6, 3])); // R4.41 Bug fix.
+                                        break;
+                                    }
 
                                 case 4:
-                                {
-                                    tempMax = (long) Math.Round(Conversion.Val(_frmMain.LVLS[6, 4])); // R4.41 Bug fix.
-                                    break;
-                                }
+                                    {
+                                        tempMax = (long)Math.Round(Conversion.Val(_frmMain.LVLS[6, 4])); // R4.41 Bug fix.
+                                        break;
+                                    }
                             }
                         }
 
                         _frmMain.PlrTeam[t] = mTeam[t];
-                        _frmMain.PlrTWin[t] = (int) tempWin; // R4.35 Added TEAM Win/Loss.
-                        _frmMain.PlrTLoss[t] = (int) tempLoss;
+                        _frmMain.PlrTWin[t] = (int)tempWin; // R4.35 Added TEAM Win/Loss.
+                        _frmMain.PlrTLoss[t] = (int)tempLoss;
                         _frmMain.PlrRank[t] = tempRank + ".";
                         if ((tempMax < 1L) | (tempRank < 1L))
                         {
@@ -856,8 +911,8 @@ namespace MakoCelo
                         else
                         {
                             _frmMain.PlrELO[t] = (100d * (Conversion.Val(_frmMain.PlrRank[t]) / tempMax)).ToString("##.0") + "%";
-                            _frmMain.PlrLVL[t] = "L-" + LOG_CalcLevel((int) Math.Round(Conversion.Val(_frmMain.PlrRank[t])),
-                                (int) tempMax);
+                            _frmMain.PlrLVL[t] = "L-" + LOG_CalcLevel((int)Math.Round(Conversion.Val(_frmMain.PlrRank[t])),
+                                (int)tempMax);
                         }
                     }
 
@@ -865,61 +920,61 @@ namespace MakoCelo
                 // R4.34 Loop thru TEAM 2 looking for possible teams.
                 // *********************************************************
                 for (var t = 2; t <= 8; t += 2)
-                for (int t2 = 1, loopTo1 = _frmMain.TeamListCnt[t]; t2 <= loopTo1; t2++)
-                {
-                    cnt = 0;
-                    if ("" != _frmMain.TeamList[t, t2].RID1)
+                    for (int t2 = 1, loopTo1 = _frmMain.TeamListCnt[t]; t2 <= loopTo1; t2++)
                     {
-                        if (_frmMain.PlrRID[2] == _frmMain.TeamList[t, t2].RID1) cnt += 1;
-
-                        if (_frmMain.PlrRID[4] == _frmMain.TeamList[t, t2].RID1) cnt += 1;
-
-                        if (_frmMain.PlrRID[6] == _frmMain.TeamList[t, t2].RID1) cnt += 1;
-
-                        if (_frmMain.PlrRID[8] == _frmMain.TeamList[t, t2].RID1) cnt += 1;
-                    }
-
-                    if ("" != _frmMain.TeamList[t, t2].RID2)
-                    {
-                        if (_frmMain.PlrRID[2] == _frmMain.TeamList[t, t2].RID2) cnt += 1;
-
-                        if (_frmMain.PlrRID[4] == _frmMain.TeamList[t, t2].RID2) cnt += 1;
-
-                        if (_frmMain.PlrRID[6] == _frmMain.TeamList[t, t2].RID2) cnt += 1;
-
-                        if (_frmMain.PlrRID[8] == _frmMain.TeamList[t, t2].RID2) cnt += 1;
-                    }
-
-                    if ("" != _frmMain.TeamList[t, t2].RID3)
-                    {
-                        if (_frmMain.PlrRID[2] == _frmMain.TeamList[t, t2].RID3) cnt += 1;
-
-                        if (_frmMain.PlrRID[4] == _frmMain.TeamList[t, t2].RID3) cnt += 1;
-
-                        if (_frmMain.PlrRID[6] == _frmMain.TeamList[t, t2].RID3) cnt += 1;
-
-                        if (_frmMain.PlrRID[8] == _frmMain.TeamList[t, t2].RID3) cnt += 1;
-                    }
-
-                    if ("" != _frmMain.TeamList[t, t2].RID4)
-                    {
-                        if (_frmMain.PlrRID[2] == _frmMain.TeamList[t, t2].RID4) cnt += 1;
-
-                        if (_frmMain.PlrRID[4] == _frmMain.TeamList[t, t2].RID4) cnt += 1;
-
-                        if (_frmMain.PlrRID[6] == _frmMain.TeamList[t, t2].RID4) cnt += 1;
-
-                        if (_frmMain.PlrRID[8] == _frmMain.TeamList[t, t2].RID4) cnt += 1;
-                    }
-
-                    if (1 < cnt)
-                        // R4.34 We found a team.
-                        if ((mCnt[t] <= cnt) & (_frmMain.TeamList[t, t2].PlrCnt <= cnt))
+                        cnt = 0;
+                        if ("" != _frmMain.TeamList[t, t2].RID1)
                         {
-                            mCnt[t] = cnt;
-                            mTeam[t] = t2;
+                            if (_frmMain.PlrRID[2] == _frmMain.TeamList[t, t2].RID1) cnt += 1;
+
+                            if (_frmMain.PlrRID[4] == _frmMain.TeamList[t, t2].RID1) cnt += 1;
+
+                            if (_frmMain.PlrRID[6] == _frmMain.TeamList[t, t2].RID1) cnt += 1;
+
+                            if (_frmMain.PlrRID[8] == _frmMain.TeamList[t, t2].RID1) cnt += 1;
                         }
-                }
+
+                        if ("" != _frmMain.TeamList[t, t2].RID2)
+                        {
+                            if (_frmMain.PlrRID[2] == _frmMain.TeamList[t, t2].RID2) cnt += 1;
+
+                            if (_frmMain.PlrRID[4] == _frmMain.TeamList[t, t2].RID2) cnt += 1;
+
+                            if (_frmMain.PlrRID[6] == _frmMain.TeamList[t, t2].RID2) cnt += 1;
+
+                            if (_frmMain.PlrRID[8] == _frmMain.TeamList[t, t2].RID2) cnt += 1;
+                        }
+
+                        if ("" != _frmMain.TeamList[t, t2].RID3)
+                        {
+                            if (_frmMain.PlrRID[2] == _frmMain.TeamList[t, t2].RID3) cnt += 1;
+
+                            if (_frmMain.PlrRID[4] == _frmMain.TeamList[t, t2].RID3) cnt += 1;
+
+                            if (_frmMain.PlrRID[6] == _frmMain.TeamList[t, t2].RID3) cnt += 1;
+
+                            if (_frmMain.PlrRID[8] == _frmMain.TeamList[t, t2].RID3) cnt += 1;
+                        }
+
+                        if ("" != _frmMain.TeamList[t, t2].RID4)
+                        {
+                            if (_frmMain.PlrRID[2] == _frmMain.TeamList[t, t2].RID4) cnt += 1;
+
+                            if (_frmMain.PlrRID[4] == _frmMain.TeamList[t, t2].RID4) cnt += 1;
+
+                            if (_frmMain.PlrRID[6] == _frmMain.TeamList[t, t2].RID4) cnt += 1;
+
+                            if (_frmMain.PlrRID[8] == _frmMain.TeamList[t, t2].RID4) cnt += 1;
+                        }
+
+                        if (1 < cnt)
+                            // R4.34 We found a team.
+                            if ((mCnt[t] <= cnt) & (_frmMain.TeamList[t, t2].PlrCnt <= cnt))
+                            {
+                                mCnt[t] = cnt;
+                                mTeam[t] = t2;
+                            }
+                    }
 
                 // R4.34 Decide if the team is Axis(20,22,24) or Allies(21,23,25) by faction.
                 for (var t = 2; t <= 8; t += 2)
@@ -935,22 +990,22 @@ namespace MakoCelo
                             switch (_frmMain.TeamList[t, mTeam[t]].PlrCnt)
                             {
                                 case 2:
-                                {
-                                    tempMax = (long) Math.Round(Conversion.Val(_frmMain.LVLS[7, 2])); // R4.41 Bug fix.
-                                    break;
-                                }
+                                    {
+                                        tempMax = (long)Math.Round(Conversion.Val(_frmMain.LVLS[7, 2])); // R4.41 Bug fix.
+                                        break;
+                                    }
 
                                 case 3:
-                                {
-                                    tempMax = (long) Math.Round(Conversion.Val(_frmMain.LVLS[7, 3])); // R4.41 Bug fix.
-                                    break;
-                                }
+                                    {
+                                        tempMax = (long)Math.Round(Conversion.Val(_frmMain.LVLS[7, 3])); // R4.41 Bug fix.
+                                        break;
+                                    }
 
                                 case 4:
-                                {
-                                    tempMax = (long) Math.Round(Conversion.Val(_frmMain.LVLS[7, 4])); // R4.41 Bug fix.
-                                    break;
-                                }
+                                    {
+                                        tempMax = (long)Math.Round(Conversion.Val(_frmMain.LVLS[7, 4])); // R4.41 Bug fix.
+                                        break;
+                                    }
                             }
                         }
                         else
@@ -961,28 +1016,28 @@ namespace MakoCelo
                             switch (_frmMain.TeamList[t, mTeam[t]].PlrCnt)
                             {
                                 case 2:
-                                {
-                                    tempMax = (long) Math.Round(Conversion.Val(_frmMain.LVLS[6, 2])); // R4.41 Bug fix.
-                                    break;
-                                }
+                                    {
+                                        tempMax = (long)Math.Round(Conversion.Val(_frmMain.LVLS[6, 2])); // R4.41 Bug fix.
+                                        break;
+                                    }
 
                                 case 3:
-                                {
-                                    tempMax = (long) Math.Round(Conversion.Val(_frmMain.LVLS[6, 3])); // R4.41 Bug fix.
-                                    break;
-                                }
+                                    {
+                                        tempMax = (long)Math.Round(Conversion.Val(_frmMain.LVLS[6, 3])); // R4.41 Bug fix.
+                                        break;
+                                    }
 
                                 case 4:
-                                {
-                                    tempMax = (long) Math.Round(Conversion.Val(_frmMain.LVLS[6, 4])); // R4.41 Bug fix.
-                                    break;
-                                }
+                                    {
+                                        tempMax = (long)Math.Round(Conversion.Val(_frmMain.LVLS[6, 4])); // R4.41 Bug fix.
+                                        break;
+                                    }
                             }
                         }
 
                         _frmMain.PlrTeam[t] = mTeam[t];
-                        _frmMain.PlrTWin[t] = (int) tempWin; // R4.35 Added TEAM Win/Loss.
-                        _frmMain.PlrTLoss[t] = (int) tempLoss;
+                        _frmMain.PlrTWin[t] = (int)tempWin; // R4.35 Added TEAM Win/Loss.
+                        _frmMain.PlrTLoss[t] = (int)tempLoss;
                         _frmMain.PlrRank[t] = tempRank + ".";
                         if ((tempMax < 1L) | (tempRank < 1L))
                         {
@@ -994,8 +1049,8 @@ namespace MakoCelo
                         else
                         {
                             _frmMain.PlrELO[t] = (100d * (Conversion.Val(_frmMain.PlrRank[t]) / tempMax)).ToString("##.0") + "%";
-                            _frmMain.PlrLVL[t] = "L-" + LOG_CalcLevel((int) Math.Round(Conversion.Val(_frmMain.PlrRank[t])),
-                                (int) tempMax);
+                            _frmMain.PlrLVL[t] = "L-" + LOG_CalcLevel((int)Math.Round(Conversion.Val(_frmMain.PlrRank[t])),
+                                (int)tempMax);
                         }
                     }
                 }
@@ -1072,34 +1127,34 @@ namespace MakoCelo
                     switch (_frmMain.PlrFact[t] ?? "")
                     {
                         case "01":
-                        {
-                            a += "O S T,";
-                            break;
-                        }
+                            {
+                                a += "O S T,";
+                                break;
+                            }
 
                         case "02":
-                        {
-                            a += "SOVIET,";
-                            break;
-                        }
+                            {
+                                a += "SOVIET,";
+                                break;
+                            }
 
                         case "03":
-                        {
-                            a += "O K W,";
-                            break;
-                        }
+                            {
+                                a += "O K W,";
+                                break;
+                            }
 
                         case "04":
-                        {
-                            a += "U S F,";
-                            break;
-                        }
+                            {
+                                a += "U S F,";
+                                break;
+                            }
 
                         case "05":
-                        {
-                            a += "BRIT,";
-                            break;
-                        }
+                            {
+                                a += "BRIT,";
+                                break;
+                            }
                     }
 
                     a = _frmMain.PlrRank[t] == "---" ? a + "No rank" + "," : a + "Rank " + _frmMain.PlrRank[t] + ",";
@@ -1113,57 +1168,40 @@ namespace MakoCelo
                         switch (_frmMain.PlrFact[t] ?? "")
                         {
                             case "01":
-                            {
-                                a += "O S T,";
-                                break;
-                            }
+                                {
+                                    a += "O S T,";
+                                    break;
+                                }
 
                             case "02":
-                            {
-                                a += "SOVIET,";
-                                break;
-                            }
+                                {
+                                    a += "SOVIET,";
+                                    break;
+                                }
 
                             case "03":
-                            {
-                                a += "O K W,";
-                                break;
-                            }
+                                {
+                                    a += "O K W,";
+                                    break;
+                                }
 
                             case "04":
-                            {
-                                a += "U S F,";
-                                break;
-                            }
+                                {
+                                    a += "U S F,";
+                                    break;
+                                }
 
                             case "05":
-                            {
-                                a += "BRIT,";
-                                break;
-                            }
+                                {
+                                    a += "BRIT,";
+                                    break;
+                                }
                         }
 
                         a = _frmMain.PlrRank[t] == "---" ? a + "No rank" + "," : a + "Rank " + _frmMain.PlrRank[t] + ",";
                     }
 
             if (!string.IsNullOrEmpty(a)) _frmMain.SpeechSynth1.SpeakAsync(a);
-        }
-
-        private long LOG_HexToLong(string a)
-        {
-            long l;
-
-            // R3.20 Convert a Hex String to a Long. If ERROR, set to ZERO.
-            try
-            {
-                l = Convert.ToInt64(a, 16);
-            }
-            catch (Exception)
-            {
-                l = 0L;
-            }
-
-            return l;
         }
 
         private void STATS_StoreLast()
@@ -1194,13 +1232,13 @@ namespace MakoCelo
                     _frmMain.PlrCountryLast[t] = _frmMain.PlrCountry_Buffer[t];
                     _frmMain.PlrCountryNameLast[t] = _frmMain.PlrCountryName_Buffer[t];
                     for (var t2 = 1; t2 <= 5; t2++)
-                    for (var t3 = 1; t3 <= 4; t3++)
-                    {
-                        _frmMain.PlrRankAllLast[t, t2, t3] = _frmMain.PlrRankALL_Buffer[t, t2, t3];
-                        _frmMain.PlrRankWinLast[t, t2, t3] = _frmMain.PlrRankWin_Buffer[t, t2, t3];
-                        _frmMain.PlrRankLossLast[t, t2, t3] = _frmMain.PlrRankLoss_Buffer[t, t2, t3];
-                        _frmMain.PlrRankPercLast[t, t2, t3] = _frmMain.PlrRankPerc_Buffer[t, t2, t3];
-                    }
+                        for (var t3 = 1; t3 <= 4; t3++)
+                        {
+                            _frmMain.PlrRankAllLast[t, t2, t3] = _frmMain.PlrRankALL_Buffer[t, t2, t3];
+                            _frmMain.PlrRankWinLast[t, t2, t3] = _frmMain.PlrRankWin_Buffer[t, t2, t3];
+                            _frmMain.PlrRankLossLast[t, t2, t3] = _frmMain.PlrRankLoss_Buffer[t, t2, t3];
+                            _frmMain.PlrRankPercLast[t, t2, t3] = _frmMain.PlrRankPerc_Buffer[t, t2, t3];
+                        }
 
                     _frmMain.TeamListCntLast[t] = _frmMain.TeamListCnt_Buffer[t];
                     for (int t2 = 1, loopTo = _frmMain.TeamListLast.GetUpperBound(1); t2 <= loopTo; t2++) _frmMain.TeamListLast[t, t2] = _frmMain.TeamList_Buffer[t, t2];

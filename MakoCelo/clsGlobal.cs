@@ -117,5 +117,14 @@ namespace MakoCelo
             Emboss = 2,
             LabelBlur = 3
         }
+
+        
+    }
+
+    public enum RankDisplayMode
+    {
+        Rank = 0,
+        Elo = 1,
+        Lvl = 2 //Precentage
     }
 }

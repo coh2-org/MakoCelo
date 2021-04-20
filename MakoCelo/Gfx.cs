@@ -785,11 +785,11 @@ namespace MakoCelo
                 }
                 else
                 {
-                    if (_frmMain.FLAG_EloMode == 0) tString = _frmMain.PlrRank[T];
+                    if (_frmMain.RankDisplayMode == RankDisplayMode.Rank) tString = _frmMain.PlrRank[T];
 
-                    if (_frmMain.FLAG_EloMode == 1) tString = _frmMain.PlrELO[T];
+                    if (_frmMain.RankDisplayMode == RankDisplayMode.Elo) tString = _frmMain.PlrELO[T];
 
-                    if (_frmMain.FLAG_EloMode == 2) tString = _frmMain.PlrLVL[T];
+                    if (_frmMain.RankDisplayMode == RankDisplayMode.Lvl) tString = _frmMain.PlrLVL[T];
                 }
 
                 // R3.00 Create a clipping area so names do not draw past the rectangle.
@@ -1058,21 +1058,21 @@ namespace MakoCelo
             }
             else
             {
-                if (_frmMain.MainBuffer1_Valid & (_frmMain.FLAG_EloMode == 0))
+                if (_frmMain.MainBuffer1_Valid & (_frmMain.RankDisplayMode == RankDisplayMode.Rank))
                 {
                     _frmMain.Main_Gfx.DrawImage(_frmMain.MainBuffer1_BM, 0, 0);
                     _frmMain.pbStats.Image = _frmMain.Main_BM;
                     return;
                 }
 
-                if (_frmMain.MainBuffer2_Valid & (_frmMain.FLAG_EloMode == 1))
+                if (_frmMain.MainBuffer2_Valid & (_frmMain.RankDisplayMode == RankDisplayMode.Elo))
                 {
                     _frmMain.Main_Gfx.DrawImage(_frmMain.MainBuffer2_BM, 0, 0);
                     _frmMain.pbStats.Image = _frmMain.Main_BM;
                     return;
                 }
 
-                if (_frmMain.MainBuffer3_Valid & (_frmMain.FLAG_EloMode == 2))
+                if (_frmMain.MainBuffer3_Valid & (_frmMain.RankDisplayMode == RankDisplayMode.Lvl))
                 {
                     _frmMain.Main_Gfx.DrawImage(_frmMain.MainBuffer3_BM, 0, 0);
                     _frmMain.pbStats.Image = _frmMain.Main_BM;
@@ -1103,7 +1103,7 @@ namespace MakoCelo
             }
             else
             {
-                if ((_frmMain.FLAG_EloMode == 0) & (_frmMain.MainBuffer1_Valid == false))
+                if ((_frmMain.RankDisplayMode == RankDisplayMode.Rank) & (_frmMain.MainBuffer1_Valid == false))
                 {
                     _frmMain.MainBuffer1_BM = new Bitmap(_frmMain.pbStats.Width, _frmMain.pbStats.Height);
                     _frmMain.MainBuffer1_Gfx = Graphics.FromImage(_frmMain.MainBuffer1_BM);
@@ -1111,7 +1111,7 @@ namespace MakoCelo
                     _frmMain.MainBuffer1_Valid = true;
                 }
 
-                if ((_frmMain.FLAG_EloMode == 1) & (_frmMain.MainBuffer2_Valid == false))
+                if ((_frmMain.RankDisplayMode == RankDisplayMode.Elo) & (_frmMain.MainBuffer2_Valid == false))
                 {
                     _frmMain.MainBuffer2_BM = new Bitmap(_frmMain.pbStats.Width, _frmMain.pbStats.Height);
                     _frmMain.MainBuffer2_Gfx = Graphics.FromImage(_frmMain.MainBuffer2_BM);
@@ -1119,7 +1119,7 @@ namespace MakoCelo
                     _frmMain.MainBuffer2_Valid = true;
                 }
 
-                if ((_frmMain.FLAG_EloMode == 2) & (_frmMain.MainBuffer3_Valid == false))
+                if ((_frmMain.RankDisplayMode == RankDisplayMode.Lvl) & (_frmMain.MainBuffer3_Valid == false))
                 {
                     _frmMain.MainBuffer3_BM = new Bitmap(_frmMain.pbStats.Width, _frmMain.pbStats.Height);
                     _frmMain.MainBuffer3_Gfx = Graphics.FromImage(_frmMain.MainBuffer3_BM);
@@ -1352,11 +1352,11 @@ namespace MakoCelo
                 }
                 else
                 {
-                    if (_frmMain.FLAG_EloMode == 0) tString = _frmMain.PlrRank[T];
+                    if (_frmMain.RankDisplayMode == RankDisplayMode.Rank) tString = _frmMain.PlrRank[T];
 
-                    if (_frmMain.FLAG_EloMode == 1) tString = _frmMain.PlrELO[T];
+                    if (_frmMain.RankDisplayMode == RankDisplayMode.Elo) tString = _frmMain.PlrELO[T];
 
-                    if (_frmMain.FLAG_EloMode == 2) tString = _frmMain.PlrLVL[T];
+                    if (_frmMain.RankDisplayMode == RankDisplayMode.Lvl) tString = _frmMain.PlrLVL[T];
                 }
 
                 // R3.00 Create a clipping area so names do not draw past the rectangle.
@@ -1718,11 +1718,11 @@ namespace MakoCelo
                 }
                 else
                 {
-                    if (_frmMain.FLAG_EloMode == 0) tString = _frmMain.PlrRank[T];
+                    if (_frmMain.RankDisplayMode == RankDisplayMode.Rank) tString = _frmMain.PlrRank[T];
 
-                    if (_frmMain.FLAG_EloMode == 1) tString = _frmMain.PlrELO[T];
+                    if (_frmMain.RankDisplayMode == RankDisplayMode.Elo) tString = _frmMain.PlrELO[T];
 
-                    if (_frmMain.FLAG_EloMode == 2) tString = _frmMain.PlrLVL[T];
+                    if (_frmMain.RankDisplayMode == RankDisplayMode.Lvl) tString = _frmMain.PlrLVL[T];
                 }
 
                 // R3.00 Create a clipping area so names do not draw past the rectangle/label.
