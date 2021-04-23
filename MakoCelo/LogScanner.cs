@@ -192,103 +192,37 @@ namespace MakoCelo
                 OnMatchFound(EventArgs.Empty);
 
                 GetGroupedStatsFromRelicApi(matchFound);
-
-                // R4.30 Get player ranks from the RELIC API.
-                //for (var t = 1; t <= matchFound.Players.Count; t++)
-                //{
-                //    _frmMain.lbStatus.Text = "Web Player: " + t; //do we really need this status update ?
-                //    Application.DoEvents();
-                //    GetStatsFromRelicApi(matchFound.Players[t - 1], t);
-                //    _frmMain.PlrRank[t] = _frmMain.PlrRankALL[t, Conversions.ToInteger(_frmMain.PlrFact[t]), (int)matchFound.MatchMode].ToString();
-                //    if (_frmMain.PlrRank[t] == "0") _frmMain.PlrRank[t] = "---";
-
-                //    _frmMain.PlrWin[t] = _frmMain.PlrRankWin[t, Conversions.ToInteger(_frmMain.PlrFact[t]), (int)matchFound.MatchMode];
-                //    _frmMain.PlrLoss[t] = _frmMain.PlrRankLoss[t, Conversions.ToInteger(_frmMain.PlrFact[t]), (int)matchFound.MatchMode];
-                //}
-
+                
                 _frmMain.lstLog.Items.Add(DateAndTime.Now.ToLongTimeString() + " - Get RID - Complete.");
-                for (var t = 1; t <= 8; t++)
-                {
-                    #region Inaccurrate
-                    //Probably there is no better way to detect premade teams 
-
-                    // R4.30 See if any players are a premade team.
-                    var tCnt = 0;
-                    if (t % 2 == 1)
-                    {
-                        for (var t2 = 1; t2 <= 7; t2 += 2)
-                            if ((_frmMain.PlrRank[t] ?? "") == (_frmMain.PlrRank[t2] ?? ""))
-                                tCnt += 1;
-                    }
-                    else
-                    {
-                        for (var t2 = 2; t2 <= 8; t2 += 2)
-                            if ((_frmMain.PlrRank[t] ?? "") == (_frmMain.PlrRank[t2] ?? ""))
-                                tCnt += 1;
-                    }
-
-
-                    #endregion
-                    // R4.30 Update the MAX player counts if on a premade team.
-                    _frmMain.PlrGLVL[t] =
-                        (int)Math.Round(Conversion.Val(_frmMain.LVLS[(int)Math.Round(Conversion.Val(_frmMain.PlrFact[t])), (int)matchFound.MatchMode]));
-                    if (tCnt == 2) // R4.30 AT 2v2
-                    {
-                        if ((_frmMain.PlrFact[t] == "01") | (_frmMain.PlrFact[t] == "03"))
-                            _frmMain.PlrGLVL[t] = (int)Math.Round(Conversion.Val(_frmMain.LVLS[7, 2]));
-                        else
-                            _frmMain.PlrGLVL[t] = (int)Math.Round(Conversion.Val(_frmMain.LVLS[6, 2]));
-                    }
-
-                    if (tCnt == 3) // R4.30 AT 3v3
-                    {
-                        if ((_frmMain.PlrFact[t] == "01") | (_frmMain.PlrFact[t] == "03"))
-                            _frmMain.PlrGLVL[t] = (int)Math.Round(Conversion.Val(_frmMain.LVLS[7, 3]));
-                        else
-                            _frmMain.PlrGLVL[t] = (int)Math.Round(Conversion.Val(_frmMain.LVLS[6, 3]));
-                    }
-
-                    if (tCnt == 4) // R4.30 AT 4v4
-                    {
-                        if ((_frmMain.PlrFact[t] == "01") | (_frmMain.PlrFact[t] == "03"))
-                            _frmMain.PlrGLVL[t] = (int)Math.Round(Conversion.Val(_frmMain.LVLS[7, 4]));
-                        else
-                            _frmMain.PlrGLVL[t] = (int)Math.Round(Conversion.Val(_frmMain.LVLS[6, 4]));
-                    }
-
-                    // R4.30 Calc ELO % and LEVEL values.
-                    if (string.IsNullOrEmpty(_frmMain.PlrRank[t])) _frmMain.PlrRank[t] = "---";
-
-                    if (string.IsNullOrEmpty(_frmMain.PlrName[t]))
-                    {
-                        _frmMain.PlrRank[t] = "";
-                        _frmMain.PlrELO[t] = "";
-                        _frmMain.PlrLVL[t] = "";
-                    }
-                    // R4.30 We have a valid player so calc ELO % and approximate LEVEL value.
-                    else if (0d < Conversion.Val(_frmMain.LVLS[Conversions.ToInteger(_frmMain.PlrFact[t]), (int)matchFound.MatchMode]))
-                    {
-                        if (_frmMain.PlrRank[t] == "---")
-                        {
-                            _frmMain.PlrELO[t] = "---";
-                            _frmMain.PlrLVL[t] = "---";
-                        }
-                        else
-                        {
-                            _frmMain.PlrELO[t] = (100d * (Conversion.Val(_frmMain.PlrRank[t]) / _frmMain.PlrGLVL[t])).ToString("##.0") + "%";
-                            _frmMain.PlrLVL[t] = "L-" + LOG_CalcLevel((int)Math.Round(Conversion.Val(_frmMain.PlrRank[t])), _frmMain.PlrGLVL[t]);
-                        }
-                    }
-                    else
-                    {
-                        _frmMain.PlrELO[t] = "";
-                        _frmMain.PlrLVL[t] = "";
-                    }
-                }
-
+                
                 // R4.34 See if we should search the net for team ranks.
                 if (_frmMain.chkGetTeams.Checked)
                 {
+                    var allTeams = matchFound.AlliesPlayers.SelectMany(x => x.Teams).Where(x => x.Players.Count <= (int)matchFound.GameMode);
+
+                    var teamGrouping = allTeams.GroupBy(x => x.Id).Where(x => x.Count() == x.First().Players.Count).OrderByDescending(y => y.Count()).FirstOrDefault();
+
+                    if (teamGrouping != null)
+                    {
+                        var team = teamGrouping.First();
+                        foreach (var matchFoundAlliesPlayer in matchFound.AlliesPlayers)
+                        {
+                            if ( team.Players.Any(x => x.RelicId == matchFoundAlliesPlayer.RelicId))
+                            {
+                                matchFoundAlliesPlayer.CurrentTeam = team;
+                                
+                            }
+                            
+                        }
+
+                    }
+
+                    
+
+                    var allaTeams = matchFound.AxisPlayers.SelectMany(x => x.Teams).Where(x => x.Players.Count <= (int)matchFound.GameMode);
+
+                    var sorteda = allaTeams.GroupBy(x => x.Id).Where(x => x.Count() == x.First().Players.Count).OrderByDescending(y => y.Count()).ToList();
+
                     // R4.34 Set ranks if players are a team.
                     STAT_GetCheckForTeam();
                     _frmMain.lstLog.Items.Add(DateAndTime.Now.ToLongTimeString() + " - TEAM Check - Completed.");
@@ -347,22 +281,27 @@ namespace MakoCelo
                                 var rank = Convert.ToInt32(leaderBoardPlayerData.Rank) == -1 ? 0 : Convert.ToInt32(leaderBoardPlayerData.Rank); //backward compatibility
                                 var percent = ((double)leaderBoardPlayerData.Wins /
                                               (leaderBoardPlayerData.Losses + leaderBoardPlayerData.Wins)).ToString("P");
-                                currentPlayer.PersonalStats.Add(new PersonalStats
+                                var personalStats = new PersonalStats
                                 {
-                                    Faction = (Faction)i,
-                                    GameMode = (GameMode)j,
+                                    Faction = (Faction) i,
+                                    GameMode = (GameMode) j,
                                     Losses = leaderBoardPlayerData.Losses,
                                     Wins = leaderBoardPlayerData.Wins,
-                                    Rank = rank.ToString(),
+                                    Rank = rank,
                                     RankLevel = leaderBoardPlayerData.RankLevel,
                                     TotalPlayers = leaderBoardPlayerData.RankTotal,
                                     WinLossPercentRatio = percent
-                                });
+                                };
+
+                                currentPlayer.PersonalStats.Add(personalStats);
+                                if (currentPlayer.CurrentFaction == personalStats.Faction)
+                                    currentPlayer.CurrentPersonalStats = personalStats;
 
                                 _frmMain.PlrRankWin[t, i, j] = leaderBoardPlayerData.Wins; //backward compatibility
                                 _frmMain.PlrRankLoss[t, i, j] = leaderBoardPlayerData.Losses; //backward compatibility
                                 _frmMain.PlrRankALL[t, i, j] = rank; //backward compatibility
                                 _frmMain.PlrRankPerc[t, i, j] = percent; //backward compatibility
+                                
 
 
                             }
@@ -386,7 +325,12 @@ namespace MakoCelo
 
                             return new Team
                             {
-                                Players = statGroup.Members.Select(y => y.Alias).ToList(),
+                                Id = statGroup.Id,
+                                Players = statGroup.Members.Select(y => new TeamMember
+                                {
+                                    Name = y.Alias,
+                                    RelicId = y.ProfileId
+                                } ).ToList(),
                                 TeamStats = response.LeaderBoardStats
                                     .Where(leaderBoard => leaderBoard.StatGroupId == statGroup.Id).Take(2)
                                     .Select(leaderBoard =>
@@ -423,12 +367,18 @@ namespace MakoCelo
                         }).ToList();
                     _frmMain.TeamListCnt[t] = currentPlayer.Teams.Count; //backward compatibility
 
-                    _frmMain.PlrRank[t] = _frmMain.PlrRankALL[t, Conversions.ToInteger(_frmMain.PlrFact[t]), (int)matchFound.MatchMode].ToString(); //backward compatibility
+                    _frmMain.PlrRank[t] = _frmMain.PlrRankALL[t, Conversions.ToInteger(_frmMain.PlrFact[t]), (int)matchFound.GameMode].ToString(); //backward compatibility
                     if (_frmMain.PlrRank[t] == "0") _frmMain.PlrRank[t] = "---";
 
-                    _frmMain.PlrWin[t] = _frmMain.PlrRankWin[t, Conversions.ToInteger(_frmMain.PlrFact[t]), (int)matchFound.MatchMode]; //backward compatibility
-                    _frmMain.PlrLoss[t] = _frmMain.PlrRankLoss[t, Conversions.ToInteger(_frmMain.PlrFact[t]), (int)matchFound.MatchMode]; //backward compatibility
+                    
 
+                    _frmMain.PlrWin[t] = _frmMain.PlrRankWin[t, Conversions.ToInteger(_frmMain.PlrFact[t]), (int)matchFound.GameMode]; //backward compatibility
+                    _frmMain.PlrLoss[t] = _frmMain.PlrRankLoss[t, Conversions.ToInteger(_frmMain.PlrFact[t]), (int)matchFound.GameMode]; //backward compatibility
+                    var currentMatchPersonalStats = currentPlayer.PersonalStats.First(x => x.Faction == currentPlayer.CurrentFaction && x.GameMode == matchFound.GameMode);
+                    _frmMain.PlrELO[t] = currentMatchPersonalStats.Rank <= 0 ? "---" :
+                        ((double)currentMatchPersonalStats.Rank / currentMatchPersonalStats.TotalPlayers)
+                        .ToString("P"); //backward compatibility
+                    _frmMain.PlrLVL[t] = Convert.ToInt32(currentMatchPersonalStats.RankLevel) <= 0 ? "---" : "L-" + currentMatchPersonalStats.RankLevel; //backward compatibility
 
                 }
 
@@ -445,73 +395,7 @@ namespace MakoCelo
 
 
         }
-
-
-        private void GetStatsFromRelicApi(Player player, int plrSlot)
-        {
-            var rawResp = "";
-            try
-            {
-                // R4.30 Request leaderboard data from Relic Web API. Put result JSON data in string for parsing.
-                _frmMain.LstLog.Items.Add(DateAndTime.Now.ToLongTimeString() + " - Get RID - PLR:" + plrSlot +
-                                          " Web Request sending...");
-                // ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls Or SecurityProtocolType.Tls11 Or SecurityProtocolType.Tls12 'R4.43 Added for Connection issues.
-
-                var response = DownloadRawStats(new List<Player> { player });
-
-                //get Country
-                var currentPlayerData = response.StatGroups.First().Members.First(x => x.ProfileId == player.RelicId);
-                player.StatGroupId = currentPlayerData.PersonalStatGroupId;
-                player.Country = new Country
-                {
-                    Code = currentPlayerData.Country,
-                    Name = Country_GetName(currentPlayerData.Country)
-                };
-                _frmMain.PlrCountry[plrSlot] = player.Country.Code; //backward compatibility
-                _frmMain.PlrCountryName[plrSlot] = player.Country.Name; //backward compatibility
-
-                for (int i = 0; i < _frmMain.RelDataLeaderId.GetUpperBound(0); i++) //backward compatibility
-                {
-                    for (int j = 0; j < _frmMain.RelDataLeaderId.GetUpperBound(1); j++) //backward compatibility
-                    {
-                        var leaderBoardPlayerData = response.LeaderBoardStats.FirstOrDefault(x => currentPlayerData.PersonalStatGroupId == x.StatGroupId && x.LeaderBoardId == _frmMain.RelDataLeaderId[i, j]);
-                        if (leaderBoardPlayerData != null)
-                        {
-                            var rank = Convert.ToInt32(leaderBoardPlayerData.Rank) == -1 ? 0 : Convert.ToInt32(leaderBoardPlayerData.Rank); //backward compatibility
-                            var percent = ((double)leaderBoardPlayerData.Wins /
-                                          (leaderBoardPlayerData.Losses + leaderBoardPlayerData.Wins)).ToString("P");
-                            player.PersonalStats.Add(new PersonalStats
-                            {
-                                Faction = (Faction)i,
-                                GameMode = (GameMode)j,
-                                Losses = leaderBoardPlayerData.Losses,
-                                Wins = leaderBoardPlayerData.Wins,
-                                Rank = rank.ToString(),
-                                RankLevel = leaderBoardPlayerData.RankLevel,
-                                TotalPlayers = leaderBoardPlayerData.RankTotal,
-                                WinLossPercentRatio = percent
-                            });
-
-                            _frmMain.PlrRankWin[plrSlot, i, j] = leaderBoardPlayerData.Wins; //backward compatibility
-                            _frmMain.PlrRankLoss[plrSlot, i, j] = leaderBoardPlayerData.Losses; //backward compatibility
-                            _frmMain.PlrRankALL[plrSlot, i, j] = rank; //backward compatibility
-                            _frmMain.PlrRankPerc[plrSlot, i, j] = percent; //backward compatibility
-                        }
-                    }
-                }
-            }
-            catch (Exception)
-            {
-                // R4.41 Added logging and color change.
-                _frmMain.LbError1.Text = "RID error:" + plrSlot;
-                _frmMain.LbError1.BackColor = Color.FromArgb(255, 255, 0, 0);
-                _frmMain.LstLog.Items.Add(DateAndTime.Now.ToLongTimeString() + " - ERROR RID - PLR:" + plrSlot + " " +
-                                          Information.Err().Description);
-            }
-
-            if (!string.IsNullOrEmpty(rawResp)) STAT_GetTeamsFromRID(rawResp, plrSlot);
-        }
-
+        
         private Response DownloadRawStats(List<Player> players)
         {
             using var responseMessage = Task.Run(() => _httpClient.GetAsync(
@@ -561,196 +445,7 @@ namespace MakoCelo
 
             return null;
         }
-
-        private void STAT_GetTeamsFromRID(string rawResp, int plRslot) // R4.45 Was  RID As Integer, PLRSlot As Integer)
-        {
-            var cnt = default(int);
-            try
-            {
-                // R4.41 Added to catch bad data.
-                if (Strings.Len(rawResp) < 10)
-                {
-                    _frmMain.LstLog1.Items.Add(DateAndTime.Now.ToLongTimeString() + " - ERROR TEAM - PLR:" + plRslot +
-                                               " No data returned.");
-                    _frmMain.LbError2.Text = "Team error:" + plRslot;
-                    _frmMain.LbError2.BackColor = Color.FromArgb(255, 255, 0, 0);
-                    return;
-                }
-
-                // R4.41 Added to catch bad data.
-                var a = "message" + '"' + ":" + '"' + "SUCCESS";
-                var p1 = Strings.InStr(rawResp, a);
-                if (p1 < 1)
-                {
-                    _frmMain.LstLog1.Items.Add(DateAndTime.Now.ToLongTimeString() + " - ERROR TEAM - PLR:" + plRslot +
-                                               " Server returned error.");
-                    _frmMain.LbError2.Text = "Team error:" + plRslot;
-                    _frmMain.LbError2.BackColor = Color.FromArgb(255, 255, 0, 0);
-                    return;
-                }
-
-                // *************************************************
-                // R4.33 Find all PREMADE TEAMS. Can be team of 1.
-                // R4.41 Start to PARSE the JSON data in a crude and broken manner.
-                // *************************************************
-                p1 = Strings.InStr(rawResp, "statGroups");
-                var pEnd = Strings.InStr(p1, rawResp, "leaderboardStats");
-                p1 = Strings.InStr(p1 + 13, rawResp, "{" + '"' + "id");
-                string s;
-                while ((0 < p1) & (p1 < pEnd) & (cnt < 500))
-                {
-                    cnt += 1;
-                    _frmMain.LbStatus.Text = "Team: " + cnt;
-                    _frmMain.LbStatus.Refresh();
-                    s = rawResp.Substring(p1 + 5, 9);
-                    var rankId = (int)Math.Round(Conversion.Val(s));
-                    p1 = Strings.InStr(p1 + 5, rawResp, "type");
-                    s = rawResp.Substring(p1 + 5, 9);
-                    var plrCnt = (int)Math.Round(Conversion.Val(s));
-
-                    // R4.34 Get the relicID and Name of each player in this team. Team can be 1-4 players.
-                    p1 = Strings.InStr(p1 + 5, rawResp, "profile_id");
-                    s = rawResp.Substring(p1 + 11, 32);
-                    var p2 = Strings.InStr(p1 + 10, rawResp, Conversions.ToString('"'));
-                    var rid1 = Math.Round(Conversion.Val(s.Substring(0, p2 - (p1 + 0)))).ToString();
-                    p1 = Strings.InStr(p1 + 5, rawResp, "alias");
-                    s = rawResp.Substring(p1 + 7, 64); // R4.44 Was 32 chars long.
-                    p2 = Strings.InStr(p1 + 8, rawResp, Conversions.ToString('"'));
-                    var plr1 = s.Substring(0, p2 - (p1 + 8));
-                    string plr2;
-                    string rid2;
-                    if (1 < plrCnt)
-                    {
-                        p1 = Strings.InStr(p1 + 5, rawResp, "profile_id");
-                        s = rawResp.Substring(p1 + 11, 32);
-                        p2 = Strings.InStr(p1 + 10, rawResp, Conversions.ToString('"'));
-                        rid2 = Math.Round(Conversion.Val(s.Substring(0, p2 - (p1 + 0)))).ToString();
-                        p1 = Strings.InStr(p1 + 5, rawResp, "alias");
-                        s = rawResp.Substring(p1 + 7, 64); // R4.44 Was 32 chars long.
-                        p2 = Strings.InStr(p1 + 8, rawResp, Conversions.ToString('"'));
-                        plr2 = s.Substring(0, p2 - (p1 + 8));
-                    }
-                    else
-                    {
-                        rid2 = "";
-                        plr2 = "";
-                    }
-
-                    string plr3;
-                    string rid3;
-                    if (2 < plrCnt)
-                    {
-                        p1 = Strings.InStr(p1 + 5, rawResp, "profile_id");
-                        s = rawResp.Substring(p1 + 11, 32);
-                        p2 = Strings.InStr(p1 + 10, rawResp, Conversions.ToString('"'));
-                        rid3 = Math.Round(Conversion.Val(s.Substring(0, p2 - (p1 + 0)))).ToString();
-                        p1 = Strings.InStr(p1 + 5, rawResp, "alias");
-                        s = rawResp.Substring(p1 + 7, 64); // R4.44 Was 32 chars long.
-                        p2 = Strings.InStr(p1 + 8, rawResp, Conversions.ToString('"'));
-                        plr3 = s.Substring(0, p2 - (p1 + 8));
-                    }
-                    else
-                    {
-                        rid3 = "";
-                        plr3 = "";
-                    }
-
-                    string plr4;
-                    string rid4;
-                    if (3 < plrCnt)
-                    {
-                        p1 = Strings.InStr(p1 + 5, rawResp, "profile_id");
-                        s = rawResp.Substring(p1 + 11, 32);
-                        p2 = Strings.InStr(p1 + 10, rawResp, Conversions.ToString('"'));
-                        rid4 = Math.Round(Conversion.Val(s.Substring(0, p2 - (p1 + 0)))).ToString();
-                        p1 = Strings.InStr(p1 + 5, rawResp, "alias");
-                        s = rawResp.Substring(p1 + 7, 64); // R4.44 Was 32 chars long.
-                        p2 = Strings.InStr(p1 + 8, rawResp, Conversions.ToString('"'));
-                        plr4 = s.Substring(0, p2 - (p1 + 8));
-                    }
-                    else
-                    {
-                        rid4 = "";
-                        plr4 = "";
-                    }
-
-                    _frmMain.TeamList[plRslot, cnt].PLR1 = plr1;
-                    _frmMain.TeamList[plRslot, cnt].PLR2 = plr2;
-                    _frmMain.TeamList[plRslot, cnt].PLR3 = plr3;
-                    _frmMain.TeamList[plRslot, cnt].PLR4 = plr4;
-                    _frmMain.TeamList[plRslot, cnt].RID1 = rid1;
-                    _frmMain.TeamList[plRslot, cnt].RID2 = rid2;
-                    _frmMain.TeamList[plRslot, cnt].RID3 = rid3;
-                    _frmMain.TeamList[plRslot, cnt].RID4 = rid4;
-                    _frmMain.TeamList[plRslot, cnt].RankID = rankId;
-                    _frmMain.TeamList[plRslot, cnt].PlrCnt = plrCnt;
-                    p1 = Strings.InStr(p1 + 5, rawResp, "{" + '"' + "id");
-                }
-
-                _frmMain.TeamListCnt[plRslot] = cnt;
-
-                // ******************************************
-                // R4.33 Find all ranks for premade teams.
-                // ******************************************
-                p1 = pEnd;
-                pEnd = Strings.Len(rawResp);
-                cnt = 0;
-                p1 = Strings.InStr(p1 + 13, rawResp, "statgroup_id");
-                while ((0 < p1) & (p1 < pEnd) & (cnt < 1500))
-                {
-                    cnt += 1;
-                    s = rawResp.Substring(p1 + 13, 12);
-                    var rankId2 = (int)Math.Round(Conversion.Val(s));
-                    p1 = Strings.InStr(p1 + 13, rawResp, "leaderboard_id");
-                    s = rawResp.Substring(p1 + 15, 12);
-                    var lid = (int)Math.Round(Conversion.Val(s));
-                    p1 = Strings.InStr(p1 + 13, rawResp, "wins");
-                    s = rawResp.Substring(p1 + 5, 12);
-                    var win = (int)Math.Round(Conversion.Val(s));
-                    p1 = Strings.InStr(p1 + 5, rawResp, "losses");
-                    s = rawResp.Substring(p1 + 7, 12);
-                    var loss = (int)Math.Round(Conversion.Val(s));
-                    p1 = Strings.InStr(p1 + 7, rawResp, "rank");
-                    s = rawResp.Substring(p1 + 5, 12);
-                    var rank = (int)Math.Round(Conversion.Val(s));
-
-                    // R4.33 Try to find a rank for this team. 
-                    for (int t = 1, loopTo = _frmMain.TeamListCnt[plRslot]; t <= loopTo; t++)
-                        if (_frmMain.TeamList[plRslot, t].RankID == rankId2)
-                        {
-                            if ((lid == 20) | (lid == 22) | (lid == 24))
-                            {
-                                _frmMain.TeamList[plRslot, t].RankAxis = rank;
-                                _frmMain.TeamList[plRslot, t].WinAxis = win;
-                                _frmMain.TeamList[plRslot, t].LossAxis = loss;
-                                break;
-                            }
-
-                            if ((lid == 21) | (lid == 23) | (lid == 25))
-                            {
-                                _frmMain.TeamList[plRslot, t].RankAllies = rank;
-                                _frmMain.TeamList[plRslot, t].WinAllies = win;
-                                _frmMain.TeamList[plRslot, t].LossAllies = loss;
-                                break;
-                            }
-                        }
-
-                    p1 = Strings.InStr(p1 + 5, rawResp, "statgroup_id");
-                }
-            }
-            catch (Exception)
-            {
-                // R4.41 Added logging and color change.
-                _frmMain.LbError2.Text = "Team Error";
-                _frmMain.LbError2.Refresh();
-                _frmMain.LbError2.BackColor = Color.FromArgb(255, 255, 0, 0);
-                _frmMain.LstLog1.Items.Add(DateAndTime.Now.ToLongTimeString() + " - ERROR TEAM - PLR:" + plRslot + " " +
-                                           Information.Err().Description);
-            }
-
-            _frmMain.LbStatus.Text = "";
-        }
-
+        
         private string Country_GetName(string ca)
         {
             var tName = "";

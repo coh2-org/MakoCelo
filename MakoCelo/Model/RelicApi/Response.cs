@@ -56,12 +56,12 @@ namespace MakoCelo.Model.RelicApi
         public string Country { get; set; }
         [JsonProperty("leaderboardregion_id")]
         public int LeaderBoardRegionId { get; set; }
-        public int Level { get; set; }
-        public string Name { get; set; }
+        //public int Level { get; set; }
+        //public string Name { get; set; }
         [JsonProperty("personal_statgroup_id")]
         public string PersonalStatGroupId { get; set; }
         [JsonProperty("profile_id")]
         public string ProfileId { get; set; }
-        public int Xp { get; set; }
+        //public int Xp { get; set; }
     }
 }

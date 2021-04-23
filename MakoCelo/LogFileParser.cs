@@ -94,31 +94,31 @@ namespace MakoCelo
                             {
                                 if (Strings.Mid(a, tLen - 5, 6) == "german")
                                 {
-                                    newPlayer.Faction = Faction.Ost;
+                                    newPlayer.CurrentFaction = Faction.Ost;
                                     _frmMain.PlrFact[plrCnt] = "01"; //backward compatibility
                                 }
 
                                 if (Strings.Mid(a, tLen - 5, 6) == "soviet")
                                 {
-                                    newPlayer.Faction = Faction.Sov;
+                                    newPlayer.CurrentFaction = Faction.Sov;
                                     _frmMain.PlrFact[plrCnt] = "02"; //backward compatibility
                                 }
 
                                 if (Strings.Mid(a, tLen - 10, 11) == "west_german")
                                 {
-                                    newPlayer.Faction = Faction.Okw;
+                                    newPlayer.CurrentFaction = Faction.Okw;
                                     _frmMain.PlrFact[plrCnt] = "03"; //backward compatibility
                                 }
 
                                 if (Strings.Mid(a, tLen - 2, 3) == "aef")
                                 {
-                                    newPlayer.Faction = Faction.Usf;
+                                    newPlayer.CurrentFaction = Faction.Usf;
                                     _frmMain.PlrFact[plrCnt] = "04"; //backward compatibility
                                 }
 
                                 if (Strings.Mid(a, tLen - 6, 7) == "british")
                                 {
-                                    newPlayer.Faction = Faction.Ukf;
+                                    newPlayer.CurrentFaction = Faction.Ukf;
                                     _frmMain.PlrFact[plrCnt] = "05"; //backward compatibility
                                 }
                             }

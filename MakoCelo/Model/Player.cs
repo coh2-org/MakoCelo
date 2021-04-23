@@ -18,22 +18,23 @@ namespace MakoCelo.Model
             return !string.IsNullOrEmpty(Id);
         }
 
-        public GameMode MatchMode => (GameMode) (Players.Count / 2);
+        public GameMode GameMode => (GameMode) (Players.Count / 2);
+
+        public IEnumerable<Player> AxisPlayers => Players.Where(x => x.CurrentFaction is Faction.Okw or Faction.Ost);
+        public IEnumerable<Player> AlliesPlayers => Players.Where(x => x.CurrentFaction is Faction.Sov or Faction.Ukf or Faction.Usf);
     }
 
 
     public class Player
     {
         public string Name { get; set; }
-        public string Rank { get; set; }
         public string RelicId { get; set; }
-        // Probably unused after 64 bit patch
-        public string SteamId { get; set; } 
-        public Faction Faction { get; set; }
-        public int Team { get; set; }
+        public Faction CurrentFaction { get; set; }
         public Country Country { get; set; }
+        public PersonalStats CurrentPersonalStats { get; set; }
         public List<PersonalStats> PersonalStats { get; set; } = new();
         public List<Team> Teams { get; set; } = new();
+        public Team CurrentTeam { get; set; }
         public string StatGroupId { get; set; }
 
     }
@@ -49,7 +50,7 @@ namespace MakoCelo.Model
     {
         public Faction Faction { get; set; }
         public GameMode GameMode { get; set; }
-        public string Rank { get; set; }
+        public int Rank { get; set; }
         public int Wins { get; set; }
         public int Losses { get; set; }
         public string WinLossPercentRatio { get; set; }
@@ -69,8 +70,15 @@ namespace MakoCelo.Model
 
     public class Team
     {
-        public List<string> Players { get; set; }
+        public string Id { get; set; }
+        public List<TeamMember> Players { get; set; }
         public List<TeamStats> TeamStats { get; set; } = new(2);
+    }
+
+    public class TeamMember
+    {
+        public string Name { get; set; }
+        public string RelicId { get; set; }
     }
 
     public enum Faction
