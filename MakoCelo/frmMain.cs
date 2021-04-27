@@ -11,6 +11,7 @@ using System.Net;
 using System.Speech.Synthesis;
 using System.Windows.Forms;
 using GameOverlay;
+using MakoCelo.Model;
 using MakoCelo.My.Resources;
 using MakoCelo.Overlay;
 using Microsoft.VisualBasic;
@@ -136,8 +137,6 @@ namespace MakoCelo
         public readonly string[] PlrName = new string[9];
         public readonly string[] PlrName_Buffer = new string[9];
         private readonly string[] PlrName_Last = new string[9];
-        public readonly string[] PlrRank = new string[9];
-        public readonly string[] PlrRank_Buffer = new string[9];
         private readonly string[] PlrRank_Last = new string[9];
         public readonly int[,,] PlrRankALL = new int[9, 8, 5]; // R4.30 Rank from RID for all game modes.
         public readonly int[,,] PlrRankALL_Buffer = new int[9, 8, 5]; // R4.30 Rank from RID for all game modes.
@@ -296,7 +295,8 @@ namespace MakoCelo
         // R4.41 Made these PUBLIC.
         private HttpWebRequest WBrequest;
         private HttpWebResponse WBresponse;
-
+        private Match _previousMatch;
+        public Match _currentMatch;
         public frmMain()
         {
             InitializeComponent();
@@ -683,7 +683,12 @@ namespace MakoCelo
             Cursor = Cursors.WaitCursor;
 
             Application.DoEvents();
-            LogScanner.StartScanningLogFile();
+            var newCurrentMatch = LogScanner.StartScanningLogFile(_currentMatch);
+            if (newCurrentMatch.IsMatchFound())
+            {
+                _previousMatch = _currentMatch;
+                _currentMatch = newCurrentMatch;
+            }
         }
 
         private void LOG_InitCalcArrays()
@@ -808,10 +813,33 @@ namespace MakoCelo
             for (var t = 1; t <= 8; t++)
             {
                 PlrName[t] = "Player " + t;
-                PlrRank[t] = "123";
                 PlrFact[t] = "01";
                 LAB_Name_Align[t] = new StringFormat();
             }
+
+            _currentMatch = new Match();
+
+            for (int i = 0; i < 8; i++)
+            {
+                _currentMatch.Players.Add(new Player
+                {
+                    Country = new Country
+                        { Code = "en", Name = "england" },
+                    CurrentFaction = (Faction)(i % 5) + 1,
+                    CurrentPersonalStats = new PersonalStats
+                    {
+                        Faction = (Faction)(i % 5) + 1,
+                        GameMode = GameMode.V4,
+                        Losses = 32,
+                        Wins = 32,
+                        Rank = 123,
+                        RankLevel = "L-13",
+                    },
+                    Name = "Player " + i
+
+                });
+            }
+
 
             // R4.00 Init some string vars.
             for (var t = 1; t <= 10; t++)
@@ -2037,22 +2065,29 @@ namespace MakoCelo
             if (Interaction.MsgBox(A,
                 (MsgBoxStyle) ((int) MsgBoxStyle.Information + (int) MsgBoxStyle.DefaultButton1 +
                                (int) MsgBoxStyle.YesNo)) == MsgBoxResult.No) return;
+            
+            _currentMatch = new Match();
 
-            // R3.00 Create some worst case scenario data to show n user setup.
-            for (var t = 1; t <= 8; t++)
+            for (int i = 0; i < 8; i++)
             {
-                PlrName[t] = "12345678901234567890123456789012";
-                PlrRank[t] = "88888";
+                _currentMatch.Players.Add(new Player
+                {
+                    Country = new Country
+                        {Code = "en", Name = "england" },
+                    CurrentFaction = (Faction)(i % 5) + 1,
+                    CurrentPersonalStats = new PersonalStats
+                    {
+                        Faction = (Faction)(i % 5) + 1,
+                        GameMode = GameMode.V4,
+                        Losses = 32,
+                        Wins = 32,
+                        Rank = 88888,
+                        RankLevel = "L-13",
+                    },
+                    Name = "12345678901234567890123456789012"
+                });
             }
-
-            PlrFact[1] = "01";
-            PlrFact[2] = "02";
-            PlrFact[3] = "03";
-            PlrFact[4] = "04";
-            PlrFact[5] = "01";
-            PlrFact[6] = "02";
-            PlrFact[7] = "03";
-            PlrFact[8] = "05";
+            
 
             // R4.50 Force the STATS image redraw.
             MainBuffer_Valid = false;
@@ -2153,36 +2188,7 @@ namespace MakoCelo
 
         private void cmLastMatch_Click(object sender, EventArgs e)
         {
-            int t;
-            for (t = 1; t <= 8; t++)
-            {
-                PlrName[t] = PlrName_Last[t];
-                PlrRank[t] = PlrRank_Last[t];
-                PlrFact[t] = PlrFact_Last[t];
-                PlrTeam[t] = PlrTeam_Last[t];
-                PlrTWin[t] = PlrTWin_Last[t];
-                PlrTLoss[t] = PlrTLoss_Last[t];
-                PlrSteam[t] = PlrSteam_Last[t];
-                PlrRID[t] = PlrRID_Last[t];
-                PlrCountry[t] = PlrCountry_Last[t]; // R4.45 Added.
-                PlrCountryName[t] = PlrCountryName_Last[t]; // R4.46 Added.
-                for (var T2 = 1; T2 <= 5; T2++)
-                for (var T3 = 1; T3 <= 4; T3++)
-                {
-                    PlrRankALL[t, T2, T3] = PlrRankALL_Last[t, T2, T3];
-                    PlrRankWin[t, T2, T3] = PlrRankWin_Last[t, T2, T3];
-                    PlrRankLoss[t, T2, T3] = PlrRankLoss_Last[t, T2, T3];
-                    PlrRankPerc[t, T2, T3] = PlrRankPerc_Last[t, T2, T3];
-                }
-
-                TeamListCnt[t] = TeamListCnt_Last[t];
-                for (int T2 = 1, loopTo = TeamList.GetUpperBound(1); T2 <= loopTo; T2++)
-                    TeamList[t, T2] = TeamList_Last[t, T2];
-
-                PlrELO[t] = PlrELO_Last[t];
-                PlrLVL[t] = PlrLVL_Last[t];
-            }
-
+            _currentMatch = _previousMatch;
             // R4.50 Force the STATS image redraw.
             MainBuffer_Valid = false;
             Gfx.GFX_DrawStats();

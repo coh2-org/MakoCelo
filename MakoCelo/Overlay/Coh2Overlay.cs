@@ -2,7 +2,9 @@
 using GameOverlay.Windows;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using MakoCelo.Model;
 
 namespace MakoCelo.Overlay
 {
@@ -13,8 +15,7 @@ namespace MakoCelo.Overlay
         private readonly Dictionary<string, SolidBrush> _brushes;
         private readonly Dictionary<string, Font> _fonts;
         private readonly Dictionary<string, Image> _images;
-        private string[] _plrNames;
-        private string[] _plrRanks;
+        private Match _matchFound;
 
 
         public Coh2Overlay()
@@ -80,27 +81,18 @@ namespace MakoCelo.Overlay
 
             gfx.FillRoundedRectangle(_brushes["black"], 0, 0, 500, 100, 8.0f);
 
-            for (int i = 1; i < _plrNames.Length; i += 2)
+            for (int i = 0; i < _matchFound.Players.Count; i++)
             {
-                if (_plrNames[i] != "")
-                {
-                    gfx.DrawText(_fonts["consolas"], _brushes["green"], 10, i * 10, _plrNames[i] + " " + _plrRanks[i]);
-                }
-            }
-
-            for (int i = 2; i < _plrNames.Length; i += 2)
-            {
-                if (_plrNames[i] != "")
-                {
-                    gfx.DrawText(_fonts["consolas"], _brushes["green"], 300, (i * 10) - 10, _plrNames[i] + " " + _plrRanks[i]);
-                }
+                var x = i % 2 == 0 ? 10 : 300;
+                var y = i % 2 == 0 ? i * 10 : (i * 10) - 10;
+                var currentPlayer = _matchFound.Players[i];
+                gfx.DrawText(_fonts["consolas"], _brushes["green"], x, y, currentPlayer.Name + " " + currentPlayer.CurrentPersonalStats.Rank );
             }
         }
 
-        public void Run(string[] plrName, string[] plrRank)
+        public void Run(Match matchFound)
         {
-            _plrNames = plrName;
-            _plrRanks = plrRank;
+            _matchFound = matchFound;
             var tmphWnd = Native.FindWindow(null, "Company Of Heroes 2");
             if (tmphWnd == IntPtr.Zero)
             {

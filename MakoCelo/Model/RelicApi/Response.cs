@@ -30,7 +30,7 @@ namespace MakoCelo.Model.RelicApi
         [JsonProperty("leaderboard_id")]
         public string LeaderBoardId { get; set; }
         public int Losses { get; set; }
-        public string Rank { get; set; }
+        public int Rank { get; set; }
         public string RankLevel { get; set; }
         public int RankTotal { get; set; }
         public int RegionRank { get; set; }

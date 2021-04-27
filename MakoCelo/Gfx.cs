@@ -781,11 +781,11 @@ namespace MakoCelo
             {
                 if (_frmMain.FLAG_EloUse == false)
                 {
-                    tString = _frmMain.PlrRank[T];
+                    tString = _frmMain._currentMatch.Players[T - 1].CurrentPersonalStats.Rank.ToString();
                 }
                 else
                 {
-                    if (_frmMain.RankDisplayMode == RankDisplayMode.Rank) tString = _frmMain.PlrRank[T];
+                    if (_frmMain.RankDisplayMode == RankDisplayMode.Rank) tString = _frmMain._currentMatch.Players[T - 1].CurrentPersonalStats.Rank.ToString();
 
                     if (_frmMain.RankDisplayMode == RankDisplayMode.Elo) tString = _frmMain.PlrELO[T];
 
@@ -1348,11 +1348,11 @@ namespace MakoCelo
             {
                 if (_frmMain.FLAG_EloUse == false)
                 {
-                    tString = _frmMain.PlrRank[T];
+                    tString = _frmMain._currentMatch.Players[T - 1].CurrentPersonalStats.Rank.ToString();
                 }
                 else
                 {
-                    if (_frmMain.RankDisplayMode == RankDisplayMode.Rank) tString = _frmMain.PlrRank[T];
+                    if (_frmMain.RankDisplayMode == RankDisplayMode.Rank) tString = _frmMain._currentMatch.Players[T - 1].CurrentPersonalStats.Rank.ToString();
 
                     if (_frmMain.RankDisplayMode == RankDisplayMode.Elo) tString = _frmMain.PlrELO[T];
 
@@ -1714,11 +1714,11 @@ namespace MakoCelo
             {
                 if (_frmMain.FLAG_EloUse == false)
                 {
-                    tString = _frmMain.PlrRank[T];
+                    tString = _frmMain._currentMatch.Players[T - 1].CurrentPersonalStats.Rank.ToString();
                 }
                 else
                 {
-                    if (_frmMain.RankDisplayMode == RankDisplayMode.Rank) tString = _frmMain.PlrRank[T];
+                    if (_frmMain.RankDisplayMode == RankDisplayMode.Rank) tString = _frmMain._currentMatch.Players[T - 1].CurrentPersonalStats.Rank.ToString();
 
                     if (_frmMain.RankDisplayMode == RankDisplayMode.Elo) tString = _frmMain.PlrELO[T];
 

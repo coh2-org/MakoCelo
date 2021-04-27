@@ -53,19 +53,30 @@ namespace MakoCelo.Model
         public int Rank { get; set; }
         public int Wins { get; set; }
         public int Losses { get; set; }
-        public string WinLossPercentRatio { get; set; }
+
+        public string WinLossPercentRatio =>
+            ((double)Wins /
+             (Losses + Wins)).ToString("P");
+
         public string RankLevel { get; set; }
         public int TotalPlayers { get; set; }
+
+        public string Elo => Rank <= 0 ? "---" : ((double) Rank / TotalPlayers).ToString("P");
     }
 
     public class TeamStats
     {
         public Side Side { get; set; }
-        public string Rank { get; set; }
+        public int Rank { get; set; }
         public int Wins { get; set; }
         public int Losses { get; set; }
         public string RankLevel { get; set; }
-        public string WinLossPercentRatio { get; set; }
+        public int  TotalTeams { get; set; }
+        public string WinLossPercentRatio =>
+            ((double)Wins /
+             (Losses + Wins)).ToString("P");
+
+        public string Elo => Rank <= 0 ? "---" : ((double) Rank / TotalTeams).ToString("P");
     }
 
     public class Team
