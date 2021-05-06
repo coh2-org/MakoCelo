@@ -62,8 +62,6 @@ namespace MakoCelo
             var tPlrRankWin = new int[9, 8, 5]; // R4.30 Rank from RID for all game modes.
             var tPlrRankLoss = new int[9, 8, 5]; // R4.30 Rank from RID for all game modes.
             var tPlrRankPerc = new string[9, 8, 5]; // R4.30 Rank from RID for all game modes.
-            var tPlrElo = new string[10];
-            var tPlrLvl = new string[10];
             var tPlrGlvl = new int[10];
 
 
@@ -110,11 +108,7 @@ namespace MakoCelo
                     tTeamList[t, t2] = _frmMain.TeamList[t, t2];
                     _frmMain.TeamList[t, t2] = tempTl;
                 }
-
-                tPlrElo[t] = _frmMain.PlrELO[t];
-                _frmMain.PlrELO[t] = "";
-                tPlrLvl[t] = _frmMain.PlrLVL[t];
-                _frmMain.PlrLVL[t] = "";
+                
                 tPlrGlvl[t] = _frmMain.PlrGLVL[t];
                 _frmMain.PlrGLVL[t] = 0;
 
@@ -139,9 +133,7 @@ namespace MakoCelo
 
                 _frmMain.TeamListCnt_Buffer[t] = tTeamListCnt[t];
                 for (int t2 = 1, loopTo2 = _frmMain.TeamList_Buffer.GetUpperBound(1); t2 <= loopTo2; t2++) _frmMain.TeamList_Buffer[t, t2] = tTeamList[t, t2];
-
-                _frmMain.PlrELO_Buffer[t] = tPlrElo[t];
-                _frmMain.PlrLVL_Buffer[t] = tPlrLvl[t];
+                
                 _frmMain.PlrGLVL_Buffer[t] = tPlrGlvl[t];
             }
 
@@ -171,9 +163,7 @@ namespace MakoCelo
 
                     _frmMain.TeamListCnt[t] = tTeamListCnt[t];
                     for (int t2 = 1, loopTo4 = _frmMain.TeamList.GetUpperBound(1); t2 <= loopTo4; t2++) _frmMain.TeamList[t, t2] = tTeamList[t, t2];
-
-                    _frmMain.PlrELO[t] = tPlrElo[t];
-                    _frmMain.PlrLVL[t] = tPlrLvl[t];
+                    
                 }
 
             #endregion ToRemoveAfterMigration
@@ -211,10 +201,6 @@ namespace MakoCelo
                                 var teamStats = team.TeamStats.FirstOrDefault(x => x.Side == Side.Allies);
                                 _frmMain.PlrTWin[t] = teamStats?.Wins ?? 0; //backward compatibility
                                 _frmMain.PlrTLoss[t] = teamStats?.Losses ?? 0; //backward compatibility
-                                _frmMain.PlrELO[t] = teamStats.Rank <= 0 ? "---" :
-                                    ((double)teamStats.Rank / teamStats.TotalTeams)
-                                    .ToString("P"); //backward compatibility
-                                _frmMain.PlrLVL[t] = Convert.ToInt32(teamStats.RankLevel) <= 0 ? "---" : "L-" + teamStats.RankLevel; //backward compatibility
                             }
                             
                         }
@@ -238,10 +224,6 @@ namespace MakoCelo
                                 var teamStats = team.TeamStats.FirstOrDefault(x => x.Side == Side.Axis);
                                 _frmMain.PlrTWin[t] = teamStats?.Wins ?? 0; //backward compatibility
                                 _frmMain.PlrTLoss[t] = teamStats?.Losses ?? 0; //backward compatibility
-                                _frmMain.PlrELO[t] = teamStats.Rank <= 0 ? "---" :
-                                    ((double)teamStats.Rank / teamStats.TotalTeams)
-                                    .ToString("P"); //backward compatibility
-                                _frmMain.PlrLVL[t] = Convert.ToInt32(teamStats.RankLevel) <= 0 ? "---" : "L-" + teamStats.RankLevel; //backward compatibility
                             }
 
                         }
@@ -394,11 +376,6 @@ namespace MakoCelo
 
                     _frmMain.PlrWin[t] = _frmMain.PlrRankWin[t, Conversions.ToInteger(_frmMain.PlrFact[t]), (int)matchFound.GameMode]; //backward compatibility
                     _frmMain.PlrLoss[t] = _frmMain.PlrRankLoss[t, Conversions.ToInteger(_frmMain.PlrFact[t]), (int)matchFound.GameMode]; //backward compatibility
-                    var currentMatchPersonalStats = currentPlayer.PersonalStats.First(x => x.Faction == currentPlayer.CurrentFaction && x.GameMode == matchFound.GameMode);
-                    _frmMain.PlrELO[t] = currentMatchPersonalStats.Rank <= 0 ? "---" :
-                        ((double)currentMatchPersonalStats.Rank / currentMatchPersonalStats.TotalPlayers)
-                        .ToString("P"); //backward compatibility
-                    _frmMain.PlrLVL[t] = Convert.ToInt32(currentMatchPersonalStats.RankLevel) <= 0 ? "---" : "L-" + currentMatchPersonalStats.RankLevel; //backward compatibility
 
                 }
 

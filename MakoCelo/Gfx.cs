@@ -785,11 +785,11 @@ namespace MakoCelo
                 }
                 else
                 {
-                    if (_frmMain.RankDisplayMode == RankDisplayMode.Rank) tString = _frmMain._currentMatch.Players[T - 1].CurrentPersonalStats.Rank.ToString();
+                    if (_frmMain.RankDisplayMode == RankDisplayMode.Rank) tString = _frmMain._currentMatch.Players[T - 1].CurrentPersonalStats.Rank.ToString(); //TODO -- TEAMStats
 
-                    if (_frmMain.RankDisplayMode == RankDisplayMode.Elo) tString = _frmMain.PlrELO[T];
+                    if (_frmMain.RankDisplayMode == RankDisplayMode.Elo) tString = _frmMain._currentMatch.Players[T - 1].CurrentPersonalStats.Elo; //TODO -- TEAMStats
 
-                    if (_frmMain.RankDisplayMode == RankDisplayMode.Lvl) tString = _frmMain.PlrLVL[T];
+                    if (_frmMain.RankDisplayMode == RankDisplayMode.Lvl) tString = _frmMain._currentMatch.Players[T - 1].CurrentPersonalStats.RankLevel; //TODO -- TEAMStats
                 }
 
                 // R3.00 Create a clipping area so names do not draw past the rectangle.
@@ -1352,11 +1352,11 @@ namespace MakoCelo
                 }
                 else
                 {
-                    if (_frmMain.RankDisplayMode == RankDisplayMode.Rank) tString = _frmMain._currentMatch.Players[T - 1].CurrentPersonalStats.Rank.ToString();
+                    if (_frmMain.RankDisplayMode == RankDisplayMode.Rank) tString = _frmMain._currentMatch.Players[T - 1].CurrentPersonalStats.Rank.ToString(); //TODO -- TEAMStats
 
-                    if (_frmMain.RankDisplayMode == RankDisplayMode.Elo) tString = _frmMain.PlrELO[T];
+                    if (_frmMain.RankDisplayMode == RankDisplayMode.Elo) tString = _frmMain._currentMatch.Players[T - 1].CurrentPersonalStats.Elo; //TODO -- TEAMStats
 
-                    if (_frmMain.RankDisplayMode == RankDisplayMode.Lvl) tString = _frmMain.PlrLVL[T];
+                    if (_frmMain.RankDisplayMode == RankDisplayMode.Lvl) tString = _frmMain._currentMatch.Players[T - 1].CurrentPersonalStats.RankLevel; //TODO -- TEAMStats
                 }
 
                 // R3.00 Create a clipping area so names do not draw past the rectangle.
@@ -1718,11 +1718,11 @@ namespace MakoCelo
                 }
                 else
                 {
-                    if (_frmMain.RankDisplayMode == RankDisplayMode.Rank) tString = _frmMain._currentMatch.Players[T - 1].CurrentPersonalStats.Rank.ToString();
+                    if (_frmMain.RankDisplayMode == RankDisplayMode.Rank) tString = _frmMain._currentMatch.Players[T - 1].CurrentPersonalStats.Rank.ToString(); //TODO -- TEAMStats
 
-                    if (_frmMain.RankDisplayMode == RankDisplayMode.Elo) tString = _frmMain.PlrELO[T];
+                    if (_frmMain.RankDisplayMode == RankDisplayMode.Elo) tString = _frmMain._currentMatch.Players[T - 1].CurrentPersonalStats.Elo; //TODO -- TEAMStats
 
-                    if (_frmMain.RankDisplayMode == RankDisplayMode.Lvl) tString = _frmMain.PlrLVL[T];
+                    if (_frmMain.RankDisplayMode == RankDisplayMode.Lvl) tString = _frmMain._currentMatch.Players[T - 1].CurrentPersonalStats.RankLevel; //TODO -- TEAMStats
                 }
 
                 // R3.00 Create a clipping area so names do not draw past the rectangle/label.

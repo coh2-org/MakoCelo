@@ -117,54 +117,32 @@ namespace MakoCelo
         public readonly string[,] LVLS = new string[8, 5];
         public readonly string[] PlrCountry = new string[9]; // R4.45 Added contry.
         public readonly string[] PlrCountry_Buffer = new string[9];
-        private readonly string[] PlrCountry_Last = new string[9];
         public readonly string[] PlrCountryName = new string[9]; // R4.46 Added contry.
         public readonly string[] PlrCountryName_Buffer = new string[9]; // R4.46 Added contry.
-        private readonly string[] PlrCountryName_Last = new string[9]; // R4.46 Added contry.
-        public readonly string[] PlrELO = new string[9];
-        public readonly string[] PlrELO_Buffer = new string[9];
-        private readonly string[] PlrELO_Last = new string[9];
+        
         public readonly string[] PlrFact = new string[9];
         public readonly string[] PlrFact_Buffer = new string[9];
-        private readonly string[] PlrFact_Last = new string[9];
         public readonly int[] PlrGLVL = new int[9];
         public readonly int[] PlrGLVL_Buffer = new int[9];
-        private readonly int[] PlrGLVL_Last = new int[9];
         public readonly int[] PlrLoss = new int[9];
-        public readonly string[] PlrLVL = new string[9];
-        public readonly string[] PlrLVL_Buffer = new string[9];
-        private readonly string[] PlrLVL_Last = new string[9];
-        public readonly string[] PlrName = new string[9];
-        public readonly string[] PlrName_Buffer = new string[9];
-        private readonly string[] PlrName_Last = new string[9];
-        private readonly string[] PlrRank_Last = new string[9];
         public readonly int[,,] PlrRankALL = new int[9, 8, 5]; // R4.30 Rank from RID for all game modes.
         public readonly int[,,] PlrRankALL_Buffer = new int[9, 8, 5]; // R4.30 Rank from RID for all game modes.
-        private readonly int[,,] PlrRankALL_Last = new int[9, 8, 5]; // R4.30 Rank from RID for all game modes.
         public readonly int[,,] PlrRankLoss = new int[9, 8, 5]; // R4.30 Rank from RID for all game modes.
         public readonly int[,,] PlrRankLoss_Buffer = new int[9, 8, 5]; // R4.30 Rank from RID for all game modes.
-        private readonly int[,,] PlrRankLoss_Last = new int[9, 8, 5]; // R4.30 Rank from RID for all game modes.
         public readonly string[,,] PlrRankPerc = new string[9, 8, 5]; // R4.30 Rank from RID for all game modes.
         public readonly string[,,] PlrRankPerc_Buffer = new string[9, 8, 5]; // R4.30 Rank from RID for all game modes.
-        private readonly string[,,] PlrRankPerc_Last = new string[9, 8, 5]; // R4.30 Rank from RID for all game modes.
         public readonly int[,,] PlrRankWin = new int[9, 8, 5]; // R4.30 Rank from RID for all game modes.
         public readonly int[,,] PlrRankWin_Buffer = new int[9, 8, 5]; // R4.30 Rank from RID for all game modes.
-        private readonly int[,,] PlrRankWin_Last = new int[9, 8, 5]; // R4.30 Rank from RID for all game modes.
         public readonly string[] PlrRID = new string[9];
         public readonly string[] PlrRID_Buffer = new string[9];
-        private readonly string[] PlrRID_Last = new string[9];
         public readonly string[] PlrSteam = new string[9];
         public readonly string[] PlrSteam_Buffer = new string[9];
-        private readonly string[] PlrSteam_Last = new string[9];
         public readonly int[] PlrTeam = new int[9];
         public readonly int[] PlrTeam_Buffer = new int[9];
-        private readonly int[] PlrTeam_Last = new int[9];
         public readonly int[] PlrTLoss = new int[9];
         public readonly int[] PlrTLoss_Buffer = new int[9];
-        private readonly int[] PlrTLoss_Last = new int[9];
         public readonly int[] PlrTWin = new int[9];
         public readonly int[] PlrTWin_Buffer = new int[9];
-        private readonly int[] PlrTWin_Last = new int[9];
         public readonly int[] PlrWin = new int[9];
 
         // R4.30 Get player info from RELICID
@@ -185,13 +163,10 @@ namespace MakoCelo
 
         public readonly clsGlobal.t_TeamList[,]
             TeamList_Buffer = new clsGlobal.t_TeamList[10, 1001]; // R4.34 Added for JSON team parsing.
-
-        private readonly clsGlobal.t_TeamList[,]
-            TeamList_Last = new clsGlobal.t_TeamList[10, 1001]; // R4.34 Added for JSON team parsing.
+        
 
         public readonly int[] TeamListCnt = new int[10];
         public readonly int[] TeamListCnt_Buffer = new int[10];
-        private readonly int[] TeamListCnt_Last = new int[10];
         private bool ANIMATION_Smooth;
         public long Celo_Height;
         public long Celo_Left;
@@ -531,111 +506,7 @@ namespace MakoCelo
             set { lbError2 = value; }
             get { return lbError2; }
         }
-
-        public SpeechSynthesizer SpeechSynth1
-        {
-            get { return SpeechSynth; }
-        }
-
-        public string[] PlrRankLast
-        {
-            get { return PlrRank_Last; }
-        }
-
-        public string[] PlrNameLast
-        {
-            get { return PlrName_Last; }
-        }
-
-        public string[] PlrSteamLast
-        {
-            get { return PlrSteam_Last; }
-        }
-
-        public string[] PlrRidLast
-        {
-            get { return PlrRID_Last; }
-        }
-
-        public string[] PlrFactLast
-        {
-            get { return PlrFact_Last; }
-        }
-
-        public int[] PlrTeamLast
-        {
-            get { return PlrTeam_Last; }
-        }
-
-        public int[] PlrTWinLast
-        {
-            get { return PlrTWin_Last; }
-        }
-
-        public int[] PlrTLossLast
-        {
-            get { return PlrTLoss_Last; }
-        }
-
-        public string[] PlrCountryLast
-        {
-            get { return PlrCountry_Last; }
-        }
-
-        public string[] PlrCountryNameLast
-        {
-            get { return PlrCountryName_Last; }
-        }
-
-        public int[,,] PlrRankAllLast
-        {
-            get { return PlrRankALL_Last; }
-        }
-
-        public int[,,] PlrRankWinLast
-        {
-            get { return PlrRankWin_Last; }
-        }
-
-        public int[,,] PlrRankLossLast
-        {
-            get { return PlrRankLoss_Last; }
-        }
-
-        public string[,,] PlrRankPercLast
-        {
-            get { return PlrRankPerc_Last; }
-        }
-
-        public int[] TeamListCntLast
-        {
-            get { return TeamListCnt_Last; }
-        }
-
-        public clsGlobal.t_TeamList[,] TeamListLast
-        {
-            get { return TeamList_Last; }
-        }
-
-        public string[] PlrEloLast
-        {
-            get { return PlrELO_Last; }
-        }
-
-        public string[] PlrLvlLast
-        {
-            get { return PlrLVL_Last; }
-        }
-
-        public int[] PlrGlvlLast
-        {
-            get { return PlrGLVL_Last; }
-        }
-
-        public float[] LvLpercs
-        {
-            get { return LVLpercs; }
-        }
+        
 
         private void cmCheckLog_Click(object sender, EventArgs e)
         {
@@ -812,7 +683,6 @@ namespace MakoCelo
             // R3.00 Setup default Ranks and Names
             for (var t = 1; t <= 8; t++)
             {
-                PlrName[t] = "Player " + t;
                 PlrFact[t] = "01";
                 LAB_Name_Align[t] = new StringFormat();
             }
@@ -2147,7 +2017,7 @@ namespace MakoCelo
                 FLAG_ShowPlayerCardNum = Hit;
 
                 // R4.00 We did not select a player
-                if ((Hit == 0) | string.IsNullOrEmpty(PlrName[Hit]) | (PlrName[Hit] == "---"))
+                if ((Hit == 0) | string.IsNullOrEmpty(_currentMatch.Players[Hit - 1].Name) | (_currentMatch.Players[Hit - 1].Name == "---"))
                 {
                     FLAG_ShowPlayerCard = Conversions.ToInteger(false);
                     return;
@@ -3551,8 +3421,7 @@ namespace MakoCelo
 
         private void tsmPlayer_Google_Click(object sender, EventArgs e)
         {
-            Process.Start("https://translate.google.com/#view=home&op=translate&sl=auto&tl=en&text=" +
-                          PlrName[Celo_PopupHit]);
+            Process.Start("https://translate.google.com/#view=home&op=translate&sl=auto&tl=en&text=" + _currentMatch.Players[Celo_PopupHit - 1].Name);
         }
 
         private void tsmPlayer_Steam_Click(object sender, EventArgs e)

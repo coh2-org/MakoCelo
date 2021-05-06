@@ -43,7 +43,6 @@ namespace MakoCelo
                         // R3.20 We have found a new section so clear the previous data.
                         for (var t = 1; t <= 8; t++)
                         {
-                            _frmMain.PlrName[t] = "";
                             _frmMain.PlrFact[t] = "";
                             _frmMain.PlrRID[t] = "";
                             _frmMain.PlrTeam[t] = 0;
@@ -77,14 +76,12 @@ namespace MakoCelo
                             if (Conversions.ToBoolean(test1))
                             {
                                 newPlayer.Name = LOG_FindPlayer(a, 39);
-                                _frmMain.PlrName[plrCnt] = newPlayer.Name; //backward compatibility
                                 newPlayer.RelicId = LOG_Find_RelicID(a);
                                 _frmMain.PlrRID[plrCnt] = newPlayer.RelicId; //backward compatibility
                             }
                             else
                             {
                                 newPlayer.Name = LOG_FindPlayer(a, 36);
-                                _frmMain.PlrName[plrCnt] = newPlayer.Name; //backward compatibility
                                 newPlayer.RelicId = ""; 
                                 _frmMain.PlrRID[plrCnt] = ""; //backward compatibility
                             }
