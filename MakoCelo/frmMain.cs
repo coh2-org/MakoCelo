@@ -116,9 +116,6 @@ namespace MakoCelo
         private readonly float[] LVLpercs = new float[21];
         public readonly string[,] LVLS = new string[8, 5];
         
-        public readonly int[] PlrGLVL = new int[9];
-        public readonly int[] PlrGLVL_Buffer = new int[9];
-
         // R4.30 Get player info from RELICID
         // R4.30 ID for each game mode.
         private readonly string[,] RelDataLeaderID = new string[8, 5];
@@ -131,16 +128,7 @@ namespace MakoCelo
 
 
         private readonly SpeechSynthesizer SpeechSynth = new(); // R4.34 Added for TEXT-TO-SPEECH option.
-
-        public readonly clsGlobal.t_TeamList[,]
-            TeamList = new clsGlobal.t_TeamList[10, 1001]; // R4.34 Added for JSON team parsing.
-
-        public readonly clsGlobal.t_TeamList[,]
-            TeamList_Buffer = new clsGlobal.t_TeamList[10, 1001]; // R4.34 Added for JSON team parsing.
         
-
-        public readonly int[] TeamListCnt = new int[10];
-        public readonly int[] TeamListCnt_Buffer = new int[10];
         private bool ANIMATION_Smooth;
         public long Celo_Height;
         public long Celo_Left;
@@ -471,6 +459,7 @@ namespace MakoCelo
             var newCurrentMatch = LogScanner.StartScanningLogFile(CurrentMatch);
             if (newCurrentMatch.IsMatchFound())
             {
+                RankDisplayMode = 0;
                 _previousMatch = CurrentMatch;
                 CurrentMatch = newCurrentMatch;
                 // R4.50 Force the STATS image redraw.
@@ -1889,8 +1878,7 @@ namespace MakoCelo
 
         private void pbStats_MouseDown(object sender, MouseEventArgs e)
         {
-            int T;
-            var Hit = default(int);
+            var hit = default(int);
             switch (FLAG_ShowPlayerCard)
             {
                 case 0:
@@ -1924,18 +1912,19 @@ namespace MakoCelo
             // R4.00 Find which player we have selected.
             if (FLAG_ShowPlayerCard == 1)
             {
+                int T;
                 for (T = 1; T <= 8; T++)
                     if ((LAB_Name[T].Y < e.Y) & (e.Y < LAB_Name[T].Y + LAB_Name[T].Height))
                         if ((LAB_Name[T].X < e.X) & (e.X < LAB_Name[T].X + LAB_Name[T].Width))
                         {
-                            Hit = T;
+                            hit = T;
                             break;
                         }
 
-                FLAG_ShowPlayerCardNum = Hit;
+                FLAG_ShowPlayerCardNum = hit;
 
                 // R4.00 We did not select a player
-                if (Hit == 0 || CurrentMatch.Players.Count < Hit)
+                if (hit == 0 || CurrentMatch.Players.Count < hit)
                 {
                     FLAG_ShowPlayerCard = Conversions.ToInteger(false);
                     return;
@@ -1946,16 +1935,15 @@ namespace MakoCelo
 
             if (FLAG_ShowPlayerCard == 1)
             {
-                Gfx.GFX_DrawPlayerCard(Hit);
+                Gfx.GFX_DrawPlayerCard(hit);
             }
             else
             {
-                Hit = FLAG_ShowPlayerCardNum;
-                scrStats.Maximum = TeamListCnt[Hit] * 90;
-                T = scrStats.Maximum;
+                hit = FLAG_ShowPlayerCardNum;
+                scrStats.Maximum = CurrentMatch.Players[hit - 1].Teams.Count * 90;
 
                 scrStats.Value = 0;
-                Gfx.GFX_DrawTeams(Hit);
+                Gfx.GFX_DrawTeams(hit);
             }
         }
 

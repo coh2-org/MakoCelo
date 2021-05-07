@@ -45,60 +45,12 @@ namespace MakoCelo
             // R4.50 Relic broke the file so now there is only one section.
             
             var tempTl = new clsGlobal.t_TeamList();
-            var tTeamList = new clsGlobal.t_TeamList[10, 1001];
-            var tTeamListCnt = new int[10];
-            var tPlrRankAll = new int[9, 8, 5]; // R4.30 Rank from RID for all game modes.
-            var tPlrRankWin = new int[9, 8, 5]; // R4.30 Rank from RID for all game modes.
-            var tPlrRankLoss = new int[9, 8, 5]; // R4.30 Rank from RID for all game modes.
-            var tPlrRankPerc = new string[9, 8, 5]; // R4.30 Rank from RID for all game modes.
-            var tPlrGlvl = new int[10];
-
-
-            // This will be replaced with object returned to form so there will be no need to buffer previous data at this point (it will be done after search)
-            #region ToRemoveAfterMigration
-            // R3.10 Clear the current match and find new data below. 
-            for (var t = 1; t <= 8; t++)
-            {
-
-                tTeamListCnt[t] = _frmMain.TeamListCnt[t];
-                _frmMain.TeamListCnt[t] = 0;
-                for (int t2 = 1, loopTo1 = _frmMain.TeamList.GetUpperBound(1); t2 <= loopTo1; t2++)
-                {
-                    tTeamList[t, t2] = _frmMain.TeamList[t, t2];
-                    _frmMain.TeamList[t, t2] = tempTl;
-                }
-                
-                tPlrGlvl[t] = _frmMain.PlrGLVL[t];
-                _frmMain.PlrGLVL[t] = 0;
-                
-
-                _frmMain.TeamListCnt_Buffer[t] = tTeamListCnt[t];
-                for (int t2 = 1, loopTo2 = _frmMain.TeamList_Buffer.GetUpperBound(1); t2 <= loopTo2; t2++) _frmMain.TeamList_Buffer[t, t2] = tTeamList[t, t2];
-                
-                _frmMain.PlrGLVL_Buffer[t] = tPlrGlvl[t];
-            }
-
-            #endregion
+            
             var matchFound = _logFileParser.ParsePlayersFromGameLog(tempTl);
-            #region ToRemoveAfterMigration
-            if (!matchFound.IsMatchFound()) //backward compatibility - won't be needed if we use previousMatch
-                for (var t = 1; t <= 8; t++)
-                {
-                    
-                    _frmMain.TeamListCnt[t] = tTeamListCnt[t];
-                    for (int t2 = 1, loopTo4 = _frmMain.TeamList.GetUpperBound(1); t2 <= loopTo4; t2++) _frmMain.TeamList[t, t2] = tTeamList[t, t2];
-                    
-                }
-
-            #endregion ToRemoveAfterMigration
 
             if (matchFound.IsMatchFound() && (previousMatch == null || matchFound.Id != previousMatch.Id))
             {
-                previousMatch = matchFound;
-
-                // R4.30 Reset the ELO cycle mode.
-                _frmMain.RankDisplayMode = 0;
-
+                
                 OnMatchFound(EventArgs.Empty);
 
                 GetGroupedStatsFromRelicApi(matchFound);
@@ -198,15 +150,14 @@ namespace MakoCelo
                             var leaderBoardPlayerData = response.LeaderBoardStats.FirstOrDefault(x => currentPlayerData.PersonalStatGroupId == x.StatGroupId && x.LeaderBoardId == _frmMain.RelDataLeaderId[i, j]);
                             if (leaderBoardPlayerData != null)
                             {
-                                var rank = Convert.ToInt32(leaderBoardPlayerData.Rank) == -1 ? 0 : Convert.ToInt32(leaderBoardPlayerData.Rank); //backward compatibility
                                 var personalStats = new PersonalStats
                                 {
                                     Faction = (Faction) i,
                                     GameMode = (GameMode) j,
                                     Losses = leaderBoardPlayerData.Losses,
                                     Wins = leaderBoardPlayerData.Wins,
-                                    Rank = rank,
-                                    RankLevel = leaderBoardPlayerData.RankLevel,
+                                    Rank = Convert.ToInt32(leaderBoardPlayerData.Rank) == -1 ? 0 : Convert.ToInt32(leaderBoardPlayerData.Rank), //backward compatibility,
+                                RankLevel = leaderBoardPlayerData.RankLevel,
                                     TotalPlayers = leaderBoardPlayerData.RankTotal
                                 };
 
@@ -222,17 +173,6 @@ namespace MakoCelo
                             statGroup.Type != 1 && statGroup.Members.Any(member => member.ProfileId == currentPlayer.RelicId))
                         .Select((statGroup, i) =>
                         {
-                            _frmMain.TeamList[t, i].PLR1 = statGroup.Members[0].Alias; //backward compatibility
-                            _frmMain.TeamList[t, i].PLR2 = statGroup.Members.ElementAtOrDefault(1)?.Alias ?? ""; //backward compatibility
-                            _frmMain.TeamList[t, i].PLR3 = statGroup.Members.ElementAtOrDefault(2)?.Alias ?? ""; //backward compatibility
-                            _frmMain.TeamList[t, i].PLR4 = statGroup.Members.ElementAtOrDefault(3)?.Alias ?? ""; //backward compatibility
-                            _frmMain.TeamList[t, i].RID1 = statGroup.Members[0].ProfileId; //backward compatibility
-                            _frmMain.TeamList[t, i].RID2 = statGroup.Members.ElementAtOrDefault(1)?.ProfileId ?? ""; //backward compatibility
-                            _frmMain.TeamList[t, i].RID3 = statGroup.Members.ElementAtOrDefault(2)?.ProfileId ?? ""; //backward compatibility
-                            _frmMain.TeamList[t, i].RID4 = statGroup.Members.ElementAtOrDefault(3)?.ProfileId ?? ""; //backward compatibility
-                            _frmMain.TeamList[t, i].RankID = Convert.ToInt32(statGroup.Id); //backward compatibility
-                            _frmMain.TeamList[t, i].PlrCnt = statGroup.Type; //backward compatibility
-
                             return new Team
                             {
                                 Id = statGroup.Id,
@@ -243,37 +183,19 @@ namespace MakoCelo
                                 } ).ToList(),
                                 TeamStats = response.LeaderBoardStats
                                     .Where(leaderBoard => leaderBoard.StatGroupId == statGroup.Id).Take(2)
-                                    .Select(leaderBoard =>
+                                    .Select(leaderBoard => new TeamStats
                                     {
-                                        var teamStats = new TeamStats
-                                        {
-                                            Side = leaderBoard.LeaderBoardId is "20" or "22" or "24"
-                                                           ? Side.Axis
-                                                           : Side.Allies,
-                                            Rank = leaderBoard.Rank,
-                                            RankLevel = leaderBoard.RankLevel,
-                                            Wins = leaderBoard.Wins,
-                                            Losses = leaderBoard.Losses,
-                                            TotalTeams = leaderBoard.RankTotal
-                                        };
-
-                                        if (teamStats.Side == Side.Allies)
-                                        {
-                                            _frmMain.TeamList[t, i].RankAllies = Convert.ToInt32(leaderBoard.Rank); //backward compatibility
-                                            _frmMain.TeamList[t, i].WinAllies = leaderBoard.Wins; //backward compatibility
-                                            _frmMain.TeamList[t, i].LossAllies = leaderBoard.Losses; //backward compatibility
-                                        }
-                                        else
-                                        {
-                                            _frmMain.TeamList[t, i].RankAxis = Convert.ToInt32(leaderBoard.Rank); //backward compatibility
-                                            _frmMain.TeamList[t, i].WinAxis = leaderBoard.Wins; //backward compatibility
-                                            _frmMain.TeamList[t, i].LossAxis = leaderBoard.Losses; //backward compatibility
-                                        }
-                                        return teamStats;
+                                        Side = leaderBoard.LeaderBoardId is "20" or "22" or "24"
+                                            ? Side.Axis
+                                            : Side.Allies,
+                                        Rank = leaderBoard.Rank,
+                                        RankLevel = leaderBoard.RankLevel,
+                                        Wins = leaderBoard.Wins,
+                                        Losses = leaderBoard.Losses,
+                                        TotalTeams = leaderBoard.RankTotal
                                     }).ToList()
                             };
                         }).ToList();
-                    _frmMain.TeamListCnt[t] = currentPlayer.Teams.Count; //backward compatibility
 
                 }
 

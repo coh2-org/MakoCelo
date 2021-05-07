@@ -37,18 +37,7 @@ namespace MakoCelo
                     if (Conversions.ToBoolean(Strings.InStr(a, "Human Player") | Strings.InStr(a, "AI Player")))
                     {
                         match = new Match();
-
-                        #region ToRemoveAfterMigration
                         
-                        // R3.20 We have found a new section so clear the previous data.
-                        for (var t = 1; t <= 8; t++)
-                        {
-                            _frmMain.TeamListCnt[t] = 0;
-                            for (int t2 = 1, loopTo3 = _frmMain.TeamList.GetUpperBound(1); t2 <= loopTo3; t2++) _frmMain.TeamList[t, t2] = tempTl;
-                            
-                        }
-
-                        #endregion
 
                         var plrCnt = 0;
                         var findPlayers = true;

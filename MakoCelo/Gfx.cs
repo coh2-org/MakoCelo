@@ -360,9 +360,11 @@ namespace MakoCelo
             BruName = new SolidBrush(_frmMain.LSName.F1);
             Yoff = _frmMain.scrStats.Value * -1; // * -75
 
+            var currentPlayer = _frmMain.CurrentMatch.Players[n - 1];
             // R4.40 Loop thru TEAM lists and draw them until we are off screen.
-            for (int t = 1, loopTo2 = _frmMain.TeamListCnt[n]; t <= loopTo2; t++)
+            for (int t = 1; t <= currentPlayer.Teams.Count; t++)
             {
+                var currentTeam = currentPlayer.Teams[t - 1];
                 YAct = Yoff + (t - 1) * 90;
                 if (_frmMain.pbStats.Height < YAct) break;
 
@@ -370,61 +372,33 @@ namespace MakoCelo
                 {
                     _frmMain.Main_Gfx.DrawString(t.ToString(), fonRank, BruName, 10f, YAct);
                     _frmMain.Main_Gfx.DrawString("Team of ", fonRank, BruRank, 45f, YAct);
-                    _frmMain.Main_Gfx.DrawString(_frmMain.TeamList[n, t].PlrCnt.ToString(), fonRank, BruName, 90f, YAct);
+                    _frmMain.Main_Gfx.DrawString(currentTeam.Players.Count.ToString(), fonRank, BruName, 90f, YAct);
                     _frmMain.Main_Gfx.DrawString("Allies:", fonRank, BruRank, 120f, YAct);
                     _frmMain.Main_Gfx.DrawString("Axis:", fonRank, BruRank, 260f, YAct);
-                    A = " (" + _frmMain.TeamList[n, t].WinAllies + "," + _frmMain.TeamList[n, t].LossAllies + ")";
-                    switch (_frmMain.TeamList[n, t].RankAllies)
+
+                    var alliesStats = currentTeam.TeamStats.FirstOrDefault(x => x.Side == Side.Allies);
+
+                    if (alliesStats != null)
                     {
-                        case -1:
-                            {
-                                _frmMain.Main_Gfx.DrawString("P" + A, fonRank, BruName, 160f, YAct);
-                                break;
-                            }
-
-                        case 0:
-                            {
-                                _frmMain.Main_Gfx.DrawString("---" + A, fonRank, BruName, 160f, YAct);
-                                break;
-                            }
-
-                        default:
-                            {
-                                _frmMain.Main_Gfx.DrawString(_frmMain.TeamList[n, t].RankAllies + A, fonRank, BruName, 160f, YAct);
-                                break;
-                            }
+                        A = " (" + alliesStats.Wins + "," + alliesStats.Losses + ")";
+                        _frmMain.Main_Gfx.DrawString(alliesStats.FormattedRank + A, fonRank, BruName, 160f, YAct);
                     }
 
-                    A = " (" + _frmMain.TeamList[n, t].WinAxis + "," + _frmMain.TeamList[n, t].LossAxis + ")";
-                    switch (_frmMain.TeamList[n, t].RankAxis)
+                    var axisStats = currentTeam.TeamStats.FirstOrDefault(x => x.Side == Side.Axis);
+                    if (axisStats != null)
                     {
-                        case -1:
-                            {
-                                _frmMain.Main_Gfx.DrawString("P" + A, fonRank, BruName, 290f, YAct);
-                                break;
-                            }
-
-                        case 0:
-                            {
-                                _frmMain.Main_Gfx.DrawString("---" + A, fonRank, BruName, 290f, YAct);
-                                break;
-                            }
-
-                        default:
-                            {
-                                _frmMain.Main_Gfx.DrawString(_frmMain.TeamList[n, t].RankAxis + A, fonRank, BruName, 290f, YAct);
-                                break;
-                            }
+                        A = " (" + axisStats.Wins + "," + axisStats.Losses + ")";
+                        _frmMain.Main_Gfx.DrawString(axisStats.FormattedRank + A, fonRank, BruName, 290f, YAct);
                     }
 
                     _frmMain.Main_Gfx.DrawString("1:", fonRank, BruRank2, 10f, YAct + 15);
                     _frmMain.Main_Gfx.DrawString("2:", fonRank, BruRank2, 10f, YAct + 30);
                     _frmMain.Main_Gfx.DrawString("3:", fonRank, BruRank2, 10f, YAct + 45);
                     _frmMain.Main_Gfx.DrawString("4:", fonRank, BruRank2, 10f, YAct + 60);
-                    _frmMain.Main_Gfx.DrawString(_frmMain.TeamList[n, t].PLR1, fonRank, BruName, 25f, YAct + 15);
-                    _frmMain.Main_Gfx.DrawString(_frmMain.TeamList[n, t].PLR2, fonRank, BruName, 25f, YAct + 30);
-                    _frmMain.Main_Gfx.DrawString(_frmMain.TeamList[n, t].PLR3, fonRank, BruName, 25f, YAct + 45);
-                    _frmMain.Main_Gfx.DrawString(_frmMain.TeamList[n, t].PLR4, fonRank, BruName, 25f, YAct + 60);
+                    for (int i = 0; i < currentTeam.Players.Count; i++)
+                    {
+                        _frmMain.Main_Gfx.DrawString(currentTeam.Players[i].Name, fonRank, BruName, 25f, YAct + (i + 1) * 15);
+                    }
                 }
             }
 
