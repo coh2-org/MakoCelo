@@ -43,13 +43,6 @@ namespace MakoCelo
                         // R3.20 We have found a new section so clear the previous data.
                         for (var t = 1; t <= 8; t++)
                         {
-                            _frmMain.PlrFact[t] = "";
-                            _frmMain.PlrRID[t] = "";
-                            _frmMain.PlrTeam[t] = 0;
-                            _frmMain.PlrTWin[t] = 0;
-                            _frmMain.PlrTLoss[t] = 0;
-                            _frmMain.PlrCountry[t] = ""; // R4.45 Added.
-                            _frmMain.PlrCountryName[t] = ""; // R4.46 Added.
                             for (var t2 = 1; t2 <= 5; t2++)
                             for (var t3 = 1; t3 <= 4; t3++)
                             {
@@ -77,13 +70,11 @@ namespace MakoCelo
                             {
                                 newPlayer.Name = LOG_FindPlayer(a, 39);
                                 newPlayer.RelicId = LOG_Find_RelicID(a);
-                                _frmMain.PlrRID[plrCnt] = newPlayer.RelicId; //backward compatibility
                             }
                             else
                             {
                                 newPlayer.Name = LOG_FindPlayer(a, 36);
                                 newPlayer.RelicId = ""; 
-                                _frmMain.PlrRID[plrCnt] = ""; //backward compatibility
                             }
                             
                             var tLen = Strings.Len(a);
@@ -92,31 +83,26 @@ namespace MakoCelo
                                 if (Strings.Mid(a, tLen - 5, 6) == "german")
                                 {
                                     newPlayer.CurrentFaction = Faction.Ost;
-                                    _frmMain.PlrFact[plrCnt] = "01"; //backward compatibility
                                 }
 
                                 if (Strings.Mid(a, tLen - 5, 6) == "soviet")
                                 {
                                     newPlayer.CurrentFaction = Faction.Sov;
-                                    _frmMain.PlrFact[plrCnt] = "02"; //backward compatibility
                                 }
 
                                 if (Strings.Mid(a, tLen - 10, 11) == "west_german")
                                 {
                                     newPlayer.CurrentFaction = Faction.Okw;
-                                    _frmMain.PlrFact[plrCnt] = "03"; //backward compatibility
                                 }
 
                                 if (Strings.Mid(a, tLen - 2, 3) == "aef")
                                 {
                                     newPlayer.CurrentFaction = Faction.Usf;
-                                    _frmMain.PlrFact[plrCnt] = "04"; //backward compatibility
                                 }
 
                                 if (Strings.Mid(a, tLen - 6, 7) == "british")
                                 {
                                     newPlayer.CurrentFaction = Faction.Ukf;
-                                    _frmMain.PlrFact[plrCnt] = "05"; //backward compatibility
                                 }
                             }
                             match.Players.Add(newPlayer);

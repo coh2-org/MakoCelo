@@ -115,16 +115,9 @@ namespace MakoCelo
         public readonly clsGlobal.t_Box[] LAB_Rank = new clsGlobal.t_Box[9]; // R2.00 Defs for current label layout. 
         private readonly float[] LVLpercs = new float[21];
         public readonly string[,] LVLS = new string[8, 5];
-        public readonly string[] PlrCountry = new string[9]; // R4.45 Added contry.
-        public readonly string[] PlrCountry_Buffer = new string[9];
-        public readonly string[] PlrCountryName = new string[9]; // R4.46 Added contry.
-        public readonly string[] PlrCountryName_Buffer = new string[9]; // R4.46 Added contry.
         
-        public readonly string[] PlrFact = new string[9];
-        public readonly string[] PlrFact_Buffer = new string[9];
         public readonly int[] PlrGLVL = new int[9];
         public readonly int[] PlrGLVL_Buffer = new int[9];
-        public readonly int[] PlrLoss = new int[9];
         public readonly int[,,] PlrRankALL = new int[9, 8, 5]; // R4.30 Rank from RID for all game modes.
         public readonly int[,,] PlrRankALL_Buffer = new int[9, 8, 5]; // R4.30 Rank from RID for all game modes.
         public readonly int[,,] PlrRankLoss = new int[9, 8, 5]; // R4.30 Rank from RID for all game modes.
@@ -133,17 +126,6 @@ namespace MakoCelo
         public readonly string[,,] PlrRankPerc_Buffer = new string[9, 8, 5]; // R4.30 Rank from RID for all game modes.
         public readonly int[,,] PlrRankWin = new int[9, 8, 5]; // R4.30 Rank from RID for all game modes.
         public readonly int[,,] PlrRankWin_Buffer = new int[9, 8, 5]; // R4.30 Rank from RID for all game modes.
-        public readonly string[] PlrRID = new string[9];
-        public readonly string[] PlrRID_Buffer = new string[9];
-        public readonly string[] PlrSteam = new string[9];
-        public readonly string[] PlrSteam_Buffer = new string[9];
-        public readonly int[] PlrTeam = new int[9];
-        public readonly int[] PlrTeam_Buffer = new int[9];
-        public readonly int[] PlrTLoss = new int[9];
-        public readonly int[] PlrTLoss_Buffer = new int[9];
-        public readonly int[] PlrTWin = new int[9];
-        public readonly int[] PlrTWin_Buffer = new int[9];
-        public readonly int[] PlrWin = new int[9];
 
         // R4.30 Get player info from RELICID
         // R4.30 ID for each game mode.
@@ -271,7 +253,7 @@ namespace MakoCelo
         private HttpWebRequest WBrequest;
         private HttpWebResponse WBresponse;
         private Match _previousMatch;
-        public Match _currentMatch;
+        public Match CurrentMatch;
         public frmMain()
         {
             InitializeComponent();
@@ -419,25 +401,7 @@ namespace MakoCelo
             set { lstLog = value; }
             get { return lstLog; }
         }
-
-        public HttpWebRequest WBrequest1
-        {
-            set { WBrequest = value; }
-            get { return WBrequest; }
-        }
-
-        public HttpWebResponse WBresponse1
-        {
-            set { WBresponse = value; }
-            get { return WBresponse; }
-        }
-
-        public StreamReader WBreader1
-        {
-            set { WBreader = value; }
-            get { return WBreader; }
-        }
-
+        
         public Label LbError1
         {
             set { lbError1 = value; }
@@ -448,24 +412,7 @@ namespace MakoCelo
         {
             get { return RelDataLeaderID; }
         }
-
-        public ListBox LstLog1
-        {
-            set { lstLog = value; }
-            get { return lstLog; }
-        }
-
-        public Label LbError2
-        {
-            set { lbError1 = value; }
-            get { return lbError1; }
-        }
-
-        public Label LbStatus
-        {
-            set { lbStatus = value; }
-            get { return lbStatus; }
-        }
+        
 
         public int CountryCount1
         {
@@ -482,31 +429,6 @@ namespace MakoCelo
         {
             get { return Country_Name; }
         }
-
-        public Label LbError3
-        {
-            set { lbError2 = value; }
-            get { return lbError2; }
-        }
-
-        public ListBox LstLog2
-        {
-            set { lstLog = value; }
-            get { return lstLog; }
-        }
-
-        public bool FlagSpeechOk
-        {
-            set { FLAG_SpeechOK = value; }
-            get { return FLAG_SpeechOK; }
-        }
-
-        public Label LbError4
-        {
-            set { lbError2 = value; }
-            get { return lbError2; }
-        }
-        
 
         private void cmCheckLog_Click(object sender, EventArgs e)
         {
@@ -554,11 +476,16 @@ namespace MakoCelo
             Cursor = Cursors.WaitCursor;
 
             Application.DoEvents();
-            var newCurrentMatch = LogScanner.StartScanningLogFile(_currentMatch);
+            var newCurrentMatch = LogScanner.StartScanningLogFile(CurrentMatch);
             if (newCurrentMatch.IsMatchFound())
             {
-                _previousMatch = _currentMatch;
-                _currentMatch = newCurrentMatch;
+                _previousMatch = CurrentMatch;
+                CurrentMatch = newCurrentMatch;
+                // R4.50 Force the STATS image redraw.
+                MainBuffer_Valid = false;
+
+                // R4.34 Draw the updated ranks.
+                Gfx.GFX_DrawStats();
             }
         }
 
@@ -683,15 +610,14 @@ namespace MakoCelo
             // R3.00 Setup default Ranks and Names
             for (var t = 1; t <= 8; t++)
             {
-                PlrFact[t] = "01";
                 LAB_Name_Align[t] = new StringFormat();
             }
 
-            _currentMatch = new Match();
+            CurrentMatch = new Match();
 
             for (int i = 0; i < 8; i++)
             {
-                _currentMatch.Players.Add(new Player
+                CurrentMatch.Players.Add(new Player
                 {
                     Country = new Country
                         { Code = "en", Name = "england" },
@@ -703,7 +629,7 @@ namespace MakoCelo
                         Losses = 32,
                         Wins = 32,
                         Rank = 123,
-                        RankLevel = "L-13",
+                        RankLevel = 13,
                     },
                     Name = "Player " + i
 
@@ -1936,11 +1862,11 @@ namespace MakoCelo
                 (MsgBoxStyle) ((int) MsgBoxStyle.Information + (int) MsgBoxStyle.DefaultButton1 +
                                (int) MsgBoxStyle.YesNo)) == MsgBoxResult.No) return;
             
-            _currentMatch = new Match();
+            CurrentMatch = new Match();
 
             for (int i = 0; i < 8; i++)
             {
-                _currentMatch.Players.Add(new Player
+                CurrentMatch.Players.Add(new Player
                 {
                     Country = new Country
                         {Code = "en", Name = "england" },
@@ -1952,7 +1878,7 @@ namespace MakoCelo
                         Losses = 32,
                         Wins = 32,
                         Rank = 88888,
-                        RankLevel = "L-13",
+                        RankLevel = 13,
                     },
                     Name = "12345678901234567890123456789012"
                 });
@@ -2017,7 +1943,7 @@ namespace MakoCelo
                 FLAG_ShowPlayerCardNum = Hit;
 
                 // R4.00 We did not select a player
-                if ((Hit == 0) | string.IsNullOrEmpty(_currentMatch.Players[Hit - 1].Name) | (_currentMatch.Players[Hit - 1].Name == "---"))
+                if (Hit == 0 || CurrentMatch.Players.Count < Hit)
                 {
                     FLAG_ShowPlayerCard = Conversions.ToInteger(false);
                     return;
@@ -2034,12 +1960,9 @@ namespace MakoCelo
             {
                 Hit = FLAG_ShowPlayerCardNum;
                 scrStats.Maximum = TeamListCnt[Hit] * 90;
-                T = (PlrTeam[Hit] - 1) * 90;
-                if (T < 0) T = 0;
+                T = scrStats.Maximum;
 
-                if (scrStats.Maximum < T) T = scrStats.Maximum;
-
-                scrStats.Value = T;
+                scrStats.Value = 0;
                 Gfx.GFX_DrawTeams(Hit);
             }
         }
@@ -2058,7 +1981,7 @@ namespace MakoCelo
 
         private void cmLastMatch_Click(object sender, EventArgs e)
         {
-            _currentMatch = _previousMatch;
+            CurrentMatch = _previousMatch;
             // R4.50 Force the STATS image redraw.
             MainBuffer_Valid = false;
             Gfx.GFX_DrawStats();
@@ -3405,69 +3328,72 @@ namespace MakoCelo
             Settings.SETTINGS_Save("");
         }
 
+        #region ContextMenuDepdendentOnSteamId
+
+        
+
+        
         // ****************************************************************************
         // R4.00 CONTEXT MENU STRIP (ToolStripMenu) FOR STATS
         // ****************************************************************************
         private void tsmPlayer_Relic_Click(object sender, EventArgs e)
         {
-            Process.Start("http://www.companyofheroes.com/leaderboards#profile/steam/" + PlrSteam[Celo_PopupHit] +
-                          "/standings");
+            //Process.Start("http://www.companyofheroes.com/leaderboards#profile/steam/" + PlrSteam[Celo_PopupHit] + "/standings");
         }
 
         private void tsmPlayer_OrgAT_Click(object sender, EventArgs e)
         {
-            Process.Start("https://www.coh2.org/ladders/playercard/viewBoard/1/steamid/" + PlrSteam[Celo_PopupHit]);
+            //Process.Start("https://www.coh2.org/ladders/playercard/viewBoard/1/steamid/" + PlrSteam[Celo_PopupHit]);
         }
 
         private void tsmPlayer_Google_Click(object sender, EventArgs e)
         {
-            Process.Start("https://translate.google.com/#view=home&op=translate&sl=auto&tl=en&text=" + _currentMatch.Players[Celo_PopupHit - 1].Name);
+            //Process.Start("https://translate.google.com/#view=home&op=translate&sl=auto&tl=en&text=" + CurrentMatch.Players[Celo_PopupHit - 1].Name);
         }
 
         private void tsmPlayer_Steam_Click(object sender, EventArgs e)
         {
-            Process.Start("https://steamcommunity.com/profiles/" + PlrSteam[Celo_PopupHit] + "/");
+            //Process.Start("https://steamcommunity.com/profiles/" + PlrSteam[Celo_PopupHit] + "/");
         }
 
         private void tsmPlayer_OrgFaction_Click(object sender, EventArgs e)
         {
             // R4.00 Try to select the correct STATS page from.org.
-            switch (PlrFact[Celo_PopupHit] ?? "")
-            {
-                case "05":
-                {
-                    Process.Start("https://www.coh2.org/ladders/playercard/viewBoard/12/steamid/" +
-                                  PlrSteam[Celo_PopupHit]); // R4.00 UKF
-                    break;
-                }
+            //switch (CurrentMatch.Players[Celo_PopupHit -1].CurrentFaction)
+            //{
+            //    case Faction.Ukf:
+            //    {
+            //        Process.Start("https://www.coh2.org/ladders/playercard/viewBoard/12/steamid/" + PlrSteam[Celo_PopupHit]); // R4.00 UKF
+            //        break;
+            //    }
 
-                case "02":
-                case "01":
-                {
-                    Process.Start("https://www.coh2.org/ladders/playercard/viewBoard/11/steamid/" +
-                                  PlrSteam[Celo_PopupHit]); // R4.00 SOV, OST
-                    break;
-                }
+            //    case Faction.Sov:
+            //    case Faction.Ost:
+            //    {
+            //        Process.Start("https://www.coh2.org/ladders/playercard/viewBoard/11/steamid/" +
+            //                      PlrSteam[Celo_PopupHit]); // R4.00 SOV, OST
+            //        break;
+            //    }
 
-                case "04":
-                case "03":
-                {
-                    Process.Start("https://www.coh2.org/ladders/playercard/viewBoard/10/steamid/" +
-                                  PlrSteam[Celo_PopupHit]); // R4.00 USF, OKW
-                    break;
-                }
+            //    case Faction.Usf:
+            //    case Faction.Okw:
+            //    {
+            //        Process.Start("https://www.coh2.org/ladders/playercard/viewBoard/10/steamid/" +
+            //                      PlrSteam[Celo_PopupHit]); // R4.00 USF, OKW
+            //        break;
+            //    }
 
-                default:
-                {
-                    Process.Start("https://www.coh2.org/ladders/playercard/steamid/" + PlrSteam[Celo_PopupHit]);
-                    break;
-                }
-            }
+            //    default:
+            //    {
+            //        Process.Start("https://www.coh2.org/ladders/playercard/steamid/" + PlrSteam[Celo_PopupHit]);
+            //        break;
+            //    }
+            //}
         }
 
         private void tsmPlayer_OrgPlayercard_Click(object sender, EventArgs e)
         {
-            Process.Start("https://www.coh2.org/ladders/playercard/steamid/" + PlrSteam[Celo_PopupHit]);
+            //Process.Start("https://www.coh2.org/ladders/playercard/steamid/" + PlrSteam[Celo_PopupHit]);
         }
 
         private void chkPopUp_CheckedChanged(object sender, EventArgs e)
@@ -3481,7 +3407,7 @@ namespace MakoCelo
             // ToolTip1.SetToolTip(pbStats, "Click a player name to see web pages for:" & vbCr & "Left: Relic Stats" & vbCr & "Ctrl-Left: Google Translate" & vbCr & "Shift-Left: Coh2.org player page" & vbCr & "Right: Coh2.org AT stats" & vbCr & "Ctrl-Right: Coh2.org faction page")
             // End If
         }
-
+        #endregion
         private void tsmSelectFile_Click(object sender, EventArgs e)
         {
             AUDIO_SelectFile(Celo_PopupHit);

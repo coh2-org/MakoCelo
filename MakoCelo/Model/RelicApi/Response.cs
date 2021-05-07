@@ -31,7 +31,7 @@ namespace MakoCelo.Model.RelicApi
         public string LeaderBoardId { get; set; }
         public int Losses { get; set; }
         public int Rank { get; set; }
-        public string RankLevel { get; set; }
+        public int RankLevel { get; set; }
         public int RankTotal { get; set; }
         public int RegionRank { get; set; }
         public int RegionRankTotal { get; set; }

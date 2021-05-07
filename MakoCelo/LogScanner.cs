@@ -3,14 +3,12 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using MakoCelo.Model;
 using MakoCelo.Model.RelicApi;
 using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 using Newtonsoft.Json;
 
 namespace MakoCelo
@@ -45,16 +43,7 @@ namespace MakoCelo
             // R4.00 Stats come in two sections. Each has a Relic ID #.
             // R4.00 Match the two sections using the Relic ID #.
             // R4.50 Relic broke the file so now there is only one section.
-            var tPlrRank = new string[10]; // R3.10 Added Storage to place old vals on screen if no new onesa are found.
-            var tPlrName = new string[10];
-            var tPlrSteam = new string[10];
-            var tPlrRid = new string[10];
-            var tPlrFact = new string[10];
-            var tPlrTWin = new int[10];
-            var tPlrTLoss = new int[10];
-            var tPlrTeam = new int[10];
-            var tPlrCountry = new string[10];
-            var tPlrCountryName = new string[10];
+            
             var tempTl = new clsGlobal.t_TeamList();
             var tTeamList = new clsGlobal.t_TeamList[10, 1001];
             var tTeamListCnt = new int[10];
@@ -70,24 +59,6 @@ namespace MakoCelo
             // R3.10 Clear the current match and find new data below. 
             for (var t = 1; t <= 8; t++)
             {
-                tPlrName[t] = _frmMain.PlrName[t];
-                _frmMain.PlrName[t] = "";
-                tPlrSteam[t] = _frmMain.PlrSteam[t];
-                _frmMain.PlrSteam[t] = "";
-                tPlrRid[t] = _frmMain.PlrRID[t];
-                _frmMain.PlrRID[t] = "";
-                tPlrFact[t] = _frmMain.PlrFact[t];
-                _frmMain.PlrFact[t] = "";
-                tPlrTeam[t] = _frmMain.PlrTeam[t];
-                _frmMain.PlrTeam[t] = 0;
-                tPlrTWin[t] = _frmMain.PlrTWin[t];
-                _frmMain.PlrTWin[t] = 0;
-                tPlrTLoss[t] = _frmMain.PlrTLoss[t];
-                _frmMain.PlrTLoss[t] = 0;
-                tPlrCountry[t] = _frmMain.PlrCountry[t];
-                _frmMain.PlrCountry[t] = "";
-                tPlrCountryName[t] = _frmMain.PlrCountryName[t];
-                _frmMain.PlrCountryName[t] = "";
                 for (var t2 = 1; t2 <= 5; t2++)
                     for (var t3 = 1; t3 <= 4; t3++)
                     {
@@ -113,15 +84,6 @@ namespace MakoCelo
                 _frmMain.PlrGLVL[t] = 0;
 
                 // R4.30 Store PUBLIC copy for LAST MATCH ability.
-                _frmMain.PlrName_Buffer[t] = tPlrName[t];
-                _frmMain.PlrSteam_Buffer[t] = tPlrSteam[t];
-                _frmMain.PlrRID_Buffer[t] = tPlrRid[t];
-                _frmMain.PlrFact_Buffer[t] = tPlrFact[t];
-                _frmMain.PlrTeam_Buffer[t] = tPlrTeam[t];
-                _frmMain.PlrTWin_Buffer[t] = tPlrTWin[t];
-                _frmMain.PlrTLoss_Buffer[t] = tPlrTLoss[t];
-                _frmMain.PlrCountry_Buffer[t] = tPlrCountry[t]; // R4.45 Added.
-                _frmMain.PlrCountryName_Buffer[t] = tPlrCountryName[t]; // R4.45 Added.
                 for (var t2 = 1; t2 <= 5; t2++)
                     for (var t3 = 1; t3 <= 4; t3++)
                     {
@@ -143,15 +105,6 @@ namespace MakoCelo
             if (!matchFound.IsMatchFound()) //backward compatibility - won't be needed if we use previousMatch
                 for (var t = 1; t <= 8; t++)
                 {
-                    _frmMain.PlrName[t] = tPlrName[t];
-                    _frmMain.PlrSteam[t] = tPlrSteam[t];
-                    _frmMain.PlrRID[t] = tPlrRid[t];
-                    _frmMain.PlrFact[t] = tPlrFact[t];
-                    _frmMain.PlrTeam[t] = tPlrTeam[t];
-                    _frmMain.PlrTWin[t] = tPlrTWin[t];
-                    _frmMain.PlrTLoss[t] = tPlrTLoss[t];
-                    _frmMain.PlrCountry[t] = tPlrCountry[t]; // R4.45 Added.
-                    _frmMain.PlrCountryName[t] = tPlrCountryName[t]; // R4.46 Added.
                     for (var t2 = 1; t2 <= 5; t2++)
                     for (var t3 = 1; t3 <= 4; t3++)
                     {
@@ -195,12 +148,10 @@ namespace MakoCelo
                         {
                             if ( team.Players.Any(x => x.RelicId == matchFoundAlliesPlayer.RelicId))
                             {
+
                                 matchFoundAlliesPlayer.CurrentTeam = team;
-                                var t = Array.FindIndex(_frmMain.PlrRID, x => x == matchFoundAlliesPlayer.RelicId);
-                                //_frmMain.PlrTeam[t] = mTeam[t];
-                                var teamStats = team.TeamStats.FirstOrDefault(x => x.Side == Side.Allies);
-                                _frmMain.PlrTWin[t] = teamStats?.Wins ?? 0; //backward compatibility
-                                _frmMain.PlrTLoss[t] = teamStats?.Losses ?? 0; //backward compatibility
+                                matchFoundAlliesPlayer.CurrentTeamStats =
+                                    team.TeamStats.First(x => x.Side == Side.Allies);
                             }
                             
                         }
@@ -219,11 +170,8 @@ namespace MakoCelo
                             if (team.Players.Any(x => x.RelicId == matchFoundAlliesPlayer.RelicId))
                             {
                                 matchFoundAlliesPlayer.CurrentTeam = team;
-                                var t = Array.FindIndex(_frmMain.PlrRID, x => x == matchFoundAlliesPlayer.RelicId);
-                                //_frmMain.PlrTeam[t] = mTeam[t];
-                                var teamStats = team.TeamStats.FirstOrDefault(x => x.Side == Side.Axis);
-                                _frmMain.PlrTWin[t] = teamStats?.Wins ?? 0; //backward compatibility
-                                _frmMain.PlrTLoss[t] = teamStats?.Losses ?? 0; //backward compatibility
+                                matchFoundAlliesPlayer.CurrentTeamStats =
+                                    team.TeamStats.First(x => x.Side == Side.Axis);
                             }
 
                         }
@@ -236,11 +184,7 @@ namespace MakoCelo
                 // R4.34 Text-to-Speech the ranks.
                 if (_frmMain.chkSpeech.Checked) throw new NotImplementedException(); //STATS_ReadAloud();
 
-                // R4.50 Force the STATS image redraw.
-                _frmMain.MainBuffer_Valid = false;
-
-                // R4.34 Draw the updated ranks.
-                _frmMain.Gfx.GFX_DrawStats();
+                
             }
 
             // R5.00 Overlay
@@ -275,8 +219,6 @@ namespace MakoCelo
                         Code = currentPlayerData.Country,
                         Name = Country_GetName(currentPlayerData.Country)
                     };
-                    _frmMain.PlrCountry[t] = currentPlayer.Country.Code; //backward compatibility
-                    _frmMain.PlrCountryName[t] = currentPlayer.Country.Name; //backward compatibility
 
                     for (int i = 0; i < _frmMain.RelDataLeaderId.GetUpperBound(0); i++) //backward compatibility
                     {
@@ -370,12 +312,6 @@ namespace MakoCelo
                             };
                         }).ToList();
                     _frmMain.TeamListCnt[t] = currentPlayer.Teams.Count; //backward compatibility
-                    
-
-                    
-
-                    _frmMain.PlrWin[t] = _frmMain.PlrRankWin[t, Conversions.ToInteger(_frmMain.PlrFact[t]), (int)matchFound.GameMode]; //backward compatibility
-                    _frmMain.PlrLoss[t] = _frmMain.PlrRankLoss[t, Conversions.ToInteger(_frmMain.PlrFact[t]), (int)matchFound.GameMode]; //backward compatibility
 
                 }
 

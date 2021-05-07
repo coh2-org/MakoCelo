@@ -35,6 +35,7 @@ namespace MakoCelo.Model
         public List<PersonalStats> PersonalStats { get; set; } = new();
         public List<Team> Teams { get; set; } = new();
         public Team CurrentTeam { get; set; }
+        public TeamStats CurrentTeamStats {get; set; }
         public string StatGroupId { get; set; }
 
     }
@@ -51,6 +52,8 @@ namespace MakoCelo.Model
         public Faction Faction { get; set; }
         public GameMode GameMode { get; set; }
         public int Rank { get; set; }
+
+        public string FormattedRank => Rank <= 0 ? "---" : $"{Rank}";
         public int Wins { get; set; }
         public int Losses { get; set; }
 
@@ -58,25 +61,28 @@ namespace MakoCelo.Model
             ((double)Wins /
              (Losses + Wins)).ToString("P");
 
-        public string RankLevel { get; set; }
+        public int RankLevel { get; set; }
+        public string FormattedRankLevel => RankLevel <= 0 ? "---" : $"L-{RankLevel}";
         public int TotalPlayers { get; set; }
 
-        public string Elo => Rank <= 0 ? "---" : ((double) Rank / TotalPlayers).ToString("P");
+        public string FormattedElo => Rank <= 0 ? "---" : ((double) Rank / TotalPlayers).ToString("P");
     }
 
     public class TeamStats
     {
         public Side Side { get; set; }
         public int Rank { get; set; }
+        public string FormattedRank => Rank <= 0 ? "---" : $"{Rank}";
         public int Wins { get; set; }
         public int Losses { get; set; }
-        public string RankLevel { get; set; }
+        public int RankLevel { get; set; }
+        public string FormattedRankLevel => RankLevel <= 0 ? "---" : $"L-{RankLevel}";
         public int  TotalTeams { get; set; }
         public string WinLossPercentRatio =>
             ((double)Wins /
              (Losses + Wins)).ToString("P");
 
-        public string Elo => Rank <= 0 ? "---" : ((double) Rank / TotalTeams).ToString("P");
+        public string FormattedElo => Rank <= 0 ? "---" : ((double) Rank / TotalTeams).ToString("P");
     }
 
     public class Team

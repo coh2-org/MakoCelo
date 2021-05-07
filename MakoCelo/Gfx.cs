@@ -200,22 +200,22 @@ namespace MakoCelo
                 _frmMain.Main_Gfx.DrawString(_frmMain.PlrRankPerc[N, t, 4], fonRank, BruName, XSec[10], YStart[t] + YSec[5]);
             }
 
-            _frmMain.Main_Gfx.DrawString("Player: " + _frmMain.PlrName[N], fonRank, BruRank, XSec[6], YStart[3] + YSec[2]);
+            _frmMain.Main_Gfx.DrawString("Player: " + _frmMain.CurrentMatch.Players[N -1].RelicId, fonRank, BruRank, XSec[6], YStart[3] + YSec[2]);
             // R4.46 Removed.   Main_Gfx.DrawString("RelicID: " & PlrRID(N), fonRank, BruRank, XSec(6), YStart(3) + YSec(3))
             _frmMain.Main_Gfx.DrawString("Left Click to exit, Right Click for teams", fonRank, BruName, XSec[6],
                 YStart[3] + YSec[4]);
-            _frmMain.Main_Gfx.DrawString("Team Win: " + _frmMain.PlrTWin[N], fonRank, BruRank, XSec[9], YStart[3] + YSec[2]);
-            _frmMain.Main_Gfx.DrawString("Team Loss: " + _frmMain.PlrTLoss[N], fonRank, BruRank, XSec[9], YStart[3] + YSec[3]);
-            _frmMain.Main_Gfx.DrawString("Team: " + _frmMain.PlrTeam[N], fonRank, BruRank, XSec[9], YStart[3] + YSec[4]);
-
+            
+            _frmMain.Main_Gfx.DrawString("Team Win: " + _frmMain.CurrentMatch.Players[N-1].CurrentTeamStats?.Wins, fonRank, BruRank, XSec[9], YStart[3] + YSec[2]);
+            _frmMain.Main_Gfx.DrawString("Team Loss: " + _frmMain.CurrentMatch.Players[N - 1].CurrentTeamStats?.Losses, fonRank, BruRank, XSec[9], YStart[3] + YSec[3]);
+            _frmMain.Main_Gfx.DrawString("Team: " + _frmMain.CurrentMatch.Players[N - 1].CurrentTeam?.Players.Count, fonRank, BruRank, XSec[9], YStart[3] + YSec[4]);
             // R4.45 Added country flags.
-            if (!string.IsNullOrEmpty(_frmMain.PlrCountry[N]))
+            if (!string.IsNullOrEmpty(_frmMain.CurrentMatch.Players[N-1].Country?.Code ))
             {
-                var bmCountry = Resources.ResourceManager.GetObject("flag_" + _frmMain.PlrCountry[N]) as Bitmap;
+                var bmCountry = Resources.ResourceManager.GetObject("flag_" + _frmMain.CurrentMatch.Players[N - 1].Country.Code) as Bitmap;
                 if (!Information.IsNothing(bmCountry)) _frmMain.Main_Gfx.DrawImage(bmCountry, new Point(XSec[6] - 20, YStart[3] + YSec[2]));
 
-                _frmMain.Main_Gfx.DrawString(_frmMain.PlrCountry[N], fonRank, BruRank, XSec[6] - 20, YStart[3] + YSec[3]);
-                _frmMain.Main_Gfx.DrawString("Country: " + _frmMain.PlrCountryName[N], fonRank, BruRank, XSec[6],
+                _frmMain.Main_Gfx.DrawString(_frmMain.CurrentMatch.Players[N - 1].Country.Code, fonRank, BruRank, XSec[6] - 20, YStart[3] + YSec[3]);
+                _frmMain.Main_Gfx.DrawString("Country: " + _frmMain.CurrentMatch.Players[N - 1].Country.Name, fonRank, BruRank, XSec[6],
                     YStart[3] + YSec[3]); // R4.46 Added.
             }
 
@@ -359,8 +359,8 @@ namespace MakoCelo
             }
 
             _frmMain.Main_Gfx.DrawString("PREMADE TEAM RANKS", fonRank, BruRank2, 500f, 0f);
-            _frmMain.Main_Gfx.DrawString("Player: " + _frmMain.PlrName[n], fonRank, BruRank, 500f, 15f);
-            _frmMain.Main_Gfx.DrawString("RelicID: " + _frmMain.PlrRID[n], fonRank, BruRank, 500f, 30f);
+            _frmMain.Main_Gfx.DrawString("Player: " + _frmMain.CurrentMatch.Players[n -1].Name, fonRank, BruRank, 500f, 15f);
+            _frmMain.Main_Gfx.DrawString("RelicID: " + _frmMain.CurrentMatch.Players[n - 1].RelicId, fonRank, BruRank, 500f, 30f);
             _frmMain.Main_Gfx.DrawString("Click the screen again to exit", fonRank, BruName, 500f, 45f);
             _frmMain.pbStats.Image = _frmMain.Main_BM;
         }
@@ -495,8 +495,8 @@ namespace MakoCelo
             // *****************************************************************
             // R3.10 Draw the Rank background rectangles
             // *****************************************************************
-            for (var T = 1; T <= 8; T++)
-                if (!_frmMain.FLAG_HideMissing | !string.IsNullOrEmpty(_frmMain.PlrName[T]) | !string.IsNullOrEmpty(_frmMain.PlrSteam[T]))
+            for (var T = 1; T <= _frmMain.CurrentMatch.Players.Count; T++)
+                if (!_frmMain.FLAG_HideMissing | !string.IsNullOrEmpty(_frmMain.CurrentMatch.Players[T - 1].Name))
                 {
                     // R3.00 Draw the RANK background rectangle.
                     linGrBrush = _frmMain.LSRank.BDir == 0
@@ -615,8 +615,8 @@ namespace MakoCelo
             // *****************************************************************
             // R3.10 Draw the Name background rectangles
             // *****************************************************************  
-            for (var T = 1; T <= 8; T++)
-                if (!_frmMain.FLAG_HideMissing | !string.IsNullOrEmpty(_frmMain.PlrName[T]))
+            for (var T = 1; T <= _frmMain.CurrentMatch.Players.Count; T++)
+                if (!_frmMain.FLAG_HideMissing | !string.IsNullOrEmpty(_frmMain.CurrentMatch.Players[T - 1].Name))
                 {
                     // R3.00 Draw the NAME background rectangle.
                     if (_frmMain.LSName.BDir == 0)
@@ -777,19 +777,20 @@ namespace MakoCelo
             var tBrushShadow = new SolidBrush(_frmMain.LSRank.ShadowColor);
             TextHgt12 = (int) Math.Round(_frmMain.Main_Gfx.MeasureString("X", frmMain.FONT_Rank).Height /
                                          2f); // R3.30 Calc height of gradient color.  'R3.30Changed from Xq.
-            for (var T = 1; T <= 8; T++)
+            for (var T = 1; T <= _frmMain.CurrentMatch.Players.Count; T++)
             {
+
                 if (_frmMain.FLAG_EloUse == false)
                 {
-                    tString = _frmMain._currentMatch.Players[T - 1].CurrentPersonalStats.Rank.ToString();
+                    tString = _frmMain.CurrentMatch.Players[T - 1].CurrentPersonalStats.Rank.ToString();
                 }
                 else
                 {
-                    if (_frmMain.RankDisplayMode == RankDisplayMode.Rank) tString = _frmMain._currentMatch.Players[T - 1].CurrentPersonalStats.Rank.ToString(); //TODO -- TEAMStats
+                    if (_frmMain.RankDisplayMode == RankDisplayMode.Rank) tString = _frmMain.CurrentMatch.Players[T - 1].CurrentPersonalStats.FormattedRank; //TODO -- TEAMStats
 
-                    if (_frmMain.RankDisplayMode == RankDisplayMode.Elo) tString = _frmMain._currentMatch.Players[T - 1].CurrentPersonalStats.Elo; //TODO -- TEAMStats
+                    if (_frmMain.RankDisplayMode == RankDisplayMode.Elo) tString = _frmMain.CurrentMatch.Players[T - 1].CurrentPersonalStats.FormattedElo; //TODO -- TEAMStats
 
-                    if (_frmMain.RankDisplayMode == RankDisplayMode.Lvl) tString = _frmMain._currentMatch.Players[T - 1].CurrentPersonalStats.RankLevel; //TODO -- TEAMStats
+                    if (_frmMain.RankDisplayMode == RankDisplayMode.Lvl) tString = _frmMain.CurrentMatch.Players[T - 1].CurrentPersonalStats.FormattedRankLevel; //TODO -- TEAMStats
                 }
 
                 // R3.00 Create a clipping area so names do not draw past the rectangle.
@@ -826,10 +827,9 @@ namespace MakoCelo
             // *****************************************************************
             // Draw the Faction images to the stats page.
             // ***************************************************************** 
-            for (var t = 1; t <= 8; t++)
-                if (!string.IsNullOrEmpty(_frmMain.PlrFact[t]))
+            for (var t = 1; t <= _frmMain.CurrentMatch.Players.Count; t++)
                 {
-                    tPic = (PictureBox) _frmMain.Controls["pbFact" + _frmMain.PlrFact[t]];
+                    tPic = (PictureBox) _frmMain.Controls["pbFact0" + (int)_frmMain.CurrentMatch.Players[t - 1].CurrentFaction];
                     _frmMain.Main_Gfx.DrawImage(tPic.Image, Xoff + _frmMain.LAB_Fact[t].X, Yoff + _frmMain.LAB_Fact[t].Y, _frmMain.LAB_Fact[t].Width, _frmMain.LAB_Fact[t].Height);
                 }
 
@@ -838,7 +838,7 @@ namespace MakoCelo
             // *****************************************************************  
             tBrushShadow = new SolidBrush(_frmMain.LSName.ShadowColor);
             TextHgt12 = (int) Math.Round(_frmMain.Main_Gfx.MeasureString("X", frmMain.FONT_Name).Height / 2f); // R3.30 Changed from Xq.
-            for (var T = 1; T <= 8; T++)
+            for (var T = 1; T <= _frmMain.CurrentMatch.Players.Count; T++)
             {
                 // R3.00 Create a clipping area so names do not draw past the rectangle.
                 _frmMain.Main_Gfx.Clip = new Region(new Rectangle((int) Math.Round(Xoff + _frmMain.LAB_Name[T].X + 1f),
@@ -858,10 +858,10 @@ namespace MakoCelo
                         // R4.50 Normal X layout style.
                         if (Conversion.Val(_frmMain.cboLayoutX.Text) < 10d)
                         {
-                            _frmMain.Main_Gfx.DrawString(_frmMain.PlrName[T], frmMain.FONT_Name, tBrushShadow,
+                            _frmMain.Main_Gfx.DrawString(_frmMain.CurrentMatch.Players[T - 1].Name, frmMain.FONT_Name, tBrushShadow,
                                 (float) (Cx + 18 + _frmMain.LSName.ShadowX * Conversion.Val(_frmMain.LSName.ShadowDepth)),
                                 (float) (Cy + _frmMain.LSName.ShadowY * Conversion.Val(_frmMain.LSName.ShadowDepth)), _frmMain.LAB_Name_Align[T]);
-                            if (!string.IsNullOrEmpty(_frmMain.PlrCountry[T]))
+                            if (!string.IsNullOrEmpty(_frmMain.CurrentMatch.Players[T - 1].Country?.Code))
                                 _frmMain.Main_Gfx.FillRectangle(tBrushShadow,
                                     (float) (Cx + _frmMain.LSName.ShadowX * Conversion.Val(_frmMain.LSName.ShadowDepth) + 4d),
                                     (float) (Yoff + _frmMain.LAB_Name[T].Y + tLabHgt - 6f + _frmMain.LSName.ShadowY * Conversion.Val(_frmMain.LSName.ShadowDepth)), 16f, 11f);
@@ -870,10 +870,10 @@ namespace MakoCelo
                         else if (Conversions.ToBoolean(T % 2))
                         {
                             // R4.46 ODD players.
-                            _frmMain.Main_Gfx.DrawString(_frmMain.PlrName[T], frmMain.FONT_Name, tBrushShadow,
+                            _frmMain.Main_Gfx.DrawString(_frmMain.CurrentMatch.Players[T - 1].Name, frmMain.FONT_Name, tBrushShadow,
                                 (float) (Cx - 19 + _frmMain.LSName.ShadowX * Conversion.Val(_frmMain.LSName.ShadowDepth)),
                                 (float) (Cy + _frmMain.LSName.ShadowY * Conversion.Val(_frmMain.LSName.ShadowDepth)), _frmMain.LAB_Name_Align[T]);
-                            if (!string.IsNullOrEmpty(_frmMain.PlrCountry[T]))
+                            if (!string.IsNullOrEmpty(_frmMain.CurrentMatch.Players[T - 1].Country?.Code))
                                 _frmMain.Main_Gfx.FillRectangle(tBrushShadow,
                                     (float) (Cx + _frmMain.LSName.ShadowX * Conversion.Val(_frmMain.LSName.ShadowDepth) - 20d),
                                     (float) (Yoff + _frmMain.LAB_Name[T].Y + tLabHgt - 6f + _frmMain.LSName.ShadowY * Conversion.Val(_frmMain.LSName.ShadowDepth)), 16f, 11f);
@@ -881,10 +881,10 @@ namespace MakoCelo
                         else
                         {
                             // R4.50 Even players.
-                            _frmMain.Main_Gfx.DrawString(_frmMain.PlrName[T], frmMain.FONT_Name, tBrushShadow,
+                            _frmMain.Main_Gfx.DrawString(_frmMain.CurrentMatch.Players[T - 1].Name, frmMain.FONT_Name, tBrushShadow,
                                 (float) (Cx + 19 + _frmMain.LSName.ShadowX * Conversion.Val(_frmMain.LSName.ShadowDepth)),
                                 (float) (Cy + _frmMain.LSName.ShadowY * Conversion.Val(_frmMain.LSName.ShadowDepth)), _frmMain.LAB_Name_Align[T]);
-                            if (!string.IsNullOrEmpty(_frmMain.PlrCountry[T]))
+                            if (!string.IsNullOrEmpty(_frmMain.CurrentMatch.Players[T - 1].Country?.Code))
                                 _frmMain.Main_Gfx.FillRectangle(tBrushShadow,
                                     (float) (Cx + _frmMain.LSName.ShadowX * Conversion.Val(_frmMain.LSName.ShadowDepth) + 4d),
                                     (float) (Yoff + _frmMain.LAB_Name[T].Y + tLabHgt - 6f + _frmMain.LSName.ShadowY * Conversion.Val(_frmMain.LSName.ShadowDepth)), 16f, 11f);
@@ -892,7 +892,7 @@ namespace MakoCelo
                     }
                     else
                     {
-                        _frmMain.Main_Gfx.DrawString(_frmMain.PlrName[T], frmMain.FONT_Name, tBrushShadow,
+                        _frmMain.Main_Gfx.DrawString(_frmMain.CurrentMatch.Players[T - 1].Name, frmMain.FONT_Name, tBrushShadow,
                             (float) (Cx + _frmMain.LSName.ShadowX * Conversion.Val(_frmMain.LSName.ShadowDepth)),
                             (float) (Cy + _frmMain.LSName.ShadowY * Conversion.Val(_frmMain.LSName.ShadowDepth)), _frmMain.LAB_Name_Align[T]);
                     }
@@ -926,10 +926,10 @@ namespace MakoCelo
                     // R4.50 Normal X layout style.
                     if (Conversion.Val(_frmMain.cboLayoutX.Text) < 10d)
                     {
-                        _frmMain.Main_Gfx.DrawString(_frmMain.PlrName[T], frmMain.FONT_Name, linGrBrush, Cx + 18, Cy, _frmMain.LAB_Name_Align[T]);
-                        if (!string.IsNullOrEmpty(_frmMain.PlrCountry[T]))
+                        _frmMain.Main_Gfx.DrawString(_frmMain.CurrentMatch.Players[T - 1].Name, frmMain.FONT_Name, linGrBrush, Cx + 18, Cy, _frmMain.LAB_Name_Align[T]);
+                        if (!string.IsNullOrEmpty(_frmMain.CurrentMatch.Players[T - 1].Country?.Code))
                         {
-                            var BM_Country = Resources.ResourceManager.GetObject("flag_" + _frmMain.PlrCountry[T]) as Bitmap;
+                            var BM_Country = Resources.ResourceManager.GetObject("flag_" + _frmMain.CurrentMatch.Players[T - 1].Country?.Code) as Bitmap;
                             if (!Information.IsNothing(BM_Country))
                                 _frmMain.Main_Gfx.DrawImage(BM_Country,
                                     new Point(Cx + 4, (int) Math.Round(Yoff + _frmMain.LAB_Name[T].Y + tLabHgt - 6f)));
@@ -939,10 +939,10 @@ namespace MakoCelo
                     else if (Conversions.ToBoolean(T % 2))
                     {
                         // R4.50 ODD players.
-                        _frmMain.Main_Gfx.DrawString(_frmMain.PlrName[T], frmMain.FONT_Name, linGrBrush, Cx - 19, Cy, _frmMain.LAB_Name_Align[T]);
-                        if (!string.IsNullOrEmpty(_frmMain.PlrCountry[T]))
+                        _frmMain.Main_Gfx.DrawString(_frmMain.CurrentMatch.Players[T - 1].Name, frmMain.FONT_Name, linGrBrush, Cx - 19, Cy, _frmMain.LAB_Name_Align[T]);
+                        if (!string.IsNullOrEmpty(_frmMain.CurrentMatch.Players[T - 1].Country?.Code))
                         {
-                            var BM_Country = Resources.ResourceManager.GetObject("flag_" + _frmMain.PlrCountry[T]) as Bitmap;
+                            var BM_Country = Resources.ResourceManager.GetObject("flag_" + _frmMain.CurrentMatch.Players[T - 1].Country?.Code) as Bitmap;
                             if (!Information.IsNothing(BM_Country))
                                 _frmMain.Main_Gfx.DrawImage(BM_Country,
                                     new Point(Cx - 20, (int) Math.Round(Yoff + _frmMain.LAB_Name[T].Y + tLabHgt - 6f)));
@@ -951,10 +951,10 @@ namespace MakoCelo
                     else
                     {
                         // R4.50 Even players.
-                        _frmMain.Main_Gfx.DrawString(_frmMain.PlrName[T], frmMain.FONT_Name, linGrBrush, Cx + 19, Cy, _frmMain.LAB_Name_Align[T]);
-                        if (!string.IsNullOrEmpty(_frmMain.PlrCountry[T]))
+                        _frmMain.Main_Gfx.DrawString(_frmMain.CurrentMatch.Players[T - 1].Name, frmMain.FONT_Name, linGrBrush, Cx + 19, Cy, _frmMain.LAB_Name_Align[T]);
+                        if (!string.IsNullOrEmpty(_frmMain.CurrentMatch.Players[T - 1].Country?.Code))
                         {
-                            var BM_Country = Resources.ResourceManager.GetObject("flag_" + _frmMain.PlrCountry[T]) as Bitmap;
+                            var BM_Country = Resources.ResourceManager.GetObject("flag_" + _frmMain.CurrentMatch.Players[T - 1].Country?.Code) as Bitmap;
                             if (!Information.IsNothing(BM_Country))
                                 _frmMain.Main_Gfx.DrawImage(BM_Country,
                                     new Point(Cx + 4, (int) Math.Round(Yoff + _frmMain.LAB_Name[T].Y + tLabHgt - 6f)));
@@ -963,7 +963,7 @@ namespace MakoCelo
                 }
                 else
                 {
-                    _frmMain.Main_Gfx.DrawString(_frmMain.PlrName[T], frmMain.FONT_Name, linGrBrush, Cx, Cy, _frmMain.LAB_Name_Align[T]);
+                    _frmMain.Main_Gfx.DrawString(_frmMain.CurrentMatch.Players[T - 1].Name, frmMain.FONT_Name, linGrBrush, Cx, Cy, _frmMain.LAB_Name_Align[T]);
                 }
 
                 // R3.00 Clear the clipping area.
@@ -1270,8 +1270,8 @@ namespace MakoCelo
 
 
             // R4.50 Blur the rectangles. This needs updated for new curved borders.
-            for (t = 1; t <= 8; t++)
-                if (!_frmMain.FLAG_HideMissing | !string.IsNullOrEmpty(_frmMain.PlrName[t]) | !string.IsNullOrEmpty(_frmMain.PlrSteam[t]))
+            for (t = 1; t <= _frmMain.CurrentMatch.Players.Count; t++)
+                if (!_frmMain.FLAG_HideMissing | !string.IsNullOrEmpty(_frmMain.CurrentMatch.Players[t - 1]?.Name))
                 {
                     if (_frmMain.LSRank.BorderMode < 4)
                         FX_BlurRect(ref rgbValues, Stride, Blur, BlurBias, (int) Math.Round(Xoff + _frmMain.LAB_Rank[t].X),
@@ -1332,10 +1332,9 @@ namespace MakoCelo
             // R3.20 RemovedDim POP(0 To 8) As Integer
             // R3.20 Removed If 0 < GUI_Mouse_PlrIndex Then POP(GUI_Mouse_PlrIndex) = LAB_Fact(1).Height / 6
 
-            for (var t = 1; t <= 8; t++)
-                if (!string.IsNullOrEmpty(_frmMain.PlrFact[t]))
+            for (var t = 1; t <= _frmMain.CurrentMatch.Players.Count; t++)
                 {
-                    tPic = (PictureBox) _frmMain.Controls["pbFact" + _frmMain.PlrFact[t]];
+                    tPic = (PictureBox) _frmMain.Controls["pbFact0" + (int)_frmMain.CurrentMatch.Players[t - 1].CurrentFaction];
                     // R3.20 Removed Gfx2.DrawImage(tPic.Image, LAB_Fact(t).X - POP(t), LAB_Fact(t).Y - POP(t), LAB_Fact(t).Width + POP(t) * 2, LAB_Fact(t).Height + POP(t) * 2)
                     _frmMain.Main_Gfx2.DrawImage(tPic.Image, Xoff + _frmMain.LAB_Fact[t].X, Yoff + _frmMain.LAB_Fact[t].Y, _frmMain.LAB_Fact[t].Width, _frmMain.LAB_Fact[t].Height);
                 }
@@ -1344,19 +1343,19 @@ namespace MakoCelo
             // R3.00 Paint a blurred shadow.
             // *****************************************************************
             var tBrushShadow = new SolidBrush(Color.FromArgb(255, 0, 0, 0));
-            for (var T = 1; T <= 8; T++)
+            for (var T = 1; T <= _frmMain.CurrentMatch.Players.Count; T++)
             {
                 if (_frmMain.FLAG_EloUse == false)
                 {
-                    tString = _frmMain._currentMatch.Players[T - 1].CurrentPersonalStats.Rank.ToString();
+                    tString = _frmMain.CurrentMatch.Players[T - 1].CurrentPersonalStats.Rank.ToString();
                 }
                 else
                 {
-                    if (_frmMain.RankDisplayMode == RankDisplayMode.Rank) tString = _frmMain._currentMatch.Players[T - 1].CurrentPersonalStats.Rank.ToString(); //TODO -- TEAMStats
+                    if (_frmMain.RankDisplayMode == RankDisplayMode.Rank) tString = _frmMain.CurrentMatch.Players[T - 1].CurrentPersonalStats.FormattedRank; //TODO -- TEAMStats
 
-                    if (_frmMain.RankDisplayMode == RankDisplayMode.Elo) tString = _frmMain._currentMatch.Players[T - 1].CurrentPersonalStats.Elo; //TODO -- TEAMStats
+                    if (_frmMain.RankDisplayMode == RankDisplayMode.Elo) tString = _frmMain.CurrentMatch.Players[T - 1].CurrentPersonalStats.FormattedElo; //TODO -- TEAMStats
 
-                    if (_frmMain.RankDisplayMode == RankDisplayMode.Lvl) tString = _frmMain._currentMatch.Players[T - 1].CurrentPersonalStats.RankLevel; //TODO -- TEAMStats
+                    if (_frmMain.RankDisplayMode == RankDisplayMode.Lvl) tString = _frmMain.CurrentMatch.Players[T - 1].CurrentPersonalStats.FormattedRankLevel; //TODO -- TEAMStats
                 }
 
                 // R3.00 Create a clipping area so names do not draw past the rectangle.
@@ -1440,7 +1439,7 @@ namespace MakoCelo
             }
 
             TextHgt12 = (int) Math.Round(_frmMain.Main_Gfx2.MeasureString("X", frmMain.FONT_Name).Height / 2f);
-            for (var T = 1; T <= 8; T++)
+            for (var T = 1; T <= _frmMain.CurrentMatch.Players.Count; T++)
             {
                 // R3.00 Create a clipping area so names do not draw past the rectangle.
                 _frmMain.Main_Gfx2.Clip = new Region(new Rectangle((int) Math.Round(Xoff + _frmMain.LAB_Name[T].X + 1f),
@@ -1525,8 +1524,8 @@ namespace MakoCelo
                         // R4.50 Normal X layout style.
                         if (Conversion.Val(_frmMain.cboLayoutX.Text) < 10d)
                         {
-                            _frmMain.Main_Gfx2.DrawString(_frmMain.PlrName[T], frmMain.FONT_Name, tBrushShadow, Cx + 18 + Cx2, Cy + Cy2, _frmMain.LAB_Name_Align[T]);
-                            if (!string.IsNullOrEmpty(_frmMain.PlrCountry[T]))
+                            _frmMain.Main_Gfx2.DrawString(_frmMain.CurrentMatch.Players[T - 1].Name, frmMain.FONT_Name, tBrushShadow, Cx + 18 + Cx2, Cy + Cy2, _frmMain.LAB_Name_Align[T]);
+                            if (!string.IsNullOrEmpty(_frmMain.CurrentMatch.Players[T - 1].Country?.Code))
                                 _frmMain.Main_Gfx2.FillRectangle(tBrushShadow, Cx + 4, Yoff + _frmMain.LAB_Name[T].Y + tLabHgt - 6f, 16f,
                                     11f);
                         }
@@ -1534,23 +1533,23 @@ namespace MakoCelo
                         else if (Conversions.ToBoolean(T % 2))
                         {
                             // R4.46 ODD players.
-                            _frmMain.Main_Gfx2.DrawString(_frmMain.PlrName[T], frmMain.FONT_Name, tBrushShadow, Cx - 19 + Cx2, Cy + Cy2, _frmMain.LAB_Name_Align[T]);
-                            if (!string.IsNullOrEmpty(_frmMain.PlrCountry[T]))
+                            _frmMain.Main_Gfx2.DrawString(_frmMain.CurrentMatch.Players[T - 1].Name, frmMain.FONT_Name, tBrushShadow, Cx - 19 + Cx2, Cy + Cy2, _frmMain.LAB_Name_Align[T]);
+                            if (!string.IsNullOrEmpty(_frmMain.CurrentMatch.Players[T - 1].Country?.Code))
                                 _frmMain.Main_Gfx2.FillRectangle(tBrushShadow, Cx - 20 + Cx2,
                                     Yoff + _frmMain.LAB_Name[T].Y + tLabHgt - 6f + Cy2, 16f, 11f);
                         }
                         else
                         {
                             // R4.50 Even players.
-                            _frmMain.Main_Gfx2.DrawString(_frmMain.PlrName[T], frmMain.FONT_Name, tBrushShadow, Cx + 19 + Cx2, Cy + Cy2, _frmMain.LAB_Name_Align[T]);
-                            if (!string.IsNullOrEmpty(_frmMain.PlrCountry[T]))
+                            _frmMain.Main_Gfx2.DrawString(_frmMain.CurrentMatch.Players[T - 1].Name, frmMain.FONT_Name, tBrushShadow, Cx + 19 + Cx2, Cy + Cy2, _frmMain.LAB_Name_Align[T]);
+                            if (!string.IsNullOrEmpty(_frmMain.CurrentMatch.Players[T - 1].Country?.Code))
                                 _frmMain.Main_Gfx2.FillRectangle(tBrushShadow, Cx + 4 + Cx2,
                                     Yoff + _frmMain.LAB_Name[T].Y + tLabHgt - 6f + Cy2, 16f, 11f);
                         }
                     }
                     else
                     {
-                        _frmMain.Main_Gfx2.DrawString(_frmMain.PlrName[T], frmMain.FONT_Name, tBrushShadow, Cx + Cx2, Cy + Cy2, _frmMain.LAB_Name_Align[T]);
+                        _frmMain.Main_Gfx2.DrawString(_frmMain.CurrentMatch.Players[T - 1].Name, frmMain.FONT_Name, tBrushShadow, Cx + Cx2, Cy + Cy2, _frmMain.LAB_Name_Align[T]);
                     }
                 }
 
@@ -1699,10 +1698,9 @@ namespace MakoCelo
             // Dim POP(0 To 8) As Integer
             // If 0 < GUI_Mouse_PlrIndex Then POP(GUI_Mouse_PlrIndex) = LAB_Fact(1).Height / 6
 
-            for (var t = 1; t <= 8; t++)
-                if (!string.IsNullOrEmpty(_frmMain.PlrFact[t]))
+            for (var t = 1; t <= _frmMain.CurrentMatch.Players.Count; t++)
                 {
-                    tPic = (PictureBox) _frmMain.Controls["pbFact" + _frmMain.PlrFact[t]];
+                    tPic = (PictureBox) _frmMain.Controls["pbFact0" + (int)_frmMain.CurrentMatch.Players[t - 1].CurrentFaction];
                     Gfx2.DrawImage(tPic.Image, Xoff + _frmMain.LAB_Fact[t].X, Yoff + _frmMain.LAB_Fact[t].Y, _frmMain.LAB_Fact[t].Width, _frmMain.LAB_Fact[t].Height);
                 }
 
@@ -1710,19 +1708,19 @@ namespace MakoCelo
             // R3.00 Print the RANK and NAME text on the blank bitmap.
             // *****************************************************************
             var tBrushShadow = new SolidBrush(Color.FromArgb(255, 0, 0, 0));
-            for (var T = 1; T <= 8; T++)
+            for (var T = 1; T <= _frmMain.CurrentMatch.Players.Count; T++)
             {
                 if (_frmMain.FLAG_EloUse == false)
                 {
-                    tString = _frmMain._currentMatch.Players[T - 1].CurrentPersonalStats.Rank.ToString();
+                    tString = _frmMain.CurrentMatch.Players[T - 1].CurrentPersonalStats.Rank.ToString();
                 }
                 else
                 {
-                    if (_frmMain.RankDisplayMode == RankDisplayMode.Rank) tString = _frmMain._currentMatch.Players[T - 1].CurrentPersonalStats.Rank.ToString(); //TODO -- TEAMStats
+                    if (_frmMain.RankDisplayMode == RankDisplayMode.Rank) tString = _frmMain.CurrentMatch.Players[T - 1].CurrentPersonalStats.FormattedRank; //TODO -- TEAMStats
 
-                    if (_frmMain.RankDisplayMode == RankDisplayMode.Elo) tString = _frmMain._currentMatch.Players[T - 1].CurrentPersonalStats.Elo; //TODO -- TEAMStats
+                    if (_frmMain.RankDisplayMode == RankDisplayMode.Elo) tString = _frmMain.CurrentMatch.Players[T - 1].CurrentPersonalStats.FormattedElo; //TODO -- TEAMStats
 
-                    if (_frmMain.RankDisplayMode == RankDisplayMode.Lvl) tString = _frmMain._currentMatch.Players[T - 1].CurrentPersonalStats.RankLevel; //TODO -- TEAMStats
+                    if (_frmMain.RankDisplayMode == RankDisplayMode.Lvl) tString = _frmMain.CurrentMatch.Players[T - 1].CurrentPersonalStats.FormattedRankLevel; //TODO -- TEAMStats
                 }
 
                 // R3.00 Create a clipping area so names do not draw past the rectangle/label.
@@ -1744,7 +1742,7 @@ namespace MakoCelo
             }
 
             TextHgt12 = (int) Math.Round(Gfx2.MeasureString("X", frmMain.FONT_Name).Height / 2f); // R3.30 Was Xq.
-            for (var T = 1; T <= 8; T++)
+            for (var T = 1; T <= _frmMain.CurrentMatch.Players.Count; T++)
             {
                 // R3.00 Create a clipping area so names do not draw past the rectangle.
                 Gfx2.Clip = new Region(new Rectangle((int) Math.Round(Xoff + _frmMain.LAB_Name[T].X + 1f),
@@ -1763,29 +1761,29 @@ namespace MakoCelo
                     // R4.50 Normal X layout style.
                     if (Conversion.Val(_frmMain.cboLayoutX.Text) < 10d)
                     {
-                        Gfx2.DrawString(_frmMain.PlrName[T], frmMain.FONT_Name, tBrushShadow, Cx + 18, Cy, _frmMain.LAB_Name_Align[T]);
-                        if (!string.IsNullOrEmpty(_frmMain.PlrCountry[T]))
+                        Gfx2.DrawString(_frmMain.CurrentMatch.Players[T - 1].Name, frmMain.FONT_Name, tBrushShadow, Cx + 18, Cy, _frmMain.LAB_Name_Align[T]);
+                        if (!string.IsNullOrEmpty(_frmMain.CurrentMatch.Players[T - 1].Country?.Code))
                             Gfx2.FillRectangle(tBrushShadow, Cx + 4, Yoff + _frmMain.LAB_Name[T].Y + LabYCenter - 6f, 16f, 11f);
                     }
                     // R4.46 Centered X layout style.
                     else if (Conversions.ToBoolean(T % 2))
                     {
                         // R4.50 ODD players.
-                        Gfx2.DrawString(_frmMain.PlrName[T], frmMain.FONT_Name, tBrushShadow, Cx - 19, Cy, _frmMain.LAB_Name_Align[T]);
-                        if (!string.IsNullOrEmpty(_frmMain.PlrCountry[T]))
+                        Gfx2.DrawString(_frmMain.CurrentMatch.Players[T - 1].Name, frmMain.FONT_Name, tBrushShadow, Cx - 19, Cy, _frmMain.LAB_Name_Align[T]);
+                        if (!string.IsNullOrEmpty(_frmMain.CurrentMatch.Players[T - 1].Country?.Code))
                             Gfx2.FillRectangle(tBrushShadow, Cx - 20, Yoff + _frmMain.LAB_Name[T].Y + LabYCenter - 6f, 16f, 11f);
                     }
                     else
                     {
                         // R4.50 Even players.
-                        Gfx2.DrawString(_frmMain.PlrName[T], frmMain.FONT_Name, tBrushShadow, Cx + 19, Cy, _frmMain.LAB_Name_Align[T]);
-                        if (!string.IsNullOrEmpty(_frmMain.PlrCountry[T]))
+                        Gfx2.DrawString(_frmMain.CurrentMatch.Players[T - 1].Name, frmMain.FONT_Name, tBrushShadow, Cx + 19, Cy, _frmMain.LAB_Name_Align[T]);
+                        if (!string.IsNullOrEmpty(_frmMain.CurrentMatch.Players[T - 1].Country?.Code))
                             Gfx2.FillRectangle(tBrushShadow, Cx + 4, Yoff + _frmMain.LAB_Name[T].Y + LabYCenter - 6f, 16f, 11f);
                     }
                 }
                 else
                 {
-                    Gfx2.DrawString(_frmMain.PlrName[T], frmMain.FONT_Name, tBrushShadow, Cx, Cy, _frmMain.LAB_Name_Align[T]);
+                    Gfx2.DrawString(_frmMain.CurrentMatch.Players[T - 1].Name, frmMain.FONT_Name, tBrushShadow, Cx, Cy, _frmMain.LAB_Name_Align[T]);
                 }
 
                 // R3.00 Clear the clipping area.
