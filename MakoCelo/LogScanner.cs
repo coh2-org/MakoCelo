@@ -59,18 +59,6 @@ namespace MakoCelo
             // R3.10 Clear the current match and find new data below. 
             for (var t = 1; t <= 8; t++)
             {
-                for (var t2 = 1; t2 <= 5; t2++)
-                    for (var t3 = 1; t3 <= 4; t3++)
-                    {
-                        tPlrRankAll[t, t2, t3] = _frmMain.PlrRankALL[t, t2, t3];
-                        _frmMain.PlrRankALL[t, t2, t3] = 0;
-                        tPlrRankWin[t, t2, t3] = _frmMain.PlrRankWin[t, t2, t3];
-                        _frmMain.PlrRankWin[t, t2, t3] = 0;
-                        tPlrRankLoss[t, t2, t3] = _frmMain.PlrRankLoss[t, t2, t3];
-                        _frmMain.PlrRankLoss[t, t2, t3] = 0;
-                        tPlrRankPerc[t, t2, t3] = _frmMain.PlrRankPerc[t, t2, t3];
-                        _frmMain.PlrRankPerc[t, t2, t3] = "";
-                    }
 
                 tTeamListCnt[t] = _frmMain.TeamListCnt[t];
                 _frmMain.TeamListCnt[t] = 0;
@@ -82,16 +70,7 @@ namespace MakoCelo
                 
                 tPlrGlvl[t] = _frmMain.PlrGLVL[t];
                 _frmMain.PlrGLVL[t] = 0;
-
-                // R4.30 Store PUBLIC copy for LAST MATCH ability.
-                for (var t2 = 1; t2 <= 5; t2++)
-                    for (var t3 = 1; t3 <= 4; t3++)
-                    {
-                        _frmMain.PlrRankALL_Buffer[t, t2, t3] = tPlrRankAll[t, t2, t3];
-                        _frmMain.PlrRankWin_Buffer[t, t2, t3] = tPlrRankWin[t, t2, t3];
-                        _frmMain.PlrRankLoss_Buffer[t, t2, t3] = tPlrRankLoss[t, t2, t3];
-                        _frmMain.PlrRankPerc_Buffer[t, t2, t3] = tPlrRankPerc[t, t2, t3];
-                    }
+                
 
                 _frmMain.TeamListCnt_Buffer[t] = tTeamListCnt[t];
                 for (int t2 = 1, loopTo2 = _frmMain.TeamList_Buffer.GetUpperBound(1); t2 <= loopTo2; t2++) _frmMain.TeamList_Buffer[t, t2] = tTeamList[t, t2];
@@ -105,15 +84,7 @@ namespace MakoCelo
             if (!matchFound.IsMatchFound()) //backward compatibility - won't be needed if we use previousMatch
                 for (var t = 1; t <= 8; t++)
                 {
-                    for (var t2 = 1; t2 <= 5; t2++)
-                    for (var t3 = 1; t3 <= 4; t3++)
-                    {
-                        _frmMain.PlrRankALL[t, t2, t3] = tPlrRankAll[t, t2, t3];
-                        _frmMain.PlrRankWin[t, t2, t3] = tPlrRankWin[t, t2, t3];
-                        _frmMain.PlrRankLoss[t, t2, t3] = tPlrRankLoss[t, t2, t3];
-                        _frmMain.PlrRankPerc[t, t2, t3] = tPlrRankPerc[t, t2, t3];
-                    }
-
+                    
                     _frmMain.TeamListCnt[t] = tTeamListCnt[t];
                     for (int t2 = 1, loopTo4 = _frmMain.TeamList.GetUpperBound(1); t2 <= loopTo4; t2++) _frmMain.TeamList[t, t2] = tTeamList[t, t2];
                     
@@ -228,8 +199,6 @@ namespace MakoCelo
                             if (leaderBoardPlayerData != null)
                             {
                                 var rank = Convert.ToInt32(leaderBoardPlayerData.Rank) == -1 ? 0 : Convert.ToInt32(leaderBoardPlayerData.Rank); //backward compatibility
-                                var percent = ((double)leaderBoardPlayerData.Wins /
-                                              (leaderBoardPlayerData.Losses + leaderBoardPlayerData.Wins)).ToString("P");
                                 var personalStats = new PersonalStats
                                 {
                                     Faction = (Faction) i,
@@ -244,14 +213,7 @@ namespace MakoCelo
                                 currentPlayer.PersonalStats.Add(personalStats);
                                 if (currentPlayer.CurrentFaction == personalStats.Faction)
                                     currentPlayer.CurrentPersonalStats = personalStats;
-
-                                _frmMain.PlrRankWin[t, i, j] = leaderBoardPlayerData.Wins; //backward compatibility
-                                _frmMain.PlrRankLoss[t, i, j] = leaderBoardPlayerData.Losses; //backward compatibility
-                                _frmMain.PlrRankALL[t, i, j] = rank; //backward compatibility
-                                _frmMain.PlrRankPerc[t, i, j] = percent; //backward compatibility
                                 
-
-
                             }
                         }
                     }

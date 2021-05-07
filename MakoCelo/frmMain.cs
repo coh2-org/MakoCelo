@@ -118,14 +118,6 @@ namespace MakoCelo
         
         public readonly int[] PlrGLVL = new int[9];
         public readonly int[] PlrGLVL_Buffer = new int[9];
-        public readonly int[,,] PlrRankALL = new int[9, 8, 5]; // R4.30 Rank from RID for all game modes.
-        public readonly int[,,] PlrRankALL_Buffer = new int[9, 8, 5]; // R4.30 Rank from RID for all game modes.
-        public readonly int[,,] PlrRankLoss = new int[9, 8, 5]; // R4.30 Rank from RID for all game modes.
-        public readonly int[,,] PlrRankLoss_Buffer = new int[9, 8, 5]; // R4.30 Rank from RID for all game modes.
-        public readonly string[,,] PlrRankPerc = new string[9, 8, 5]; // R4.30 Rank from RID for all game modes.
-        public readonly string[,,] PlrRankPerc_Buffer = new string[9, 8, 5]; // R4.30 Rank from RID for all game modes.
-        public readonly int[,,] PlrRankWin = new int[9, 8, 5]; // R4.30 Rank from RID for all game modes.
-        public readonly int[,,] PlrRankWin_Buffer = new int[9, 8, 5]; // R4.30 Rank from RID for all game modes.
 
         // R4.30 Get player info from RELICID
         // R4.30 ID for each game mode.

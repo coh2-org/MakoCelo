@@ -43,15 +43,6 @@ namespace MakoCelo
                         // R3.20 We have found a new section so clear the previous data.
                         for (var t = 1; t <= 8; t++)
                         {
-                            for (var t2 = 1; t2 <= 5; t2++)
-                            for (var t3 = 1; t3 <= 4; t3++)
-                            {
-                                _frmMain.PlrRankALL[t, t2, t3] = 0;
-                                _frmMain.PlrRankWin[t, t2, t3] = 0;
-                                _frmMain.PlrRankLoss[t, t2, t3] = 0;
-                                _frmMain.PlrRankPerc[t, t2, t3] = "";
-                            }
-
                             _frmMain.TeamListCnt[t] = 0;
                             for (int t2 = 1, loopTo3 = _frmMain.TeamList.GetUpperBound(1); t2 <= loopTo3; t2++) _frmMain.TeamList[t, t2] = tempTl;
                             
