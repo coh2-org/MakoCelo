@@ -11,20 +11,18 @@ using Match = MakoCelo.Model.Match;
 namespace MakoCelo
 {
     public class LogFileParser
-    {
-        private readonly frmMain _frmMain;
+    { 
         private long _lastMatchGameLogPosition;
         private string _startLineWithGameStartTime;
 
         public LogFileParser(frmMain frmMain)
         {
-            _frmMain = frmMain;
         }
 
-        public Match ParsePlayersFromGameLog(clsGlobal.t_TeamList tempTl)
+        public Match ParsePlayersFromGameLog(string filePath)
         {
             Match match = new Match();
-            using var fs = new FileStream(_frmMain.PATH_Game, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            using var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             using var sr = new StreamReader(fs, Encoding.UTF8);
             SetStreamPosition(fs, sr);
             while (!sr.EndOfStream)

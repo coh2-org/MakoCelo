@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Weavers xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="FodyWeavers.xsd">
+  <Tracer adapterAssembly="Tracer.NLog" logManager="Tracer.NLog.Adapters.LogManagerAdapter" logger="Tracer.NLog.Adapters.LoggerAdapter" staticLogger="Tracer.NLog.Log" traceConstructors="true" traceProperties="true">
+    <TraceOn namespace="MakoCelo" class="private" method="private" />
+    <!--<NoTrace namespace="Root.Generated" /> -->
+  </Tracer>
+</Weavers>

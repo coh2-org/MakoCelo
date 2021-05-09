@@ -18,6 +18,8 @@ namespace MakoCelo.Model
             return !string.IsNullOrEmpty(Id);
         }
 
+        public bool IsNewMatch { get; set; }
+
         public GameMode GameMode => (GameMode) (Players.Count / 2);
 
         public IEnumerable<Player> AxisPlayers => Players.Where(x => x.CurrentFaction is Faction.Okw or Faction.Ost);
