@@ -4,39 +4,6 @@ namespace MakoCelo
 {
     public class clsGlobal
     {
-
-        // Public Shared NoteAnim01 As t_NoteAnimation           'R3.50 Added.
-        // Public Shared NoteSetup_Text(0 To 10) As String       'R3.50 Added.
-        // Public Shared NoteAnim01_Text(0 To 10) As String      'R3.50 Added.
-        // Public Shared NoteAnim02_Text(0 To 10) As String      'R3.50 Added.
-        // Public Shared NoteAnim03_Text(0 To 10) As String      'R3.50 Added.
-        // Public Shared NoteAnim04_Text(0 To 10) As String      'R3.50 Added.
-
-        // Public Shared DlgLSetup As t_LabelSetup
-        // Public Shared DlgReturnOK As Boolean
-
-
-        public struct t_TeamList
-        {
-            public string PLR1;
-            public string PLR2;
-            public string PLR3;
-            public string PLR4;
-            public string RID1;
-            public string RID2;
-            public string RID3;
-            public string RID4;
-            public int PlrCnt;
-            public int Gmode;
-            public int RankID;
-            public int RankAxis;
-            public int RankAllies;
-            public int WinAllies;
-            public int LossAllies;
-            public int WinAxis;
-            public int LossAxis;
-        }
-
         public struct t_LabelSetup
         {
             public int Width;

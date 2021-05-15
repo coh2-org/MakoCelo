@@ -185,8 +185,6 @@ namespace MakoCelo
             this._scrStats = new System.Windows.Forms.VScrollBar();
             this._chkSpeech = new System.Windows.Forms.CheckBox();
             this._chkGetTeams = new System.Windows.Forms.CheckBox();
-            this.lstLog = new System.Windows.Forms.ListBox();
-            this._cmErrLog = new System.Windows.Forms.Button();
             this._chkCountry = new System.Windows.Forms.CheckBox();
             this.SS1 = new System.Windows.Forms.StatusStrip();
             this.SS1_Version = new System.Windows.Forms.ToolStripStatusLabel();
@@ -1924,29 +1922,6 @@ namespace MakoCelo
             this._chkGetTeams.UseVisualStyleBackColor = true;
             this._chkGetTeams.CheckedChanged += new System.EventHandler(this.chkGetTeams_CheckedChanged);
             // 
-            // lstLog
-            // 
-            this.lstLog.FormattingEnabled = true;
-            this.lstLog.Location = new System.Drawing.Point(738, 387);
-            this.lstLog.Name = "lstLog";
-            this.lstLog.Size = new System.Drawing.Size(288, 277);
-            this.lstLog.TabIndex = 110;
-            this.lstLog.Visible = false;
-            // 
-            // _cmErrLog
-            // 
-            this._cmErrLog.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(232)))), ((int)(((byte)(232)))), ((int)(((byte)(232)))));
-            this._cmErrLog.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(232)))), ((int)(((byte)(255)))), ((int)(((byte)(232)))));
-            this._cmErrLog.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this._cmErrLog.ForeColor = System.Drawing.Color.Black;
-            this._cmErrLog.Location = new System.Drawing.Point(880, 170);
-            this._cmErrLog.Name = "_cmErrLog";
-            this._cmErrLog.Size = new System.Drawing.Size(105, 23);
-            this._cmErrLog.TabIndex = 111;
-            this._cmErrLog.Text = "View Web Log";
-            this._cmErrLog.UseVisualStyleBackColor = false;
-            this._cmErrLog.Click += new System.EventHandler(this.cmErrLog_Click);
-            // 
             // _chkCountry
             // 
             this._chkCountry.AutoSize = true;
@@ -2041,8 +2016,6 @@ namespace MakoCelo
             this.Controls.Add(this._chkToggleOverlay);
             this.Controls.Add(this.SS1);
             this.Controls.Add(this._chkCountry);
-            this.Controls.Add(this._cmErrLog);
-            this.Controls.Add(this.lstLog);
             this.Controls.Add(this._chkGetTeams);
             this.Controls.Add(this._chkSpeech);
             this.Controls.Add(this._scrStats);
@@ -4651,34 +4624,7 @@ namespace MakoCelo
                 }
             }
         }
-
-        internal ListBox lstLog;
-        private Button _cmErrLog;
-
-        internal Button cmErrLog
-        {
-            [MethodImpl(MethodImplOptions.Synchronized)]
-            get
-            {
-                return _cmErrLog;
-            }
-
-            [MethodImpl(MethodImplOptions.Synchronized)]
-            set
-            {
-                if (_cmErrLog != null)
-                {
-                    _cmErrLog.Click -= cmErrLog_Click;
-                }
-
-                _cmErrLog = value;
-                if (_cmErrLog != null)
-                {
-                    _cmErrLog.Click += cmErrLog_Click;
-                }
-            }
-        }
-
+        
         private CheckBox _chkCountry;
 
         internal CheckBox chkCountry

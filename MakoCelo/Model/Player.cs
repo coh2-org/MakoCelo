@@ -6,20 +6,26 @@ using System.Threading.Tasks;
 
 namespace MakoCelo.Model
 {
+    public class ScanningResult
+    {
+        public Match Match { get; set; }
+
+        public bool IsMatchFound()
+        {
+            return Match != null && !string.IsNullOrEmpty(Match.Id);
+        }
+
+        public bool IsNewMatch { get; set; }
+
+        public bool Success { get; set; } = true;
+    }
     public class Match
     {
         //network session GUID
         public string Id { get; set; }
 
         public List<Player> Players { get; set; } = new(8);
-
-        public bool IsMatchFound()
-        {
-            return !string.IsNullOrEmpty(Id);
-        }
-
-        public bool IsNewMatch { get; set; }
-
+        
         public GameMode GameMode => (GameMode) (Players.Count / 2);
 
         public IEnumerable<Player> AxisPlayers => Players.Where(x => x.CurrentFaction is Faction.Okw or Faction.Ost);

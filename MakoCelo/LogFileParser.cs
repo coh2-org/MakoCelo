@@ -14,14 +14,11 @@ namespace MakoCelo
     { 
         private long _lastMatchGameLogPosition;
         private string _startLineWithGameStartTime;
+        
 
-        public LogFileParser(frmMain frmMain)
+        public Match ParseGameLog(string filePath)
         {
-        }
-
-        public Match ParsePlayersFromGameLog(string filePath)
-        {
-            Match match = new Match();
+            Match match = null;
             using var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             using var sr = new StreamReader(fs, Encoding.UTF8);
             SetStreamPosition(fs, sr);
@@ -46,12 +43,12 @@ namespace MakoCelo
                             long test1 = Strings.InStr(a, "Human Player");
                             if (Conversions.ToBoolean(test1))
                             {
-                                newPlayer.Name = LOG_FindPlayer(a, 39);
-                                newPlayer.RelicId = LOG_Find_RelicID(a);
+                                newPlayer.Name = FindPlayerNameInLine(a, 39);
+                                newPlayer.RelicId = FindPlayerRelicIdInLine(a);
                             }
                             else
                             {
-                                newPlayer.Name = LOG_FindPlayer(a, 36);
+                                newPlayer.Name = FindPlayerNameInLine(a, 36);
                                 newPlayer.RelicId = ""; 
                             }
                             
@@ -116,7 +113,7 @@ namespace MakoCelo
             }
         }
 
-        private string LOG_Find_RelicID(string a)
+        private string FindPlayerRelicIdInLine(string a)
         {
             var rid = 0L;
             int T;
@@ -153,7 +150,7 @@ namespace MakoCelo
         /// <param name="a"></param>
         /// <param name="charStart"></param>
         /// <returns></returns>
-        private string LOG_FindPlayer(string a, int charStart)
+        private string FindPlayerNameInLine(string a, int charStart)
         {
             string c;
             int T;

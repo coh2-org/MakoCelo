@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
@@ -107,20 +108,14 @@ namespace MakoCelo
         public readonly bool[] CFX3DActive = new bool[11];
         public readonly Color[] CFX3DC = new Color[11];
         public readonly string[,] CFX3DVar = new string[11, 11]; // R3.10 1=Mode
-        private readonly string[] Country_Abbr = new string[301];
+        
 
-        // R4.46 Added Country Strings.
-        private readonly string[] Country_Name = new string[301];
         public readonly clsGlobal.t_Box[] LAB_Fact = new clsGlobal.t_Box[9];
         public readonly clsGlobal.t_Box[] LAB_Name = new clsGlobal.t_Box[9];
         public readonly StringFormat[] LAB_Name_Align = new StringFormat[9];
         public readonly clsGlobal.t_Box[] LAB_Rank = new clsGlobal.t_Box[9]; // R2.00 Defs for current label layout. 
-        private readonly float[] LVLpercs = new float[21];
         public readonly string[,] LVLS = new string[8, 5];
         
-        // R4.30 Get player info from RELICID
-        // R4.30 ID for each game mode.
-        private readonly string[,] RelDataLeaderID = new string[8, 5];
         public readonly string[] SOUND_File = new string[31]; // R4.00 Added.
 
         public readonly string[] SOUND_Vol = new string[31]; // R4.10 Added.
@@ -144,7 +139,6 @@ namespace MakoCelo
         public int COLOR_Back_Dir; // R3.00 Future gradient on background. 
         public Color COLOR_Back1; // R3.00 Future gradient on background. 
         public Color COLOR_Back2; // R3.00 Future gradient on background. 
-        private int CountryCount;
         private bool FLAG_CheckingLog;
         private bool FLAG_Drawing; // R3.40 Dont let combo boxes call when we are drawing.
         public RankDisplayMode RankDisplayMode; // R4.30 Which value are we showing right now. Cycles with Scans.
@@ -323,10 +317,9 @@ namespace MakoCelo
             _scrStats.Name = "scrStats";
             _chkSpeech.Name = "chkSpeech";
             _chkGetTeams.Name = "chkGetTeams";
-            _cmErrLog.Name = "cmErrLog";
             _chkCountry.Name = "chkCountry";
             Settings = new Settings(this);
-            LogScanner = new LogScanner(this);
+            LogScanner = new LogScanner();
 
             Gfx = new Gfx(this);
         }
@@ -372,40 +365,14 @@ namespace MakoCelo
         }
 
         public Gfx Gfx { get; }
-
-        public ListBox LstLog
-        {
-            set { lstLog = value; }
-            get { return lstLog; }
-        }
         
         public Label LbError1
         {
             set { lbError1 = value; }
             get { return lbError1; }
         }
-
-        public string[,] RelDataLeaderId
-        {
-            get { return RelDataLeaderID; }
-        }
         
-
-        public int CountryCount1
-        {
-            set { CountryCount = value; }
-            get { return CountryCount; }
-        }
-
-        public string[] CountryAbbr
-        {
-            get { return Country_Abbr; }
-        }
-
-        public string[] CountryName
-        {
-            get { return Country_Name; }
-        }
+        
 
         private void cmCheckLog_Click(object sender, EventArgs e)
         {
@@ -453,23 +420,36 @@ namespace MakoCelo
             Cursor = Cursors.WaitCursor;
 
             Application.DoEvents();
-            var newCurrentMatch = LogScanner.StartScanningLogFile(CurrentMatch);
-            if (newCurrentMatch.IsMatchFound())
+            var scanningResult = LogScanner.ScanForMatch(CurrentMatch, PATH_Game);
+
+            Cursor = Cursors.Default;
+            lbStatus.Text = "Ready";
+
+            if (!scanningResult.Success)
+            {
+                LbError1.Text = "Scan Error";
+                LbError1.BackColor = Color.FromArgb(255, 255, 0, 0);
+            }
+            else if (scanningResult.IsNewMatch)
             {
                 _previousMatch = CurrentMatch;
-                CurrentMatch = newCurrentMatch;
+                CurrentMatch = scanningResult.Match;
 
                 // R4.34 Text-to-Speech the ranks.
                 if (chkSpeech.Checked) throw new NotImplementedException(); //STATS_ReadAloud();
 
-                if (AutoScanEnabled && _chkToggleOverlay.Checked) _overlay.Run(newCurrentMatch);
+                if (AutoScanEnabled && _chkToggleOverlay.Checked) _overlay.Run(scanningResult.Match);
 
 
                 RankDisplayMode = 0;
-                
+
                 MainBuffer_Valid = false;
                 Gfx.GFX_DrawStats();
             }
+
+
+
+
         }
 
         //private void STATS_ReadAloud()
@@ -614,31 +594,7 @@ namespace MakoCelo
         //    if (!string.IsNullOrEmpty(a)) _frmMain.SpeechSynth1.SpeakAsync(a);
         //}
 
-
-        private void LOG_InitCalcArrays()
-        {
-            LVLpercs[20] = 0.00013f;
-            LVLpercs[19] = 0.00038f;
-            LVLpercs[18] = 0.00176f;
-            LVLpercs[17] = 0.00466f;
-            LVLpercs[16] = 0.01019f;
-            LVLpercs[15] = 0.0253f;
-            LVLpercs[14] = 0.05021f;
-            LVLpercs[13] = 0.10018f;
-            LVLpercs[12] = 0.15014f;
-            LVLpercs[11] = 0.20023f;
-            LVLpercs[10] = 0.25019f;
-            LVLpercs[9] = 0.31022f;
-            LVLpercs[8] = 0.38019f;
-            LVLpercs[7] = 0.45016f;
-            LVLpercs[6] = 0.55021f;
-            LVLpercs[5] = 0.65014f;
-            LVLpercs[4] = 0.75019f;
-            LVLpercs[3] = 0.80015f;
-            LVLpercs[2] = 0.86018f;
-            LVLpercs[1] = 0.94022f;
-        }
-
+        
         public void LS_SetShadowXY(ref clsGlobal.t_LabelSetup LS)
         {
             // *****************************************************
@@ -720,10 +676,7 @@ namespace MakoCelo
 
             // R4.43 Added for Connection issues.
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-
-            // R4.46 Added Country Strings. Read from included Resource FIle.
-            RES_GetCountryData();
-
+            
             // R4.30 Create a BMP to work from. 
             Main_BM = new Bitmap(pbStats.Width, pbStats.Height);
             Main_Gfx = Graphics.FromImage(Main_BM);
@@ -775,20 +728,15 @@ namespace MakoCelo
                 Note03_Text[t] = "";
                 Note04_Text[t] = "";
             }
-
-            // R4.30 Fill in the RELIC LEADERBOARD IDs for each game mode.
-            INIT_LeaderBoardIDs();
-
+            
             // R3.30 Fill in the Combo Box list items.
             INIT_FillComboBoxes();
 
             // R3.40 Setup ToolTips
             ToolTip1.Active = false;
             ToolTip_Setup();
-
-            // R4.30 Create array with LEVEL step percentages.
-            LOG_InitCalcArrays();
-
+            
+            
             // R4.00 Setup default FONTs for Rank and Name labels.
             FONT_Rank_Name = "Arial";
             FONT_Rank_Size = "14";
@@ -910,35 +858,6 @@ namespace MakoCelo
                 FLAG_SpeechOK = false;
                 lbError2.Text = "Speech Error";
             }
-        }
-
-        private void INIT_LeaderBoardIDs()
-        {
-            // OST
-            RelDataLeaderID[1, 1] = "4";
-            RelDataLeaderID[1, 2] = "8";
-            RelDataLeaderID[1, 3] = "12";
-            RelDataLeaderID[1, 4] = "16";
-            // SOV
-            RelDataLeaderID[2, 1] = "5";
-            RelDataLeaderID[2, 2] = "9";
-            RelDataLeaderID[2, 3] = "13";
-            RelDataLeaderID[2, 4] = "17";
-            // OKW
-            RelDataLeaderID[3, 1] = "6";
-            RelDataLeaderID[3, 2] = "10";
-            RelDataLeaderID[3, 3] = "14";
-            RelDataLeaderID[3, 4] = "18";
-            // USF
-            RelDataLeaderID[4, 1] = "7";
-            RelDataLeaderID[4, 2] = "11";
-            RelDataLeaderID[4, 3] = "15";
-            RelDataLeaderID[4, 4] = "19";
-            // BRIT
-            RelDataLeaderID[5, 1] = "51";
-            RelDataLeaderID[5, 2] = "52";
-            RelDataLeaderID[5, 3] = "53";
-            RelDataLeaderID[5, 4] = "54";
         }
 
         private void SETUP_Apply()
@@ -2521,8 +2440,6 @@ namespace MakoCelo
             ToolTip1.SetToolTip(cmTestData,
                 "Test your current setup by filling the stats page" + Constants.vbCr +
                 "with the largest values you may see in a COH2 match.");
-            ToolTip1.SetToolTip(cmErrLog,
-                "Display the web data log transactions. Useful for troubleshooting problems/crashes.");
         }
 
         private void chkTips_CheckedChanged(object sender, EventArgs e)
@@ -2577,7 +2494,6 @@ namespace MakoCelo
         }
         private void MatchFoundEvent(object sender, EventArgs e)
         {
-            lstLog.Items.Clear();
 
             if (AutoScanEnabled && chkFoundSound.Checked && !string.IsNullOrEmpty(SOUND_File[15]))
             {
@@ -4036,56 +3952,13 @@ namespace MakoCelo
             // R4.34 Added.
             Settings.SETTINGS_Save("");
         }
-
-        private void cmErrLog_Click(object sender, EventArgs e)
-        {
-            var LogDialog =
-                new frmErrLog(lstLog.Items.Cast<object>()
-                    .ToList()); // With {} ' {.HideSizeOptions = True, .HideSizeAll = True}
-
-            // R4.42 Show the Error Log dialog.
-            LogDialog.ShowDialog();
-        }
-
+        
         private void chkCountry_CheckedChanged(object sender, EventArgs e)
         {
             // R4.45 Added to Country Flags.
             Settings.SETTINGS_Save("");
         }
-
-        private void RES_GetCountryData()
-        {
-            var Cnt = default(int);
-
-            // R4.46 Default to no country names available.
-            CountryCount = 0;
-            try
-            {
-                using var MyReader =
-                    new TextFieldParser(
-                        new StringReader(Resources.country_defs))
-                    {
-                        TextFieldType = FieldType.Delimited
-                    };
-                MyReader.SetDelimiters(",");
-                while (!MyReader.EndOfData)
-                {
-                    var CurrentRow = MyReader.ReadFields();
-                    Cnt += 1;
-                    Country_Name[Cnt] = CurrentRow[0];
-                    Country_Abbr[Cnt] = Strings.LCase(CurrentRow[1]);
-                }
-
-                CountryCount = Cnt;
-            }
-            catch
-            {
-                Interaction.MsgBox(
-                    "Error: parsing Country name resource file." + Constants.vbCrLf + Information.Err().Description,
-                    MsgBoxStyle.ApplicationModal, "MakoCELO - Loading error");
-            }
-        }
-
+        
         private void tbXoff_TextChanged(object sender, EventArgs e)
         {
         }

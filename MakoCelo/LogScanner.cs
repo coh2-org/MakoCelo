@@ -1,32 +1,75 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using MakoCelo.Model;
-using MakoCelo.Model.RelicApi;
+using MakoCelo.My.Resources;
 using Microsoft.VisualBasic;
-using Newtonsoft.Json;
+using Microsoft.VisualBasic.FileIO;
 using Tracer.NLog;
 
 namespace MakoCelo
 {
     public class LogScanner
     {
-        private readonly frmMain _frmMain;
         private readonly LogFileParser _logFileParser;
-
-        public event EventHandler MatchFound;
-        private readonly HttpClient _httpClient = new();
-        private readonly JsonSerializer _jsonSerializer = new();
-
-        public LogScanner(frmMain frmMain)
+        private readonly RelicApiClient _relicApiClient;
+        private readonly Dictionary<string, ValueTuple<Faction, GameMode>> _LeaderBoardDictionary = new()
         {
-            _frmMain = frmMain;
+            { "4", (Faction.Ost, GameMode.V1) },
+            { "8", (Faction.Ost, GameMode.V2) },
+            { "12", (Faction.Ost, GameMode.V3) },
+            { "16", (Faction.Ost, GameMode.V4) },
+
+            { "5", (Faction.Sov, GameMode.V1) },
+            { "9", (Faction.Sov, GameMode.V2) },
+            { "13", (Faction.Sov, GameMode.V3) },
+            { "17", (Faction.Sov, GameMode.V4) },
+
+            { "6", (Faction.Okw, GameMode.V1) },
+            { "10", (Faction.Okw, GameMode.V2) },
+            { "14", (Faction.Okw, GameMode.V3) },
+            { "18", (Faction.Okw, GameMode.V4) },
+
+            { "7", (Faction.Usf, GameMode.V1) },
+            { "11", (Faction.Usf, GameMode.V2) },
+            { "15", (Faction.Usf, GameMode.V3) },
+            { "19", (Faction.Usf, GameMode.V4) },
+
+            { "51", (Faction.Ukf, GameMode.V1) },
+            { "52", (Faction.Ukf, GameMode.V2) },
+            { "53", (Faction.Ukf, GameMode.V3) },
+            { "54", (Faction.Ukf, GameMode.V4) }
+        };
+        private readonly Dictionary<string, string> CountryCodeToNameDictionary = new();
+        public event EventHandler MatchFound;
+        
+
+        public LogScanner()
+        {
             _logFileParser = new LogFileParser();
+            _relicApiClient = new RelicApiClient();
+
+            try
+            {
+                using var myReader =
+                    new TextFieldParser(
+                        new StringReader(Resources.country_defs))
+                    {
+                        TextFieldType = FieldType.Delimited
+                    };
+                myReader.SetDelimiters(",");
+                while (!myReader.EndOfData)
+                {
+                    var CurrentRow = myReader.ReadFields();
+                    CountryCodeToNameDictionary.Add(Strings.LCase(CurrentRow[1]), CurrentRow[0]);
+                }
+            }
+            catch(Exception ex)
+            {
+                Log.Error(ex);
+            }
+
         }
 
         protected virtual void OnMatchFound(EventArgs e)
@@ -38,210 +81,151 @@ namespace MakoCelo
             }
         }
 
-        public Match StartScanningLogFile(Match previousMatch)
+        public ScanningResult ScanForMatch(Match previousMatch, string warningsLogFilePath)
         {
-            var matchFound = _logFileParser.ParsePlayersFromGameLog(_frmMain.PATH_Game);
-
-            if (matchFound.IsMatchFound() && (previousMatch == null || matchFound.Id != previousMatch.Id))
-            {
-                matchFound.IsNewMatch = true;
-                OnMatchFound(EventArgs.Empty);
-
-                GetGroupedStatsFromRelicApi(matchFound);
-
-                var allTeams = matchFound.AlliesPlayers.SelectMany(x => x.Teams).Where(x => x.Players.Count <= (int)matchFound.GameMode);
-
-                var teamGrouping = allTeams.GroupBy(x => x.Id).Where(x => x.Count() == x.First().Players.Count).OrderByDescending(y => y.Count()).FirstOrDefault();
-
-                if (teamGrouping != null)
-                {
-                    var team = teamGrouping.First();
-                    foreach (var matchFoundAlliesPlayer in matchFound.AlliesPlayers)
-                    {
-                        if (team.Players.Any(x => x.RelicId == matchFoundAlliesPlayer.RelicId))
-                        {
-
-                            matchFoundAlliesPlayer.CurrentTeam = team;
-                            matchFoundAlliesPlayer.CurrentTeamStats =
-                                team.TeamStats.First(x => x.Side == Side.Allies);
-                        }
-
-                    }
-
-                }
-
-                var axsTeams = matchFound.AxisPlayers.SelectMany(x => x.Teams).Where(x => x.Players.Count <= (int)matchFound.GameMode);
-
-                teamGrouping = axsTeams.GroupBy(x => x.Id).Where(x => x.Count() == x.First().Players.Count).OrderByDescending(y => y.Count()).FirstOrDefault();
-
-                if (teamGrouping != null)
-                {
-                    var team = teamGrouping.First();
-                    foreach (var matchFoundAlliesPlayer in matchFound.AxisPlayers)
-                    {
-                        if (team.Players.Any(x => x.RelicId == matchFoundAlliesPlayer.RelicId))
-                        {
-                            matchFoundAlliesPlayer.CurrentTeam = team;
-                            matchFoundAlliesPlayer.CurrentTeamStats =
-                                team.TeamStats.First(x => x.Side == Side.Axis);
-                        }
-
-                    }
-
-                }
-                
-            }
-
-
-            // R4.30 Clean up our GUI user indicators.
-            _frmMain.Cursor = Cursors.Default;
-            _frmMain.lbStatus.Text = "Ready";
-            Application.DoEvents();
-
-            return matchFound;
-        }
-
-        private void GetGroupedStatsFromRelicApi(Match matchFound)
-        {
-            var rawResp = "";
+            var result = new ScanningResult();
             try
             {
+                result.Match = _logFileParser.ParseGameLog(warningsLogFilePath);
 
-                var response = DownloadRawStats(matchFound.Players);
-
-                for (var t = 1; t <= matchFound.Players.Count; t++)
+                if (result.IsMatchFound() && (previousMatch == null || result.Match.Id != previousMatch.Id))
                 {
-                    var currentPlayer = matchFound.Players[t - 1];
+                    result.IsNewMatch = true;
+                    OnMatchFound(EventArgs.Empty);
 
-                    var currentPlayerData = response.StatGroups.First(x => x.Type == 1 && x.Members.Any(x => x.ProfileId == currentPlayer.RelicId)).Members.First();
-                    currentPlayer.StatGroupId = currentPlayerData.PersonalStatGroupId;
-                    currentPlayer.Country = new Country
+                    GetDataFromRelicApi(result.Match);
+                }
+            }
+            catch (Exception e)
+            {
+                Log.Error(e);
+                result.Success = false;
+            }
+            return result;
+        }
+
+        private void GetDataFromRelicApi(Match matchFound)
+        {
+            var response = _relicApiClient.GetPlayerStats(matchFound.Players.Select(x => x.RelicId).ToArray());
+
+            for (var t = 1; t <= matchFound.Players.Count; t++)
+            {
+                var currentPlayer = matchFound.Players[t - 1];
+
+                var currentPlayerData = response.StatGroups
+                    .First(x => x.Type == 1 && x.Members.Any(x => x.ProfileId == currentPlayer.RelicId)).Members
+                    .First();
+                currentPlayer.StatGroupId = currentPlayerData.PersonalStatGroupId;
+                currentPlayer.Country = new Country
+                {
+                    Code = currentPlayerData.Country,
+                    Name = CountryCodeToNameDictionary[currentPlayerData.Country]
+                };
+
+                foreach (var leaderBoardPlayerData in response.LeaderBoardStats.Where(x =>
+                    x.StatGroupId == currentPlayerData.PersonalStatGroupId))
+                {
+                    if (!_LeaderBoardDictionary.ContainsKey(leaderBoardPlayerData.LeaderBoardId)) continue;
+
+
+                    var (faction, gameMode) = _LeaderBoardDictionary[leaderBoardPlayerData.LeaderBoardId];
+
+                    var personalStats = new PersonalStats
                     {
-                        Code = currentPlayerData.Country,
-                        Name = Country_GetName(currentPlayerData.Country)
+                        Faction = faction,
+                        GameMode = gameMode,
+                        Losses = leaderBoardPlayerData.Losses,
+                        Wins = leaderBoardPlayerData.Wins,
+                        Rank = Convert.ToInt32(leaderBoardPlayerData.Rank) == -1
+                            ? 0
+                            : Convert.ToInt32(leaderBoardPlayerData.Rank), //backward compatibility,
+                        RankLevel = leaderBoardPlayerData.RankLevel,
+                        TotalPlayers = leaderBoardPlayerData.RankTotal
                     };
 
-                    for (int i = 0; i < _frmMain.RelDataLeaderId.GetUpperBound(0); i++) //backward compatibility
+                    currentPlayer.PersonalStats.Add(personalStats);
+                    if (currentPlayer.CurrentFaction == personalStats.Faction && matchFound.GameMode == personalStats.GameMode)
+                        currentPlayer.CurrentPersonalStats = personalStats;
+                }
+
+
+                currentPlayer.Teams = response.StatGroups.Where(statGroup =>
+                        statGroup.Type != 1 &&
+                        statGroup.Members.Any(member => member.ProfileId == currentPlayer.RelicId))
+                    .Select((statGroup, i) =>
                     {
-                        for (int j = 0; j < _frmMain.RelDataLeaderId.GetUpperBound(1); j++) //backward compatibility
+                        return new Team
                         {
-                            var leaderBoardPlayerData = response.LeaderBoardStats.FirstOrDefault(x => currentPlayerData.PersonalStatGroupId == x.StatGroupId && x.LeaderBoardId == _frmMain.RelDataLeaderId[i, j]);
-                            if (leaderBoardPlayerData != null)
+                            Id = statGroup.Id,
+                            Players = statGroup.Members.Select(y => new TeamMember
                             {
-                                var personalStats = new PersonalStats
+                                Name = y.Alias,
+                                RelicId = y.ProfileId
+                            }).ToList(),
+                            TeamStats = response.LeaderBoardStats
+                                .Where(leaderBoard => leaderBoard.StatGroupId == statGroup.Id).Take(2)
+                                .Select(leaderBoard => new TeamStats
                                 {
-                                    Faction = (Faction)i,
-                                    GameMode = (GameMode)j,
-                                    Losses = leaderBoardPlayerData.Losses,
-                                    Wins = leaderBoardPlayerData.Wins,
-                                    Rank = Convert.ToInt32(leaderBoardPlayerData.Rank) == -1 ? 0 : Convert.ToInt32(leaderBoardPlayerData.Rank), //backward compatibility,
-                                    RankLevel = leaderBoardPlayerData.RankLevel,
-                                    TotalPlayers = leaderBoardPlayerData.RankTotal
-                                };
+                                    Side = leaderBoard.LeaderBoardId is "20" or "22" or "24"
+                                        ? Side.Axis
+                                        : Side.Allies,
+                                    Rank = leaderBoard.Rank,
+                                    RankLevel = leaderBoard.RankLevel,
+                                    Wins = leaderBoard.Wins,
+                                    Losses = leaderBoard.Losses,
+                                    TotalTeams = leaderBoard.RankTotal
+                                }).ToList()
+                        };
+                    }).ToList();
 
-                                currentPlayer.PersonalStats.Add(personalStats);
-                                if (currentPlayer.CurrentFaction == personalStats.Faction)
-                                    currentPlayer.CurrentPersonalStats = personalStats;
+            }
 
-                            }
-                        }
+            var allTeams = matchFound.AlliesPlayers.SelectMany(x => x.Teams)
+                .Where(x => x.Players.Count <= (int) matchFound.GameMode);
+
+            var teamGrouping = allTeams.GroupBy(x => x.Id).Where(x => x.Count() == x.First().Players.Count)
+                .OrderByDescending(y => y.Count()).FirstOrDefault();
+
+            if (teamGrouping != null)
+            {
+                var team = teamGrouping.First();
+                foreach (var matchFoundAlliesPlayer in matchFound.AlliesPlayers)
+                {
+                    if (team.Players.Any(x => x.RelicId == matchFoundAlliesPlayer.RelicId))
+                    {
+
+                        matchFoundAlliesPlayer.CurrentTeam = team;
+                        matchFoundAlliesPlayer.CurrentTeamStats =
+                            team.TeamStats.First(x => x.Side == Side.Allies);
                     }
 
-                    currentPlayer.Teams = response.StatGroups.Where(statGroup =>
-                            statGroup.Type != 1 && statGroup.Members.Any(member => member.ProfileId == currentPlayer.RelicId))
-                        .Select((statGroup, i) =>
-                        {
-                            return new Team
-                            {
-                                Id = statGroup.Id,
-                                Players = statGroup.Members.Select(y => new TeamMember
-                                {
-                                    Name = y.Alias,
-                                    RelicId = y.ProfileId
-                                }).ToList(),
-                                TeamStats = response.LeaderBoardStats
-                                    .Where(leaderBoard => leaderBoard.StatGroupId == statGroup.Id).Take(2)
-                                    .Select(leaderBoard => new TeamStats
-                                    {
-                                        Side = leaderBoard.LeaderBoardId is "20" or "22" or "24"
-                                            ? Side.Axis
-                                            : Side.Allies,
-                                        Rank = leaderBoard.Rank,
-                                        RankLevel = leaderBoard.RankLevel,
-                                        Wins = leaderBoard.Wins,
-                                        Losses = leaderBoard.Losses,
-                                        TotalTeams = leaderBoard.RankTotal
-                                    }).ToList()
-                            };
-                        }).ToList();
+                }
+
+            }
+
+            var axsTeams = matchFound.AxisPlayers.SelectMany(x => x.Teams)
+                .Where(x => x.Players.Count <= (int) matchFound.GameMode);
+
+            teamGrouping = axsTeams.GroupBy(x => x.Id).Where(x => x.Count() == x.First().Players.Count)
+                .OrderByDescending(y => y.Count()).FirstOrDefault();
+
+            if (teamGrouping != null)
+            {
+                var team = teamGrouping.First();
+                foreach (var matchFoundAlliesPlayer in matchFound.AxisPlayers)
+                {
+                    if (team.Players.Any(x => x.RelicId == matchFoundAlliesPlayer.RelicId))
+                    {
+                        matchFoundAlliesPlayer.CurrentTeam = team;
+                        matchFoundAlliesPlayer.CurrentTeamStats =
+                            team.TeamStats.First(x => x.Side == Side.Axis);
+                    }
 
                 }
 
-
             }
-            catch (Exception)
-            {
-                // R4.41 Added logging and color change.
-                _frmMain.LbError1.Text = "RID error";
-                _frmMain.LbError1.BackColor = Color.FromArgb(255, 255, 0, 0);
-                _frmMain.LstLog.Items.Add(DateAndTime.Now.ToLongTimeString() + " - ERROR RID " +
-                                          Information.Err().Description);
-            }
-
 
         }
 
-        private Response DownloadRawStats(List<Player> players)
-        {
-            using var responseMessage = Task.Run(() => _httpClient.GetAsync(
-                "https://coh2-api.reliclink.com/community/leaderboard/GetPersonalStat?title=coh2&profile_ids=[" +
-                 string.Join(",", players.Select(x => x.RelicId).ToArray()) + "]")).Result; // TODO: make whole app Async :)
-
-            if (responseMessage.IsSuccessStatusCode)
-            {
-                var content = Task.Run(() => responseMessage.Content.ReadAsStreamAsync()).Result;
-
-                using StreamReader sr = new StreamReader(content);
-                using JsonReader reader = new JsonTextReader(sr);
-
-                var deserializeObject = _jsonSerializer.Deserialize<Response>(reader);
-
-                if (deserializeObject != null && deserializeObject.Result.Message == "SUCCESS")
-                {
-                    return deserializeObject;
-                }
-
-                if (deserializeObject != null)
-                {
-                    Log.Error(
-                        $"{DateAndTime.Now.ToLongTimeString()} - Get RID - Error in Relic API, status code: {deserializeObject.Result.Code}, Message: {deserializeObject.Result.Message} ");
-
-                }
-            }
-            else
-            {
-                Log.Error(
-                    $"{DateAndTime.Now.ToLongTimeString()} - Get RID -  Error getting response, status code: {responseMessage.StatusCode}, Reason: {responseMessage.ReasonPhrase} ");
-
-            }
-
-            _frmMain.LbError1.Text = "RID error";
-            _frmMain.LbError1.BackColor = Color.FromArgb(255, 255, 0, 0);
-
-            return null;
-        }
-
-        private string Country_GetName(string ca)
-        {
-            var tName = "";
-            for (int t = 1, loopTo = _frmMain.CountryCount1; t <= loopTo; t++)
-                if ((ca ?? "") == (_frmMain.CountryAbbr[t] ?? ""))
-                {
-                    tName = _frmMain.CountryName[t];
-                    break;
-                }
-
-            return tName;
-        }
     }
 }
