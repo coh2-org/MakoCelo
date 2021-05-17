@@ -1,19 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
 using System.Media;
 using System.Net;
 using System.Speech.Synthesis;
+using System.Text;
 using System.Windows.Forms;
 using GameOverlay;
 using MakoCelo.Model;
-using MakoCelo.My.Resources;
 using MakoCelo.Overlay;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
@@ -435,8 +432,7 @@ namespace MakoCelo
                 _previousMatch = CurrentMatch;
                 CurrentMatch = scanningResult.Match;
 
-                // R4.34 Text-to-Speech the ranks.
-                if (chkSpeech.Checked) throw new NotImplementedException(); //STATS_ReadAloud();
+                if (chkSpeech.Checked) STATS_ReadAloud();
 
                 if (AutoScanEnabled && _chkToggleOverlay.Checked) _overlay.Run(scanningResult.Match);
 
@@ -452,149 +448,30 @@ namespace MakoCelo
 
         }
 
-        //private void STATS_ReadAloud()
-        //{
-        //    // R4.34 Added.
-        //    var a = "";
-        //    var goodGuys = "Good Guys";
-        //    var badGuys = "Bad Guys";
-        //    // Dim tts As New SpeechSynthesizer
-        //    var tp = new string[10];
-        //    if (_frmMain.FlagSpeechOk == false)
-        //    {
-        //        _frmMain.LbError4.Text = "Speech Error";
-        //        return;
-        //    }
+        private void STATS_ReadAloud()
+        {
+            StringBuilder sb = new("");
+            if (FLAG_SpeechOK == false)
+            {
+                lbError1.Text = "Speech Error";
+                return;
+            }
 
-        //    // R4.34 Remove some chars for clearer speech.
-        //    for (var t = 1; t <= 8; t++)
-        //    {
-        //        a = _frmMain.PlrName[t];
-        //        a = a.Replace(".", "");
-        //        a = a.Replace(",", "");
-        //        a = a.Replace("|", "");
-        //        tp[t] = a;
-        //    }
+            sb.Append("The Allies players: ");
+            foreach (var player in CurrentMatch.AlliesPlayers)
+            {
+                sb.Append($"Player {player.SpeechFormattedName}, Faction {player.SpeechFormattedCurrentFaction}, Rank {(chkGetTeams.Checked && player.CurrentTeamStats != null ? player.CurrentTeamStats.SpeechFormattedRank : player.CurrentPersonalStats.SpeechFormattedRank)}. ");
+            }
+            sb.Append("Versus The Axis players: ");
+            foreach (var player in CurrentMatch.AxisPlayers)
+            {
+                sb.Append($"Player {player.SpeechFormattedName}, Faction {player.SpeechFormattedCurrentFaction}, Rank {(chkGetTeams.Checked && player.CurrentTeamStats != null ? player.CurrentTeamStats.SpeechFormattedRank : player.CurrentPersonalStats.SpeechFormattedRank)}. ");
+            }
 
-        //    if ((_frmMain.PlrFact[1] == "01") | (_frmMain.PlrFact[1] == "03"))
-        //    {
-        //        goodGuys = "Axis";
-        //        badGuys = "Allies";
-        //    }
+            SpeechSynth.SpeakAsync(sb.ToString());
+        }
 
-        //    if ((_frmMain.PlrFact[1] == "02") | (_frmMain.PlrFact[1] == "04") | (_frmMain.PlrFact[1] == "05"))
-        //    {
-        //        goodGuys = "Allies";
-        //        badGuys = "Axis";
-        //    }
 
-        //    a = a + "The " + goodGuys + " players are ";
-        //    for (var t = 1; t <= 8; t += 2)
-        //        if (!string.IsNullOrEmpty(_frmMain.PlrName[t])) // R4.34 User may be "..." which will be "".
-        //        {
-        //            a = a + "Player " + tp[t] + ",";
-        //            a = _frmMain.PlrRank[t] == "---"
-        //                ? a + "Faction Rank is None" + ","
-        //                : a + "Faction Rank is " + _frmMain.PlrRank[t] + ",";
-        //        }
-
-        //    a = a + "The " + badGuys + " players are ";
-        //    for (var t = 2; t <= 8; t += 2)
-        //        if (!string.IsNullOrEmpty(_frmMain.PlrName[t])) // R4.34 User may be "..." which will be "".
-        //        {
-        //            a = a + "Player " + tp[t] + ",";
-        //            a = _frmMain.PlrRank[t] == "---"
-        //                ? a + "Faction Rank is None" + ","
-        //                : a + "Faction Rank is " + _frmMain.PlrRank[t] + ",";
-        //        }
-
-        //    a = a + ",So we have " + goodGuys + " ";
-        //    for (var t = 1; t <= 8; t += 2)
-        //        if (!string.IsNullOrEmpty(_frmMain.PlrName[t]))
-        //        {
-        //            switch (_frmMain.PlrFact[t] ?? "")
-        //            {
-        //                case "01":
-        //                {
-        //                    a += "O S T,";
-        //                    break;
-        //                }
-
-        //                case "02":
-        //                {
-        //                    a += "SOVIET,";
-        //                    break;
-        //                }
-
-        //                case "03":
-        //                {
-        //                    a += "O K W,";
-        //                    break;
-        //                }
-
-        //                case "04":
-        //                {
-        //                    a += "U S F,";
-        //                    break;
-        //                }
-
-        //                case "05":
-        //                {
-        //                    a += "BRIT,";
-        //                    break;
-        //                }
-        //            }
-
-        //            a = _frmMain.PlrRank[t] == "---" ? a + "No rank" + "," : a + "Rank " + _frmMain.PlrRank[t] + ",";
-        //        }
-
-        //    a = a + ", versus " + badGuys + " ";
-        //    for (var t = 2; t <= 8; t += 2)
-        //        if (!string.IsNullOrEmpty(_frmMain.PlrName[t]))
-        //            if (!string.IsNullOrEmpty(_frmMain.PlrName[t]))
-        //            {
-        //                switch (_frmMain.PlrFact[t] ?? "")
-        //                {
-        //                    case "01":
-        //                    {
-        //                        a += "O S T,";
-        //                        break;
-        //                    }
-
-        //                    case "02":
-        //                    {
-        //                        a += "SOVIET,";
-        //                        break;
-        //                    }
-
-        //                    case "03":
-        //                    {
-        //                        a += "O K W,";
-        //                        break;
-        //                    }
-
-        //                    case "04":
-        //                    {
-        //                        a += "U S F,";
-        //                        break;
-        //                    }
-
-        //                    case "05":
-        //                    {
-        //                        a += "BRIT,";
-        //                        break;
-        //                    }
-        //                }
-
-        //                a = _frmMain.PlrRank[t] == "---"
-        //                    ? a + "No rank" + ","
-        //                    : a + "Rank " + _frmMain.PlrRank[t] + ",";
-        //            }
-
-        //    if (!string.IsNullOrEmpty(a)) _frmMain.SpeechSynth1.SpeakAsync(a);
-        //}
-
-        
         public void LS_SetShadowXY(ref clsGlobal.t_LabelSetup LS)
         {
             // *****************************************************

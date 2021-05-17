@@ -19,7 +19,7 @@ namespace MakoCelo
             var fileTarget = new FileTarget();
             fileTarget.FileName = "DiagnosticLog.txt";
             fileTarget.Layout = "${time} ${logger}[${threadid}][${level}] ${event-properties:item=TypeInfo}.${event-properties:item=MethodInfo} - ${message}";
-            fileTarget.MaxArchiveFiles = 2;
+            fileTarget.MaxArchiveFiles = 5;
             fileTarget.ArchiveOldFileOnStartup = true;
 
             config.AddTarget("file", fileTarget);

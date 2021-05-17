@@ -823,6 +823,7 @@ namespace MakoCelo
                                          2f); // R3.30 Calc height of gradient color.  'R3.30Changed from Xq.
             for (var T = 1; T <= _frmMain.CurrentMatch.Players.Count; T++)
             {
+                var currentPlayer = _frmMain.CurrentMatch.Players[T - 1];
 
                 if (_frmMain.FLAG_EloUse == false)
                 {
@@ -830,11 +831,11 @@ namespace MakoCelo
                 }
                 else
                 {
-                    if (_frmMain.RankDisplayMode == RankDisplayMode.Rank) tString = _frmMain.CurrentMatch.Players[T - 1].CurrentPersonalStats.FormattedRank; //TODO -- TEAMStats
+                    if (_frmMain.RankDisplayMode == RankDisplayMode.Rank) tString = _frmMain.chkGetTeams.Checked && currentPlayer.CurrentTeamStats != null ? currentPlayer.CurrentTeamStats.FormattedRank : currentPlayer.CurrentPersonalStats.FormattedRank;
 
-                    if (_frmMain.RankDisplayMode == RankDisplayMode.Elo) tString = _frmMain.CurrentMatch.Players[T - 1].CurrentPersonalStats.FormattedElo; //TODO -- TEAMStats
+                    if (_frmMain.RankDisplayMode == RankDisplayMode.Elo) tString = _frmMain.chkGetTeams.Checked && currentPlayer.CurrentTeamStats != null ? currentPlayer.CurrentTeamStats.FormattedElo : currentPlayer.CurrentPersonalStats.FormattedElo;
 
-                    if (_frmMain.RankDisplayMode == RankDisplayMode.Lvl) tString = _frmMain.CurrentMatch.Players[T - 1].CurrentPersonalStats.FormattedRankLevel; //TODO -- TEAMStats
+                    if (_frmMain.RankDisplayMode == RankDisplayMode.Lvl) tString = _frmMain.chkGetTeams.Checked && currentPlayer.CurrentTeamStats != null ? currentPlayer.CurrentTeamStats.FormattedRankLevel : currentPlayer.CurrentPersonalStats.FormattedRankLevel;
                 }
 
                 // R3.00 Create a clipping area so names do not draw past the rectangle.
@@ -1389,17 +1390,19 @@ namespace MakoCelo
             var tBrushShadow = new SolidBrush(Color.FromArgb(255, 0, 0, 0));
             for (var T = 1; T <= _frmMain.CurrentMatch.Players.Count; T++)
             {
+                var currentPlayer = _frmMain.CurrentMatch.Players[T - 1];
+
                 if (_frmMain.FLAG_EloUse == false)
                 {
                     tString = _frmMain.CurrentMatch.Players[T - 1].CurrentPersonalStats.FormattedRank;
                 }
                 else
                 {
-                    if (_frmMain.RankDisplayMode == RankDisplayMode.Rank) tString = _frmMain.CurrentMatch.Players[T - 1].CurrentPersonalStats.FormattedRank; //TODO -- TEAMStats
+                    if (_frmMain.RankDisplayMode == RankDisplayMode.Rank) tString = _frmMain.chkGetTeams.Checked && currentPlayer.CurrentTeamStats != null ? currentPlayer.CurrentTeamStats.FormattedRank : currentPlayer.CurrentPersonalStats.FormattedRank;
 
-                    if (_frmMain.RankDisplayMode == RankDisplayMode.Elo) tString = _frmMain.CurrentMatch.Players[T - 1].CurrentPersonalStats.FormattedElo; //TODO -- TEAMStats
+                    if (_frmMain.RankDisplayMode == RankDisplayMode.Elo) tString = _frmMain.chkGetTeams.Checked && currentPlayer.CurrentTeamStats != null ? currentPlayer.CurrentTeamStats.FormattedElo : currentPlayer.CurrentPersonalStats.FormattedElo;
 
-                    if (_frmMain.RankDisplayMode == RankDisplayMode.Lvl) tString = _frmMain.CurrentMatch.Players[T - 1].CurrentPersonalStats.FormattedRankLevel; //TODO -- TEAMStats
+                    if (_frmMain.RankDisplayMode == RankDisplayMode.Lvl) tString = _frmMain.chkGetTeams.Checked && currentPlayer.CurrentTeamStats != null ? currentPlayer.CurrentTeamStats.FormattedRankLevel : currentPlayer.CurrentPersonalStats.FormattedRankLevel;
                 }
 
                 // R3.00 Create a clipping area so names do not draw past the rectangle.
@@ -1754,17 +1757,19 @@ namespace MakoCelo
             var tBrushShadow = new SolidBrush(Color.FromArgb(255, 0, 0, 0));
             for (var T = 1; T <= _frmMain.CurrentMatch.Players.Count; T++)
             {
+                var currentPlayer = _frmMain.CurrentMatch.Players[T - 1];
+
                 if (_frmMain.FLAG_EloUse == false)
                 {
                     tString = _frmMain.CurrentMatch.Players[T - 1].CurrentPersonalStats.FormattedRank;
                 }
                 else
                 {
-                    if (_frmMain.RankDisplayMode == RankDisplayMode.Rank) tString = _frmMain.CurrentMatch.Players[T - 1].CurrentPersonalStats.FormattedRank; //TODO -- TEAMStats
+                    if (_frmMain.RankDisplayMode == RankDisplayMode.Rank) tString = _frmMain.chkGetTeams.Checked && currentPlayer.CurrentTeamStats != null ? currentPlayer.CurrentTeamStats.FormattedRank : currentPlayer.CurrentPersonalStats.FormattedRank;
 
-                    if (_frmMain.RankDisplayMode == RankDisplayMode.Elo) tString = _frmMain.CurrentMatch.Players[T - 1].CurrentPersonalStats.FormattedElo; //TODO -- TEAMStats
+                    if (_frmMain.RankDisplayMode == RankDisplayMode.Elo) tString = _frmMain.chkGetTeams.Checked && currentPlayer.CurrentTeamStats != null ? currentPlayer.CurrentTeamStats.FormattedElo : currentPlayer.CurrentPersonalStats.FormattedElo;
 
-                    if (_frmMain.RankDisplayMode == RankDisplayMode.Lvl) tString = _frmMain.CurrentMatch.Players[T - 1].CurrentPersonalStats.FormattedRankLevel; //TODO -- TEAMStats
+                    if (_frmMain.RankDisplayMode == RankDisplayMode.Lvl) tString = _frmMain.chkGetTeams.Checked && currentPlayer.CurrentTeamStats != null ? currentPlayer.CurrentTeamStats.FormattedRankLevel : currentPlayer.CurrentPersonalStats.FormattedRankLevel;
                 }
 
                 // R3.00 Create a clipping area so names do not draw past the rectangle/label.

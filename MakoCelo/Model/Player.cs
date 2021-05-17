@@ -36,8 +36,25 @@ namespace MakoCelo.Model
     public class Player
     {
         public string Name { get; set; }
+
+        public string SpeechFormattedName => Name.Replace(".", "").Replace(",", "").Replace("|", "");
         public string RelicId { get; set; }
         public Faction CurrentFaction { get; set; }
+
+        public string SpeechFormattedCurrentFaction{
+            get
+            {
+                return CurrentFaction switch
+                {
+                    Faction.Ost => "O S T",
+                    Faction.Sov => "SOVIET",
+                    Faction.Okw => "O K W",
+                    Faction.Usf => "U S F",
+                    Faction.Ukf => "BRIT",
+                    _ => throw new NotImplementedException(),
+                };
+            }
+        }
         public Country Country { get; set; }
         public PersonalStats CurrentPersonalStats { get; set; }
         public List<PersonalStats> PersonalStats { get; set; } = new();
@@ -62,6 +79,7 @@ namespace MakoCelo.Model
         public int Rank { get; set; }
 
         public string FormattedRank => Rank <= 0 ? "---" : $"{Rank}";
+        public string SpeechFormattedRank => Rank <= 0 ? "None" : $"{Rank}";
         public int Wins { get; set; }
         public int Losses { get; set; }
 
@@ -81,6 +99,7 @@ namespace MakoCelo.Model
         public Side Side { get; set; }
         public int Rank { get; set; }
         public string FormattedRank => Rank <= 0 ? "---" : $"{Rank}";
+        public string SpeechFormattedRank => Rank <= 0 ? "None" : $"{Rank}";
         public int Wins { get; set; }
         public int Losses { get; set; }
         public int RankLevel { get; set; }
