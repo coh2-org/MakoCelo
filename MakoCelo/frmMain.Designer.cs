@@ -1954,7 +1954,7 @@ namespace MakoCelo
             this.SS1_Version.BorderStyle = System.Windows.Forms.Border3DStyle.Sunken;
             this.SS1_Version.Name = "SS1_Version";
             this.SS1_Version.Size = new System.Drawing.Size(35, 17);
-            this.SS1_Version.Text = "v4.50";
+            this.SS1_Version.Text = "v5.1";
             this.SS1_Version.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // SS1_Sep1
