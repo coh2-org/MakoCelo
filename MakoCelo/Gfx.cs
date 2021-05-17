@@ -826,7 +826,7 @@ namespace MakoCelo
 
                 if (_frmMain.FLAG_EloUse == false)
                 {
-                    tString = _frmMain.CurrentMatch.Players[T - 1].CurrentPersonalStats.Rank.ToString();
+                    tString = _frmMain.CurrentMatch.Players[T - 1].CurrentPersonalStats.FormattedRank;
                 }
                 else
                 {
@@ -1391,7 +1391,7 @@ namespace MakoCelo
             {
                 if (_frmMain.FLAG_EloUse == false)
                 {
-                    tString = _frmMain.CurrentMatch.Players[T - 1].CurrentPersonalStats.Rank.ToString();
+                    tString = _frmMain.CurrentMatch.Players[T - 1].CurrentPersonalStats.FormattedRank;
                 }
                 else
                 {
@@ -1756,7 +1756,7 @@ namespace MakoCelo
             {
                 if (_frmMain.FLAG_EloUse == false)
                 {
-                    tString = _frmMain.CurrentMatch.Players[T - 1].CurrentPersonalStats.Rank.ToString();
+                    tString = _frmMain.CurrentMatch.Players[T - 1].CurrentPersonalStats.FormattedRank;
                 }
                 else
                 {

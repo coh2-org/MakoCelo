@@ -136,9 +136,7 @@ namespace MakoCelo
                         GameMode = gameMode,
                         Losses = leaderBoardPlayerData.Losses,
                         Wins = leaderBoardPlayerData.Wins,
-                        Rank = Convert.ToInt32(leaderBoardPlayerData.Rank) == -1
-                            ? 0
-                            : Convert.ToInt32(leaderBoardPlayerData.Rank), //backward compatibility,
+                        Rank =  Convert.ToInt32(leaderBoardPlayerData.Rank),
                         RankLevel = leaderBoardPlayerData.RankLevel,
                         TotalPlayers = leaderBoardPlayerData.RankTotal
                     };

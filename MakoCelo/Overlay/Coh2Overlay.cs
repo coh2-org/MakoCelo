@@ -86,7 +86,7 @@ namespace MakoCelo.Overlay
                 var x = i % 2 == 0 ? 10 : 300;
                 var y = i % 2 == 0 ? i * 10 : (i * 10) - 10;
                 var currentPlayer = _matchFound.Players[i];
-                gfx.DrawText(_fonts["consolas"], _brushes["green"], x, y, currentPlayer.Name + " " + currentPlayer.CurrentPersonalStats.Rank );
+                gfx.DrawText(_fonts["consolas"], _brushes["green"], x, y, currentPlayer.Name + " " + currentPlayer.CurrentPersonalStats.FormattedRank );
             }
         }
 
