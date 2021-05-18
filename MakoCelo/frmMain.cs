@@ -111,7 +111,6 @@ namespace MakoCelo
         public readonly clsGlobal.t_Box[] LAB_Name = new clsGlobal.t_Box[9];
         public readonly StringFormat[] LAB_Name_Align = new StringFormat[9];
         public readonly clsGlobal.t_Box[] LAB_Rank = new clsGlobal.t_Box[9]; // R2.00 Defs for current label layout. 
-        public readonly string[,] LVLS = new string[8, 5];
         
         public readonly string[] SOUND_File = new string[31]; // R4.00 Added.
 
@@ -140,7 +139,6 @@ namespace MakoCelo
         private bool FLAG_Drawing; // R3.40 Dont let combo boxes call when we are drawing.
         public RankDisplayMode RankDisplayMode; // R4.30 Which value are we showing right now. Cycles with Scans.
         public bool FLAG_EloUse; // R4.30 Try to draw the ELO values on screen?
-        private bool FLAG_EloValid; // R4.30 Are the current ELO values valid?
         public bool FLAG_HideMissing; // R4.30 Added to hide blanks on Overlays/Green Screens.
         public bool FLAG_Loading; // R2.00 Flag that we are loading, so do not update.
         private int FLAG_ShowPlayerCard; // R4.30 Toggle STATS and PLAYERCARD display.
@@ -231,7 +229,6 @@ namespace MakoCelo
             _cmCopy.Name = "cmCopy";
             _cmAbout.Name = "cmAbout";
             _cboLayoutY.Name = "cboLayoutY";
-            _cmELO.Name = "cmELO";
             _cmSetupSave.Name = "cmSetupSave";
             _cmSetupLoad.Name = "cmSetupLoad";
             _cmNote_PlayAll.Name = "cmNote_PlayAll";
@@ -713,8 +710,6 @@ namespace MakoCelo
 
             SETUP_Apply();
 
-            // R4.30 Check the MAX player data to see if is usable.
-            ELO_VerifyData();
             SPEECH_Test();
 
             // R4.50 Force a clean redraw once fully loaded.
@@ -723,7 +718,6 @@ namespace MakoCelo
 
         private void SPEECH_Test()
         {
-            // Dim tts As New SpeechSynthesizer
 
             FLAG_SpeechOK = true;
             try
@@ -977,7 +971,6 @@ namespace MakoCelo
             cmFindLog.Enabled = tState;
             cmTestData.Enabled = tState;
             cmRankSetup.Enabled = tState;
-            cmELO.Enabled = tState; // R4.30 Added.
             cmNameSetup.Enabled = tState;
             cmSetupLoad.Enabled = tState;
             cmSetupSave.Enabled = tState;
@@ -3673,54 +3666,8 @@ namespace MakoCelo
             Settings.SETTINGS_Save("");
         }
 
-        private void cmTest_Click(object sender, EventArgs e)
-        {
-            ELO_Setup();
-        }
-
-        private void ELO_Setup()
-        {
-            var PSDialog = new frmMaxPlayerSearch(); // With {} ' {.HideSizeOptions = True, .HideSizeAll = True}
-
-            // R4.00 Get the data we are editing.
-            for (var t = 1; t <= 7; t++)
-            for (var tt = 1; tt <= 4; tt++)
-                PSDialog.LVLs[t, tt] = LVLS[t, tt];
-
-            // R4.00 Call the setup dialog and default to CANCEL being pressed.
-            PSDialog.ShowDialog();
-            if (PSDialog.Cancel == false)
-            {
-                for (var t = 1; t <= 7; t++)
-                for (var tt = 1; tt <= 4; tt++)
-                    LVLS[t, tt] = PSDialog.LVLs[t, tt];
-
-                Settings.SETTINGS_Save("");
-            }
-        }
-
-        private void ELO_VerifyData()
-        {
-            var BadData = default(bool);
-
-            // R4.30 Check for VALID max layer counts.
-            for (var T1 = 1; T1 <= 5; T1++)
-            for (var T2 = 1; T2 <= 4; T2++)
-                if (Conversion.Val(LVLS[T1, T2]) < 1d)
-                    BadData = true;
-
-            for (var T1 = 6; T1 <= 7; T1++)
-            for (var T2 = 2; T2 <= 4; T2++)
-                if (Conversion.Val(LVLS[T1, T2]) < 1d)
-                    BadData = true;
-
-            FLAG_EloValid = BadData ? false : true;
-        }
-
         private void chkShowELO_CheckedChanged(object sender, EventArgs e)
         {
-            string A;
-
             // R4.30 Added ELO percantage.
             FLAG_EloUse = chkShowELO.Checked;
 
@@ -3733,39 +3680,6 @@ namespace MakoCelo
                 return;
             }
 
-            // R4.30 Check for VALID max player counts.
-            ELO_VerifyData();
-            if (FLAG_EloValid == false)
-            {
-                A = "NOTE: To calc ELO values, MakoCELO needs the max players" + Constants.vbCr + Constants.vbCr;
-                A = A + "for each game mode. This can be done by the RANK setup area." + Constants.vbCr +
-                    Constants.vbCr;
-                A = A + "Would you like to OPEN the ELO setup dialog now?" + Constants.vbCr + Constants.vbCr;
-                var result = (DialogResult) Interaction.MsgBox(A, MsgBoxStyle.YesNo, "MakoCELO ELO Setup");
-
-                // R4.30 User selected YES.
-                if (result == DialogResult.No)
-                {
-                    chkShowELO.Checked = false;
-                    FLAG_EloUse = false;
-                }
-                else
-                {
-                    // R4.30 Let user get ELO data, then verify that data.
-                    ELO_Setup();
-                    ELO_VerifyData();
-                    if (FLAG_EloValid == false)
-                    {
-                        A = "NOTE: The ELO data appears to be incomplete." + Constants.vbCr + Constants.vbCr;
-                        A = A + "ELO Cyclong will be disabled until the ELO" + Constants.vbCr + Constants.vbCr;
-                        A = A + "data is completed." + Constants.vbCr + Constants.vbCr;
-                        Interaction.MsgBox(A, MsgBoxStyle.Information, "MakoCELO ELO Setup");
-                        chkShowELO.Checked = false;
-                        FLAG_EloUse = false;
-                    }
-                }
-            }
-
             Settings.SETTINGS_Save("");
             STATS_Refresh();
         }
@@ -3773,7 +3687,7 @@ namespace MakoCelo
 
         private void timELOCycle_Tick(object sender, EventArgs e)
         {
-            if (FLAG_EloUse & FLAG_EloValid)
+            if (FLAG_EloUse)
             {
                 // *****************************************************************
                 // R4.30 If doing ELO cycles, calc the current Cycle to show.

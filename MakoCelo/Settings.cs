@@ -1921,7 +1921,7 @@ namespace MakoCelo
                                         for (var tt = 1; tt <= 4; tt++)
                                         {
                                             A = sr.ReadLine();
-                                            _frmMain.LVLS[t, tt] = A;
+                                            //_frmMain.LVLS[t, tt] = A; unused after 5.1
                                         }
 
                                     A = sr.ReadLine(); // R4.30 SHOW RANKS, ELO %, and LEVEL. 
@@ -2566,7 +2566,7 @@ namespace MakoCelo
                 sw.WriteLine("LEVEL STORAGE");
                 for (var t = 1; t <= 7; t++)
                 for (var tt = 1; tt <= 4; tt++)
-                    sw.WriteLine(_frmMain.LVLS[t, tt]);
+                    sw.WriteLine("");
 
                 // R4.30 Added.
                 sw.WriteLine("CYCLE ELO");

@@ -67,7 +67,6 @@ namespace MakoCelo
             this.Label4 = new System.Windows.Forms.Label();
             this._cboLayoutY = new System.Windows.Forms.ComboBox();
             this.gbRank = new System.Windows.Forms.GroupBox();
-            this._cmELO = new System.Windows.Forms.Button();
             this._cmSetupSave = new System.Windows.Forms.Button();
             this._cmSetupLoad = new System.Windows.Forms.Button();
             this._cmNote_PlayAll = new System.Windows.Forms.Button();
@@ -490,7 +489,6 @@ namespace MakoCelo
             // 
             // gbRank
             // 
-            this.gbRank.Controls.Add(this._cmELO);
             this.gbRank.Controls.Add(this._cmSetupSave);
             this.gbRank.Controls.Add(this._cmSetupLoad);
             this.gbRank.Controls.Add(this._cmNote_PlayAll);
@@ -521,20 +519,6 @@ namespace MakoCelo
             this.gbRank.TabIndex = 73;
             this.gbRank.TabStop = false;
             this.gbRank.Text = "Stats and Note Setups";
-            // 
-            // _cmELO
-            // 
-            this._cmELO.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(232)))), ((int)(((byte)(232)))), ((int)(((byte)(232)))));
-            this._cmELO.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(232)))), ((int)(((byte)(255)))), ((int)(((byte)(232)))));
-            this._cmELO.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this._cmELO.ForeColor = System.Drawing.Color.Black;
-            this._cmELO.Location = new System.Drawing.Point(100, 15);
-            this._cmELO.Name = "_cmELO";
-            this._cmELO.Size = new System.Drawing.Size(50, 23);
-            this._cmELO.TabIndex = 94;
-            this._cmELO.Text = "ELO";
-            this._cmELO.UseVisualStyleBackColor = false;
-            this._cmELO.Click += new System.EventHandler(this.cmTest_Click);
             // 
             // _cmSetupSave
             // 
@@ -4462,32 +4446,6 @@ namespace MakoCelo
                 if (_tsmPlayer_Steam != null)
                 {
                     _tsmPlayer_Steam.Click += tsmPlayer_Steam_Click;
-                }
-            }
-        }
-
-        private Button _cmELO;
-
-        internal Button cmELO
-        {
-            [MethodImpl(MethodImplOptions.Synchronized)]
-            get
-            {
-                return _cmELO;
-            }
-
-            [MethodImpl(MethodImplOptions.Synchronized)]
-            set
-            {
-                if (_cmELO != null)
-                {
-                    _cmELO.Click -= cmTest_Click;
-                }
-
-                _cmELO = value;
-                if (_cmELO != null)
-                {
-                    _cmELO.Click += cmTest_Click;
                 }
             }
         }
