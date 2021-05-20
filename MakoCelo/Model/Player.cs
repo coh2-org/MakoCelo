@@ -37,6 +37,8 @@ namespace MakoCelo.Model
     {
         public string Name { get; set; }
 
+        public bool IsAIPlayer { get; set; }
+
         public string SpeechFormattedName => Name.Replace(".", "").Replace(",", "").Replace("|", "");
         public string RelicId { get; set; }
         public Faction CurrentFaction { get; set; }

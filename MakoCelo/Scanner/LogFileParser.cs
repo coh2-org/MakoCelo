@@ -1,14 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using MakoCelo.Model;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
-using Match = MakoCelo.Model.Match;
 
-namespace MakoCelo
+namespace MakoCelo.Scanner
 {
     public class LogFileParser
     { 
@@ -16,9 +14,9 @@ namespace MakoCelo
         private string _startLineWithGameStartTime;
         
 
-        public Match ParseGameLog(string filePath)
+        public Model.Match ParseGameLog(string filePath)
         {
-            Match match = null;
+            Model.Match match = null;
             using var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             using var sr = new StreamReader(fs, Encoding.UTF8);
             SetStreamPosition(fs, sr);
@@ -31,7 +29,7 @@ namespace MakoCelo
                 if (Conversions.ToBoolean(Strings.InStr(a, "GAME ")))
                     if (Conversions.ToBoolean(Strings.InStr(a, "Human Player") | Strings.InStr(a, "AI Player")))
                     {
-                        match = new Match();
+                        match = new Model.Match();
                         
 
                         var plrCnt = 0;
@@ -43,13 +41,13 @@ namespace MakoCelo
                             long test1 = Strings.InStr(a, "Human Player");
                             if (Conversions.ToBoolean(test1))
                             {
-                                newPlayer.Name = FindPlayerNameInLine(a, 39);
-                                newPlayer.RelicId = FindPlayerRelicIdInLine(a);
+                                newPlayer.Name = Utilities.FindPlayerNameInLine(a, 39);
+                                newPlayer.RelicId = Utilities.FindPlayerRelicIdInLine(a);
                             }
                             else
                             {
-                                newPlayer.Name = FindPlayerNameInLine(a, 36);
-                                newPlayer.RelicId = ""; 
+                                newPlayer.Name = Utilities.FindPlayerNameInLine(a, 36);
+                                newPlayer.IsAIPlayer = true;
                             }
                             
                             var tLen = Strings.Len(a);
@@ -113,65 +111,6 @@ namespace MakoCelo
             }
         }
 
-        private string FindPlayerRelicIdInLine(string a)
-        {
-            var rid = 0L;
-            int T;
-            var cnt = default(int);
-            var charStart = default(int);
-            var charEnd = default(int);
-
-            // R3.20 Get the RelicID number from the Player stats line.
-            for (T = Strings.Len(a); T >= 1; T -= 1)
-            {
-                var c = Strings.Mid(a, T, 1);
-                if (c == " ")
-                {
-                    cnt += 1;
-                    if (cnt == 2) charEnd = T;
-
-                    if (cnt == 3)
-                    {
-                        charStart = T;
-                        break;
-                    }
-                }
-            }
-
-            if (Conversions.ToBoolean(charEnd))
-                rid = (long) Math.Round(Conversion.Val(Strings.Mid(a, charStart, charEnd - charStart)));
-
-            return rid.ToString();
-        }
-
-        /// <summary>
-        /// Names are not Delimited, need to search for end of name from the end of line.
-        /// </summary>
-        /// <param name="a"></param>
-        /// <param name="charStart"></param>
-        /// <returns></returns>
-        private string FindPlayerNameInLine(string a, int charStart)
-        {
-            string c;
-            int T;
-            var cnt = default(int);
-            var charEnd = default(int);
-            for (T = Strings.Len(a); T >= 1; T -= 1)
-            {
-                c = Strings.Mid(a, T, 1);
-                if (c == " ") cnt += 1;
-
-                if (cnt == 3)
-                {
-                    charEnd = T;
-                    break;
-                }
-            }
-
-            c = "None";
-            if (Conversions.ToBoolean(charEnd)) c = Strings.Mid(a, charStart, charEnd - charStart);
-
-            return c;
-        }
+        
     }
 }

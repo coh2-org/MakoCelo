@@ -313,14 +313,14 @@ namespace MakoCelo
             _chkGetTeams.Name = "chkGetTeams";
             _chkCountry.Name = "chkCountry";
             Settings = new Settings(this);
-            LogScanner = new LogScanner();
+            LogScanner = new MatchScanner();
 
             Gfx = new Gfx(this);
         }
 
         public Settings Settings { get; }
 
-        public LogScanner LogScanner { get; }
+        public MatchScanner LogScanner { get; }
 
         public Bitmap NameOvlBmp
         {
@@ -542,7 +542,7 @@ namespace MakoCelo
 
         private void frmMain_Load(object sender, EventArgs e)
         {
-            LogScanner.MatchFound += MatchFoundEvent;
+            LogScanner.NewMatchFound += NewMatchFound;
             FLAG_Loading = true; // R2.00 Tell Controls not to update. Most save settings as they update,
             GUI_Active = false; // R3.10 Default to NO active GUI elements.
             PATH_Game = ""; // R2.00 Initialize the var or we get error 448 in file.
@@ -2362,7 +2362,7 @@ namespace MakoCelo
                 }
             }
         }
-        private void MatchFoundEvent(object sender, EventArgs e)
+        private void NewMatchFound(object sender, EventArgs e)
         {
 
             if (AutoScanEnabled && chkFoundSound.Checked && !string.IsNullOrEmpty(SOUND_File[15]))

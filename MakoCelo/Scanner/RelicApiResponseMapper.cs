@@ -1,19 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using MakoCelo.Model;
+﻿using MakoCelo.Model;
+using MakoCelo.Model.RelicApi;
 using MakoCelo.My.Resources;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.FileIO;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using Tracer.NLog;
 
-namespace MakoCelo
+namespace MakoCelo.Scanner
 {
-    public class LogScanner
+    public class RelicApiResponseMapper
     {
-        private readonly LogFileParser _logFileParser;
-        private readonly RelicApiClient _relicApiClient;
         private readonly Dictionary<string, ValueTuple<Faction, GameMode>> _LeaderBoardDictionary = new()
         {
             { "4", (Faction.Ost, GameMode.V1) },
@@ -42,13 +41,9 @@ namespace MakoCelo
             { "54", (Faction.Ukf, GameMode.V4) }
         };
         private readonly Dictionary<string, string> CountryCodeToNameDictionary = new();
-        public event EventHandler MatchFound;
-        
 
-        public LogScanner()
+        public RelicApiResponseMapper()
         {
-            _logFileParser = new LogFileParser();
-            _relicApiClient = new RelicApiClient();
 
             try
             {
@@ -65,53 +60,17 @@ namespace MakoCelo
                     CountryCodeToNameDictionary.Add(Strings.LCase(CurrentRow[1]), CurrentRow[0]);
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Log.Error(ex);
             }
-
         }
 
-        protected virtual void OnMatchFound(EventArgs e)
+        public void MapResponseToMatch(Match matchFound, Response response)
         {
-            EventHandler handler = MatchFound;
-            if (handler != null)
+
+            foreach (var currentPlayer in matchFound.Players.Where(x => !x.IsAIPlayer))
             {
-                handler(this, e);
-            }
-        }
-
-        public ScanningResult ScanForMatch(Match previousMatch, string warningsLogFilePath)
-        {
-            var result = new ScanningResult();
-            try
-            {
-                result.Match = _logFileParser.ParseGameLog(warningsLogFilePath);
-
-                if (result.IsMatchFound() && (previousMatch == null || result.Match.Id != previousMatch.Id))
-                {
-                    result.IsNewMatch = true;
-                    OnMatchFound(EventArgs.Empty);
-
-                    GetDataFromRelicApi(result.Match);
-                }
-            }
-            catch (Exception e)
-            {
-                Log.Error(e);
-                result.Success = false;
-            }
-            return result;
-        }
-
-        private void GetDataFromRelicApi(Match matchFound)
-        {
-            var response = _relicApiClient.GetPlayerStats(matchFound.Players.Select(x => x.RelicId).ToArray());
-
-            for (var t = 1; t <= matchFound.Players.Count; t++)
-            {
-                var currentPlayer = matchFound.Players[t - 1];
-
                 var currentPlayerData = response.StatGroups
                     .First(x => x.Type == 1 && x.Members.Any(x => x.ProfileId == currentPlayer.RelicId)).Members
                     .First();
@@ -123,11 +82,8 @@ namespace MakoCelo
                 };
 
                 foreach (var leaderBoardPlayerData in response.LeaderBoardStats.Where(x =>
-                    x.StatGroupId == currentPlayerData.PersonalStatGroupId))
+                    x.StatGroupId == currentPlayerData.PersonalStatGroupId && _LeaderBoardDictionary.ContainsKey(x.LeaderBoardId)))
                 {
-                    if (!_LeaderBoardDictionary.ContainsKey(leaderBoardPlayerData.LeaderBoardId)) continue;
-
-
                     var (faction, gameMode) = _LeaderBoardDictionary[leaderBoardPlayerData.LeaderBoardId];
 
                     var personalStats = new PersonalStats
@@ -136,7 +92,7 @@ namespace MakoCelo
                         GameMode = gameMode,
                         Losses = leaderBoardPlayerData.Losses,
                         Wins = leaderBoardPlayerData.Wins,
-                        Rank =  Convert.ToInt32(leaderBoardPlayerData.Rank),
+                        Rank = Convert.ToInt32(leaderBoardPlayerData.Rank),
                         RankLevel = leaderBoardPlayerData.RankLevel,
                         TotalPlayers = leaderBoardPlayerData.RankTotal
                     };
@@ -179,7 +135,7 @@ namespace MakoCelo
             }
 
             var allTeams = matchFound.AlliesPlayers.SelectMany(x => x.Teams)
-                .Where(x => x.Players.Count <= (int) matchFound.GameMode);
+                .Where(x => x.Players.Count <= (int)matchFound.GameMode);
 
             var teamGrouping = allTeams.GroupBy(x => x.Id).Where(x => x.Count() == x.First().Players.Count)
                 .OrderByDescending(y => y.Count()).FirstOrDefault();
@@ -202,7 +158,7 @@ namespace MakoCelo
             }
 
             var axsTeams = matchFound.AxisPlayers.SelectMany(x => x.Teams)
-                .Where(x => x.Players.Count <= (int) matchFound.GameMode);
+                .Where(x => x.Players.Count <= (int)matchFound.GameMode);
 
             teamGrouping = axsTeams.GroupBy(x => x.Id).Where(x => x.Count() == x.First().Players.Count)
                 .OrderByDescending(y => y.Count()).FirstOrDefault();
@@ -224,6 +180,5 @@ namespace MakoCelo
             }
 
         }
-
     }
 }

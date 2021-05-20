@@ -1,14 +1,11 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
-using MakoCelo.Model;
 using MakoCelo.Model.RelicApi;
 using Newtonsoft.Json;
 using Tracer.NLog;
 
-namespace MakoCelo
+namespace MakoCelo.Scanner
 {
     public class RelicApiClient
     {
@@ -32,18 +29,18 @@ namespace MakoCelo
             using StreamReader sr = new StreamReader(content);
             using JsonReader reader = new JsonTextReader(sr);
 
-            var deserializeObject = _jsonSerializer.Deserialize<Response>(reader);
+            var response = _jsonSerializer.Deserialize<Response>(reader);
             
 
-            if (deserializeObject != null && deserializeObject.Result.Message != "SUCCESS")
+            if (response != null && response.Result.Message != "SUCCESS")
             {
                 Log.Error(
-                    $"Get RID - Error in Relic API, status code: {deserializeObject.Result.Code}, Message: {deserializeObject.Result.Message} ");
+                    $"Get RID - Error in Relic API, status code: {response.Result.Code}, Message: {response.Result.Message} ");
                 throw new HttpRequestException("Relic API returned data with result different than SUCCESS");
 
             }
 
-            return deserializeObject;
+            return response;
         }
     }
 }
