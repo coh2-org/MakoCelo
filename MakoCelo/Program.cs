@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Windows.Forms;
+using MakoCelo.IoC;
 using NLog;
 using NLog.Config;
 using NLog.Targets;
+using SimpleInjector;
+using SimpleInjector.Diagnostics;
 
 namespace MakoCelo
 {
@@ -13,6 +16,17 @@ namespace MakoCelo
         /// </summary>
         [STAThread]
         private static void Main()
+        {
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+
+            BuildLogConfiguration();
+            var container = ContainerInitializer.BuildContainer();
+
+            Application.Run(container.GetInstance<frmMain>());
+        }
+
+        private static void BuildLogConfiguration()
         {
             var config = new LoggingConfiguration();
 
@@ -26,10 +40,9 @@ namespace MakoCelo
             config.AddRuleForAllLevels(fileTarget);
 
             LogManager.Configuration = config;
-
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new frmMain());
+            
         }
+
+        
     }
 }

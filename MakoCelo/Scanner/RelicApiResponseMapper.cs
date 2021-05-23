@@ -11,7 +11,7 @@ using Tracer.NLog;
 
 namespace MakoCelo.Scanner
 {
-    public class RelicApiResponseMapper
+    public class RelicApiResponseMapper : IRelicApiResponseMapper
     {
         private readonly Dictionary<string, ValueTuple<Faction, GameMode>> _LeaderBoardDictionary = new()
         {

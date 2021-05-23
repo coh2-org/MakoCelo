@@ -8,11 +8,11 @@ using Microsoft.VisualBasic.CompilerServices;
 
 namespace MakoCelo.Scanner
 {
-    public class LogFileParser
-    { 
+    public class LogFileParser : ILogFileParser
+    {
         private long _lastMatchGameLogPosition;
         private string _startLineWithGameStartTime;
-        
+
 
         public Model.Match ParseGameLog(string filePath)
         {
@@ -30,7 +30,7 @@ namespace MakoCelo.Scanner
                     if (Conversions.ToBoolean(Strings.InStr(a, "Human Player") | Strings.InStr(a, "AI Player")))
                     {
                         match = new Model.Match();
-                        
+
 
                         var plrCnt = 0;
                         var findPlayers = true;
@@ -49,7 +49,7 @@ namespace MakoCelo.Scanner
                                 newPlayer.Name = Utilities.FindPlayerNameInLine(a, 36);
                                 newPlayer.IsAIPlayer = true;
                             }
-                            
+
                             var tLen = Strings.Len(a);
                             if (20 < tLen) // R3.40 This should never happen, but just in case.
                             {
@@ -111,6 +111,6 @@ namespace MakoCelo.Scanner
             }
         }
 
-        
+
     }
 }

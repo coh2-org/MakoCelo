@@ -30,6 +30,8 @@
     <TargetFrameworkProfile />
     <DefaultItemExcludes>$(DefaultItemExcludes);$(ProjectDir)**\*.vb</DefaultItemExcludes>
     <LangVersion>latest</LangVersion>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
     <PublishUrl>D:\publishmakocelo\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -45,8 +47,6 @@
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -113,6 +113,9 @@
     <Reference Include="SharpDX.DXGI, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
       <HintPath>..\packages\SharpDX.DXGI.4.2.0\lib\net45\SharpDX.DXGI.dll</HintPath>
     </Reference>
+    <Reference Include="SimpleInjector, Version=5.0.0.0, Culture=neutral, PublicKeyToken=984cb50dea722e99, processorArchitecture=MSIL">
+      <HintPath>..\packages\SimpleInjector.5.3.0\lib\net461\SimpleInjector.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
@@ -154,6 +157,7 @@
     <Import Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Base\IFormInitialize.cs" />
     <Compile Include="clsGlobal.cs" />
     <Compile Include="frmLabelSetup.Designer.cs">
       <DependentUpon>frmLabelSetup.cs</DependentUpon>
@@ -181,6 +185,11 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Gfx.cs" />
+    <Compile Include="IoC\ContainerInitializer.cs" />
+    <Compile Include="IoC\FormOpener.cs" />
+    <Compile Include="Scanner\ILogFileParser.cs" />
+    <Compile Include="Scanner\IRelicApiClient.cs" />
+    <Compile Include="Scanner\IRelicApiResponseMapper.cs" />
     <Compile Include="Scanner\LogFileParser.cs" />
     <Compile Include="Scanner\MatchScanner.cs" />
     <Compile Include="Model\Player.cs" />
@@ -198,6 +207,7 @@
     <Compile Include="Scanner\RelicApiResponseMapper.cs" />
     <Compile Include="Scanner\Utilities.cs" />
     <Compile Include="Settings.cs" />
+    <Compile Include="SettingsLoader.cs" />
     <Compile Include="Utilities.cs" />
   </ItemGroup>
   <ItemGroup>

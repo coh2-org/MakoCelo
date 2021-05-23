@@ -7,18 +7,18 @@ namespace MakoCelo.Scanner
 {
     public class MatchScanner
     {
-        private readonly LogFileParser _logFileParser;
-        private readonly RelicApiClient _relicApiClient;
-        private readonly RelicApiResponseMapper _relicApiResponseMapper;
+        private readonly ILogFileParser _logFileParser;
+        private readonly IRelicApiClient _relicApiClient;
+        private readonly IRelicApiResponseMapper _relicApiResponseMapper;
         
         public event EventHandler NewMatchFound;
         
 
-        public MatchScanner()
+        public MatchScanner(ILogFileParser logFileParser, IRelicApiClient relicApiClient, IRelicApiResponseMapper relicApiResponseMapper)
         {
-            _logFileParser = new LogFileParser();
-            _relicApiClient = new RelicApiClient();
-            _relicApiResponseMapper = new RelicApiResponseMapper();
+            _logFileParser = logFileParser;
+            _relicApiClient = relicApiClient;
+            _relicApiResponseMapper = relicApiResponseMapper;
         }
 
         protected virtual void OnNewMatchFound(EventArgs e)

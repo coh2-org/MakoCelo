@@ -7,11 +7,11 @@ using Tracer.NLog;
 
 namespace MakoCelo.Scanner
 {
-    public class RelicApiClient
+    public class RelicApiClient : IRelicApiClient
     {
         private readonly HttpClient _httpClient = new();
         private readonly JsonSerializer _jsonSerializer = new();
-        
+
 
         public Response GetPlayerStats(string[] playersIds)
         {
@@ -20,8 +20,8 @@ namespace MakoCelo.Scanner
                 var result = _httpClient.GetAsync(
                     "https://coh2-api.reliclink.com/community/leaderboard/GetPersonalStat?title=coh2&profile_ids=[" +
                     string.Join(",", playersIds) + "]").Result;
-                    result.EnsureSuccessStatusCode();
-                    return await result.Content.ReadAsStreamAsync();
+                result.EnsureSuccessStatusCode();
+                return await result.Content.ReadAsStreamAsync();
 
             }).Result; // TODO: make whole app Async :)
 
@@ -30,7 +30,7 @@ namespace MakoCelo.Scanner
             using JsonReader reader = new JsonTextReader(sr);
 
             var response = _jsonSerializer.Deserialize<Response>(reader);
-            
+
 
             if (response != null && response.Result.Message != "SUCCESS")
             {

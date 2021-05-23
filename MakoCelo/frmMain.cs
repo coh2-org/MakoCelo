@@ -10,8 +10,10 @@ using System.Speech.Synthesis;
 using System.Text;
 using System.Windows.Forms;
 using GameOverlay;
+using MakoCelo.IoC;
 using MakoCelo.Model;
 using MakoCelo.Overlay;
+using MakoCelo.Scanner;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 using Microsoft.VisualBasic.FileIO;
@@ -220,8 +222,13 @@ namespace MakoCelo
         
         private Match _previousMatch;
         public Match CurrentMatch;
-        public frmMain()
+        private readonly Settings _settings;
+        private readonly IFormOpener _formOpener;
+        public frmMain(Settings settings, MatchScanner matchScanner, IFormOpener formOpener)
         {
+            _settings = settings;
+            _formOpener = formOpener;
+            _matchScanner = matchScanner;
             InitializeComponent();
             _cmCheckLog.Name = "cmCheckLog";
             _cmFindLog.Name = "cmFindLog";
@@ -312,15 +319,15 @@ namespace MakoCelo
             _chkSpeech.Name = "chkSpeech";
             _chkGetTeams.Name = "chkGetTeams";
             _chkCountry.Name = "chkCountry";
-            Settings = new Settings(this);
-            LogScanner = new MatchScanner();
+            Settings = new SettingsLoader(this);
+            
 
             Gfx = new Gfx(this);
         }
 
-        public Settings Settings { get; }
+        public SettingsLoader Settings { get; }
 
-        public MatchScanner LogScanner { get; }
+        public MatchScanner _matchScanner { get; }
 
         public Bitmap NameOvlBmp
         {
@@ -414,7 +421,7 @@ namespace MakoCelo
             Cursor = Cursors.WaitCursor;
 
             Application.DoEvents();
-            var scanningResult = LogScanner.ScanForMatch(CurrentMatch, PATH_Game);
+            var scanningResult = _matchScanner.ScanForMatch(CurrentMatch, PATH_Game);
 
             Cursor = Cursors.Default;
             lbStatus.Text = "Ready";
@@ -542,7 +549,7 @@ namespace MakoCelo
 
         private void frmMain_Load(object sender, EventArgs e)
         {
-            LogScanner.NewMatchFound += NewMatchFound;
+            _matchScanner.NewMatchFound += NewMatchFound;
             FLAG_Loading = true; // R2.00 Tell Controls not to update. Most save settings as they update,
             GUI_Active = false; // R3.10 Default to NO active GUI elements.
             PATH_Game = ""; // R2.00 Initialize the var or we get error 448 in file.
@@ -2655,7 +2662,7 @@ namespace MakoCelo
 
         private void cmRankSetup_Click(object sender, EventArgs e)
         {
-            var LBDialog = new frmLabelSetup(chkTips.Checked) {HideSizeOptions = true, HideSizeAll = true};
+            var LBDialog = new frmLabelSetup(chkTips.Checked) { HideSizeOptions = true, HideSizeAll = true };
 
             // R4.00 Get the data we are editing.
             LSRank.BackC = LSName.BackC; // R4.00 Name has backround info that is used.
@@ -2669,9 +2676,8 @@ namespace MakoCelo
             PATH_DlgOVLBmp = PATH_Name_OVLBmp; // R4.00 Path for back image.
             Note_OVLBmp = NAME_OVLBmp; // R4.00 Back Image.
             PATH_DlgOVLBmpPath = Utilities.PATH_StripFilename(PATH_DlgOVLBmp);
-
-            // R4.00 Call the setup dialog and default to CANCEL being pressed.
             LBDialog.ShowDialog();
+            // R4.00 Call the setup dialog and default to CANCEL being pressed.
             if (LBDialog.Cancel == false)
             {
                 LSRank = LBDialog.LSetup;
@@ -2964,9 +2970,9 @@ namespace MakoCelo
                 FONT_Note01_Size = FONT_Setup.Size.ToString();
                 FONT_Note01_Bold = Conversions.ToString(FONT_Setup.Bold);
                 FONT_Note01_Italic = Conversions.ToString(FONT_Setup.Italic);
-                LSNote01.B1 = Color.FromArgb((int) Math.Round(255d * (Conversion.Val(LSNote01.O1) * 0.01d)),
+                LSNote01.B1 = Color.FromArgb((int)Math.Round(255d * (Conversion.Val(LSNote01.O1) * 0.01d)),
                     LSNote01.B1.R, LSNote01.B1.G, LSNote01.B1.B);
-                LSNote01.B2 = Color.FromArgb((int) Math.Round(255d * (Conversion.Val(LSNote01.O2) * 0.01d)),
+                LSNote01.B2 = Color.FromArgb((int)Math.Round(255d * (Conversion.Val(LSNote01.O2) * 0.01d)),
                     LSNote01.B2.R, LSNote01.B2.G, LSNote01.B2.B);
                 NOTE_CheckNoteSizes();
                 Settings.SETTINGS_Save("");
@@ -3006,9 +3012,9 @@ namespace MakoCelo
                 FONT_Note02_Size = FONT_Setup.Size.ToString();
                 FONT_Note02_Bold = Conversions.ToString(FONT_Setup.Bold);
                 FONT_Note02_Italic = Conversions.ToString(FONT_Setup.Italic);
-                LSNote02.B1 = Color.FromArgb((int) Math.Round(255d * (Conversion.Val(LSNote02.O1) * 0.01d)),
+                LSNote02.B1 = Color.FromArgb((int)Math.Round(255d * (Conversion.Val(LSNote02.O1) * 0.01d)),
                     LSNote02.B1.R, LSNote02.B1.G, LSNote02.B1.B);
-                LSNote02.B2 = Color.FromArgb((int) Math.Round(255d * (Conversion.Val(LSNote02.O2) * 0.01d)),
+                LSNote02.B2 = Color.FromArgb((int)Math.Round(255d * (Conversion.Val(LSNote02.O2) * 0.01d)),
                     LSNote02.B2.R, LSNote02.B2.G, LSNote02.B2.B);
                 NOTE_CheckNoteSizes();
                 Settings.SETTINGS_Save("");
@@ -3048,9 +3054,9 @@ namespace MakoCelo
                 FONT_Note03_Size = FONT_Setup.Size.ToString();
                 FONT_Note03_Bold = Conversions.ToString(FONT_Setup.Bold);
                 FONT_Note03_Italic = Conversions.ToString(FONT_Setup.Italic);
-                LSNote03.B1 = Color.FromArgb((int) Math.Round(255d * (Conversion.Val(LSNote03.O1) * 0.01d)),
+                LSNote03.B1 = Color.FromArgb((int)Math.Round(255d * (Conversion.Val(LSNote03.O1) * 0.01d)),
                     LSNote03.B1.R, LSNote03.B1.G, LSNote03.B1.B);
-                LSNote03.B2 = Color.FromArgb((int) Math.Round(255d * (Conversion.Val(LSNote03.O2) * 0.01d)),
+                LSNote03.B2 = Color.FromArgb((int)Math.Round(255d * (Conversion.Val(LSNote03.O2) * 0.01d)),
                     LSNote03.B2.R, LSNote03.B2.G, LSNote03.B2.B);
                 NOTE_CheckNoteSizes();
                 Settings.SETTINGS_Save("");
@@ -3090,9 +3096,9 @@ namespace MakoCelo
                 FONT_Note04_Size = FONT_Setup.Size.ToString();
                 FONT_Note04_Bold = Conversions.ToString(FONT_Setup.Bold);
                 FONT_Note04_Italic = Conversions.ToString(FONT_Setup.Italic);
-                LSNote04.B1 = Color.FromArgb((int) Math.Round(255d * (Conversion.Val(LSNote04.O1) * 0.01d)),
+                LSNote04.B1 = Color.FromArgb((int)Math.Round(255d * (Conversion.Val(LSNote04.O1) * 0.01d)),
                     LSNote04.B1.R, LSNote04.B1.G, LSNote04.B1.B);
-                LSNote04.B2 = Color.FromArgb((int) Math.Round(255d * (Conversion.Val(LSNote04.O2) * 0.01d)),
+                LSNote04.B2 = Color.FromArgb((int)Math.Round(255d * (Conversion.Val(LSNote04.O2) * 0.01d)),
                     LSNote04.B2.R, LSNote04.B2.G, LSNote04.B2.B);
                 NOTE_CheckNoteSizes();
                 Settings.SETTINGS_Save("");
