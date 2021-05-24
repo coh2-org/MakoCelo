@@ -16,4 +16,19 @@
     <ProjectReference Include="..\MakoCelo\MakoCelo.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="Scanner\TestCases.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>TestCases.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Scanner\TestCases.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>TestCases.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
 </Project>

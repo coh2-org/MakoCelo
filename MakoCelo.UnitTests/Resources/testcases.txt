@@ -1,0 +1,40 @@
+22:25:44.70   GAME -- Human Player: 0 May~something~nice~happen~to~you 292292 0 west_german;May~something~nice~happen~to~you;292292
+22:25:44.70   GAME -- Human Player: 1 jjiscool9 49082 1 british;jjiscool9;49082
+22:25:44.70   GAME -- Human Player: 2 markaj 2972793 0 german;markaj;2972793
+22:25:44.70   GAME -- Human Player: 3 Kartikeian 891938 1 soviet;Kartikeian;891938
+22:25:44.70   GAME -- Human Player: 4 RgB 1259582 0 west_german;RgB;1259582
+22:25:44.70   GAME -- Human Player: 5 jeep deployed!!! 4661768 1 soviet;jeep deployed!!!;4661768
+22:52:53.10   GAME -- Human Player: 0 markaj 2972793 0 german;markaj;2972793
+22:52:53.10   GAME -- Human Player: 1 litavous 2529787 1 soviet;litavous;2529787
+22:52:53.10   GAME -- Human Player: 3 Nabu 13550 1 aef;Nabu;13550
+22:52:53.10   GAME -- Human Player: 4 The Mask 220036 0 west_german;The Mask;220036
+22:52:53.10   GAME -- Human Player: 5 Epicurus 11389 1 soviet;Epicurus;11389
+22:40:15.43   GAME -- Human Player: 0 Livius 2940616 0 german;Livius;2940616
+22:40:15.43   GAME -- Human Player: 1 GUMBALL 4281908 1 british;GUMBALL;4281908
+22:40:15.43   GAME -- Human Player: 2 Lord of Dark Angels 1321860 0 west_german;Lord of Dark Angels;1321860
+22:40:15.43   GAME -- Human Player: 3 NIGHTWING 4468379 1 soviet;NIGHTWING;4468379
+22:40:15.43   GAME -- Human Player: 5 KROENEN 3917229 1 soviet;KROENEN;3917229
+23:02:55.51   GAME -- Human Player: 0 Chocolatine 1921179 0 west_german;Chocolatine;1921179
+23:02:55.51   GAME -- Human Player: 1 Du serpent 123390 1 soviet;Du serpent;123390
+23:02:55.51   GAME -- Human Player: 3 Hellstorm 873602 1 soviet;Hellstorm;873602
+23:02:55.51   GAME -- Human Player: 4 Campus IGS toulouse 1463786 0 west_german;Campus IGS toulouse;1463786
+22:05:29.03   GAME -- Human Player: 1 KIP het Vlees! 376225 1 soviet;KIP het Vlees!;376225
+22:05:29.03   GAME -- Human Player: 2 Smooth_Operator 211475 0 west_german;Smooth_Operator;211475
+22:05:29.03   GAME -- Human Player: 3 vonrectum 1160250 1 soviet;vonrectum;1160250
+22:05:29.03   GAME -- Human Player: 4 HotPotato 2728056 0 west_german;HotPotato;2728056
+22:05:29.03   GAME -- Human Player: 5 Fur 617457 1 british;Fur;617457
+22:19:17.66   GAME -- Human Player: 1 iamwetwo 898377 1 soviet;iamwetwo;898377
+22:19:17.66   GAME -- Human Player: 2 Dodo 1425285 0 german;Dodo;1425285
+22:19:17.66   GAME -- Human Player: 3 Tuzão, o Verme 1314392 1 aef;Tuzão;1314392
+22:19:17.66   GAME -- Human Player: 4 MBV 473848 0 west_german;MBV;473848
+22:19:17.66   GAME -- Human Player: 5 Hydronium 2736128 1 soviet;Hydronium;2736128
+22:52:49.20   GAME -- Human Player: 0 Nodfor 3009581 0 west_german;Nodfor;3009581
+22:52:49.20   GAME -- Human Player: 1 PRESI 2013935 1 british;PRESI;2013935
+22:52:49.20   GAME -- Human Player: 2 Drumledore [AUT] 1642668 0 german;Drumledore;1642668
+22:52:49.20   GAME -- Human Player: 3 [PY]TazdarK 649033 1 soviet;[PY]TazdarK;649033
+22:52:49.20   GAME -- Human Player: 5 Hellfish_PY 1910968 1 soviet;Hellfish_PY;1910968
+21:58:20.26   GAME -- Human Player: 0 WhiteFace 1457150 0 west_german;WhiteFace;1457150
+21:58:20.26   GAME -- Human Player: 1 Prinz Marcus 3828473 1 british;Prinz Marcus;3828473
+21:58:20.26   GAME -- Human Player: 2 James Charles 2354786 0 west_german;James Charles;2354786
+21:58:20.26   GAME -- Human Player: 3 Imperial Kawaii Army 1430603 1 aef;Imperial Kawaii Army;1430603
+21:58:20.26   GAME -- Human Player: 5 Hashey 679569 1 british;Hashey;679569
