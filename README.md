@@ -1,8 +1,8 @@
 # MakoCelo
 * Log file parser for Company of Heroes 2 match stats.
-* Written in Visual Basic 2019.
-* Version: 4.20
-* Posted: December 3, 2020
+* Written in Visual Basic 2019 and migrated to C#
+* Version: 5.1
+* Posted: June, 2021
 
        
 SUMMARY
@@ -12,8 +12,7 @@ The program displays all players, their ranks, and the factions
 they are playing. Additional stats can be found by clicking the 
 player name in the STATS window or using the PopUp menu option.
 
-Stats displayed by this program are limited to what is available
-in the local log file at runtime.
+Stats displayed are downloaded from Relic site http://www.companyofheroes.com/leaderboards via provided API.
 
 For a full featured program please search CELO on COH2.Org for
 the original program. The Company of Heroes ELO program. Or 
@@ -36,7 +35,7 @@ match. For best results restart COH2 frequently.
 
 CONTRIBUTORS
 ------------------------------------------------------------------
-Ishtari, Sturmpanther, Flappy
+Ishtari, Sturmpanther, Flappy, Redgood
 
 VERSION HISTORY
 ------------------------------------------------------------------
@@ -121,8 +120,18 @@ v4.20
 * Added setup Load/Save buttons for access to multiple setups.
 * Changed ABOUT dialog to RTF for ease of use.
 
-v5.0 Alpha
-* Code Migration to c#
-
-v5.1 Alpha
+v5.1
+Functional
 * Added In-Game overlay that shows players ranks during match loading screen (Requires Toggle Overlay checked and turned on Auto Scan Log)
+* Some minor improvement in logic of log scanning and team detection (partially loaded data is no more
+* Added application logs to file with more details for easier troubleshooting
+* Removed Stats window because all data is downloaded from Relic API during match detection  
+
+Non-functional
+* Moved project to C#
+* Removed some references to VisualBasic project format
+* Introduced new SoundPlayer (because sound playing was done by removed VisualBasic reference) - technical change, no new functionalities.
+* Removed a lot of redundant code (I think it can be around 5k lines of code up to 10k)
+* Refactor of log scanning code and Relic API communication
+* Refactor of data model which will allow further improvements and functionalities
+
