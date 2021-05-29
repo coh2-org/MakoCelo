@@ -25,12 +25,12 @@
 22:05:29.03   GAME -- Human Player: 5 Fur 617457 1 british;Fur;617457
 22:19:17.66   GAME -- Human Player: 1 iamwetwo 898377 1 soviet;iamwetwo;898377
 22:19:17.66   GAME -- Human Player: 2 Dodo 1425285 0 german;Dodo;1425285
-22:19:17.66   GAME -- Human Player: 3 Tuzão, o Verme 1314392 1 aef;Tuzão;1314392
+22:19:17.66   GAME -- Human Player: 3 Tuzão, o Verme 1314392 1 aef;Tuzão, o Verme;1314392
 22:19:17.66   GAME -- Human Player: 4 MBV 473848 0 west_german;MBV;473848
 22:19:17.66   GAME -- Human Player: 5 Hydronium 2736128 1 soviet;Hydronium;2736128
 22:52:49.20   GAME -- Human Player: 0 Nodfor 3009581 0 west_german;Nodfor;3009581
 22:52:49.20   GAME -- Human Player: 1 PRESI 2013935 1 british;PRESI;2013935
-22:52:49.20   GAME -- Human Player: 2 Drumledore [AUT] 1642668 0 german;Drumledore;1642668
+22:52:49.20   GAME -- Human Player: 2 Drumledore [AUT] 1642668 0 german;Drumledore [AUT];1642668
 22:52:49.20   GAME -- Human Player: 3 [PY]TazdarK 649033 1 soviet;[PY]TazdarK;649033
 22:52:49.20   GAME -- Human Player: 5 Hellfish_PY 1910968 1 soviet;Hellfish_PY;1910968
 21:58:20.26   GAME -- Human Player: 0 WhiteFace 1457150 0 west_german;WhiteFace;1457150
