@@ -126,7 +126,7 @@ Functional
 * Added In-Game overlay that shows players ranks during match loading screen (Requires Toggle Overlay checked and turned on Auto Scan Log)
 * Some minor improvement in logic of log scanning and team detection (partially loaded data is no more
 * Added application logs to file with more details for easier troubleshooting
-* Removed Stats window because all data is downloaded from Relic API during match detection  
+* Removed ELO window because all data is downloaded from Relic API during match detection  
 
 Non-functional
 * Moved project to C#
@@ -135,4 +135,5 @@ Non-functional
 * Removed a lot of redundant code (I think it can be around 5k lines of code up to 10k)
 * Refactor of log scanning code and Relic API communication
 * Refactor of data model which will allow further improvements and functionalities
+* Introduced UnitTests and IoC container
 
