@@ -121,6 +121,7 @@ v4.20
 * Changed ABOUT dialog to RTF for ease of use.
 
 v5.1
+
 Functional
 * Added In-Game overlay that shows players ranks during match loading screen (Requires Toggle Overlay checked and turned on Auto Scan Log)
 * Some minor improvement in logic of log scanning and team detection (partially loaded data is no more
